@@ -1,27 +1,31 @@
 {
-  "_from": "bootstrap-daterangepicker",
+  "_args": [
+    [
+      "bootstrap-daterangepicker@3.0.5",
+      "D:\\www\\disposisi"
+    ]
+  ],
+  "_from": "bootstrap-daterangepicker@3.0.5",
   "_id": "bootstrap-daterangepicker@3.0.5",
   "_inBundle": false,
   "_integrity": "sha512-WdTNB5ZKCpqZltcRkzeE6Xmwp/b8yPnuwsHfqP5mGP2VIV/kzd/6VuTIKEjuskDcsLAYW38LXGjcSm2TBNRdTw==",
   "_location": "/bootstrap-daterangepicker",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "version",
     "registry": true,
-    "raw": "bootstrap-daterangepicker",
+    "raw": "bootstrap-daterangepicker@3.0.5",
     "name": "bootstrap-daterangepicker",
     "escapedName": "bootstrap-daterangepicker",
-    "rawSpec": "",
+    "rawSpec": "3.0.5",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "3.0.5"
   },
   "_requiredBy": [
-    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/bootstrap-daterangepicker/-/bootstrap-daterangepicker-3.0.5.tgz",
-  "_shasum": "dc10db6b4854cc63ebb5b17dac55edd7318dcbad",
-  "_spec": "bootstrap-daterangepicker",
+  "_spec": "3.0.5",
   "_where": "D:\\www\\disposisi",
   "author": {
     "name": "Dan Grossman",
@@ -31,12 +35,10 @@
   "bugs": {
     "url": "https://github.com/dangrossman/daterangepicker/issues"
   },
-  "bundleDependencies": false,
   "dependencies": {
     "jquery": ">=1.10",
     "moment": "^2.9.0"
   },
-  "deprecated": false,
   "description": "Date range picker component for Bootstrap",
   "homepage": "https://github.com/dangrossman/daterangepicker",
   "license": "MIT",

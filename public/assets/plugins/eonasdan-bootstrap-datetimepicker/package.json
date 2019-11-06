@@ -1,27 +1,31 @@
 {
-  "_from": "eonasdan-bootstrap-datetimepicker",
+  "_args": [
+    [
+      "eonasdan-bootstrap-datetimepicker@4.17.47",
+      "D:\\www\\disposisi"
+    ]
+  ],
+  "_from": "eonasdan-bootstrap-datetimepicker@4.17.47",
   "_id": "eonasdan-bootstrap-datetimepicker@4.17.47",
   "_inBundle": false,
   "_integrity": "sha1-ekmXAEQGUnbnll79Fvgic1IZ5zU=",
   "_location": "/eonasdan-bootstrap-datetimepicker",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "version",
     "registry": true,
-    "raw": "eonasdan-bootstrap-datetimepicker",
+    "raw": "eonasdan-bootstrap-datetimepicker@4.17.47",
     "name": "eonasdan-bootstrap-datetimepicker",
     "escapedName": "eonasdan-bootstrap-datetimepicker",
-    "rawSpec": "",
+    "rawSpec": "4.17.47",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "4.17.47"
   },
   "_requiredBy": [
-    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/eonasdan-bootstrap-datetimepicker/-/eonasdan-bootstrap-datetimepicker-4.17.47.tgz",
-  "_shasum": "7a49970044065276e7965efd16f822735219e735",
-  "_spec": "eonasdan-bootstrap-datetimepicker",
+  "_spec": "4.17.47",
   "_where": "D:\\www\\disposisi",
   "author": {
     "name": "Jonathan Peterson"
@@ -29,14 +33,12 @@
   "bugs": {
     "url": "https://github.com/eonasdan/bootstrap-datetimepicker/issues"
   },
-  "bundleDependencies": false,
   "dependencies": {
     "bootstrap": "^3.3",
     "jquery": "^1.8.3 || ^2.0 || ^3.0",
     "moment": "^2.10",
     "moment-timezone": "^0.4.0"
   },
-  "deprecated": false,
   "description": "A date/time picker component designed to work with Bootstrap 3 and Momentjs. For usage, installation and demos see Project Site on GitHub",
   "devDependencies": {
     "grunt": "latest",

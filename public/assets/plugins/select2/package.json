@@ -1,27 +1,31 @@
 {
-  "_from": "select2",
+  "_args": [
+    [
+      "select2@4.0.12",
+      "D:\\www\\disposisi"
+    ]
+  ],
+  "_from": "select2@4.0.12",
   "_id": "select2@4.0.12",
   "_inBundle": false,
   "_integrity": "sha512-mbXC05AvjCboZcRlgJqN4mlI2qmqshpRC76sKNAdxS1lPLOh2m/NTyfL6xsvGoY6eIhjaya4dbumN99MudVQ2w==",
   "_location": "/select2",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "version",
     "registry": true,
-    "raw": "select2",
+    "raw": "select2@4.0.12",
     "name": "select2",
     "escapedName": "select2",
-    "rawSpec": "",
+    "rawSpec": "4.0.12",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "4.0.12"
   },
   "_requiredBy": [
-    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/select2/-/select2-4.0.12.tgz",
-  "_shasum": "9c0492d4d06948f2bd079f6e14718a41c7eaa60e",
-  "_spec": "select2",
+  "_spec": "4.0.12",
   "_where": "D:\\www\\disposisi",
   "author": {
     "name": "Kevin Brown",
@@ -30,7 +34,6 @@
   "bugs": {
     "url": "https://github.com/select2/select2/issues"
   },
-  "bundleDependencies": false,
   "contributors": [
     {
       "name": "Igor Vaynberg",
@@ -42,7 +45,6 @@
     }
   ],
   "dependencies": {},
-  "deprecated": false,
   "description": "Select2 is a jQuery based replacement for select boxes. It supports searching, remote data sets, and infinite scrolling of results.",
   "devDependencies": {
     "almond": "~0.3.1",

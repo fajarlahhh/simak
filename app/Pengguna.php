@@ -28,6 +28,10 @@ class Pengguna extends Authenticatable
         'pengguna_nip', 'pengguna_sandi'
     ];
 
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+    
     public function getAuthPassword()
     {
         return $this->pengguna_sandi;

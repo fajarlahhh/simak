@@ -26,7 +26,6 @@
 		<!-- end brand -->
 		<!-- begin login-content -->
 		<div class="login-content">
-
 			<form action="{{ route('login') }}" method="POST" class="margin-bottom-0" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
 				@csrf
 				<div class="form-group m-b-20">
