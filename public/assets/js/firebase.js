@@ -1,11 +1,11 @@
 var firebaseConfig = {
-    apiKey: "AIzaSyDLXU2OD0DD4LzDXgMY2BG7K5POWyE2BnE",
-    authDomain: "akunting-pdam.firebaseapp.com",
-    databaseURL: "https://akunting-pdam.firebaseio.com",
-    projectId: "akunting-pdam",
-    storageBucket: "akunting-pdam.appspot.com",
-    messagingSenderId: "459835640586",
-    appId: "1:459835640586:web:8850f7af39e22ce69d08f3",
-    measurementId: "G-T5JGWJDQC7"
+    apiKey: "AIzaSyAH9xKosNqt1p6NXfJI2sIJWMnyQ0xT9nA",
+    authDomain: "arsip-disposisi.firebaseapp.com",
+    databaseURL: "https://arsip-disposisi.firebaseio.com",
+    projectId: "arsip-disposisi",
+    storageBucket: "arsip-disposisi.appspot.com",
+    messagingSenderId: "619131449554",
+    appId: "1:619131449554:web:7c33da671fc7295ded7d0b",
+    measurementId: "G-ZMDSNMHY95"
 };
 firebase.initializeApp(firebaseConfig);

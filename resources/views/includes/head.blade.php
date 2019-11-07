@@ -8,8 +8,8 @@
 
 <!-- ================== BEGIN BASE CSS STYLE ================== -->
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-<link href="/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-<link href="/assets/css/bundle.css" rel="stylesheet" />
+<link href="/assets/css/app.css" rel="stylesheet" />
+<link href="/assets/css/jqueryui/jquery-ui.min.css" rel="stylesheet" />
 <link href="/assets/css/default/style.min.css" rel="stylesheet" />
 <link href="/assets/css/default/style-responsive.min.css" rel="stylesheet" />
 <link href="/assets/css/default/theme/default.css" rel="stylesheet" id="theme" />

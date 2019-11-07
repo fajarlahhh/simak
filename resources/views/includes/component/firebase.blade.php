@@ -1,6 +1,6 @@
 <script>
-	var user_id = "{{ Auth::user()->pengguna_nip }}";
-    
+	var user_id = "{{ Auth::user()->pengguna_id }}";
+
     var database = firebase.database();
 
     if({!! Auth::user() !!}) {

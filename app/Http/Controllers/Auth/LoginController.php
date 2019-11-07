@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Akunting\Pengguna;
+use App\Pengguna;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
-use Symfony\Component\Console\Input\Input;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -67,36 +68,35 @@ class LoginController extends Controller
         	]
         );
 
-        $remember = (Input::has('remember')) ? true : false;
+        $remember = ($req->remember == 'on') ? true : false;
 
-        if (Auth::attempt(['pengguna_nip' => Input::get('uid'), 'password' => Input::get('password')], $remember)) {
-            
-            return 'sukses';
-            $pengguna = Pengguna::find(Input::get('uid'));
+        if (Auth::attempt(['pengguna_id' => $req->uid, 'password' => $req->password], $remember)) {
+
             $new_session_id = Session::getId();
+            $pengguna = Pengguna::find($req->uid);
 
             if($pengguna->session_id != '') {
                 $last_session = Session::getHandler()->read($pengguna->session_id);
-
                 if ($last_session) {
                     if (Session::getHandler()->destroy($pengguna->session_id)) {
 
                     }
                 }
             }
-            Pengguna::where('pengguna_nip', $pengguna->pengguna_nip)->update(['session_id' => $new_session_id]);
+
+            $pengguna->session_id = $new_session_id;
+            $pengguna->save();
+
             return redirect()->intended('dashboard')
             ->with('gritter_judul', 'Selamat datang ')
             ->with('gritter_teks', 'Selamat bekerja dan semoga sukses')
-            ->with('gritter_gambar', (Auth::user()? Storage::url(Auth::user()->pengguna_foto): '../assets/img/user/user.png'));
+            ->with('gritter_gambar', (Auth::user()->pengguna_foto? Storage::url(Auth::user()->pengguna_foto): '../assets/img/user/user.png'));
         }
-        
-        return 'gagal';
         return Redirect::back()->withInput()->with('alert', 'ID Pengguna atau Kata Sandi salah');
     }
 
     private function username()
     {
-        return 'pengguna_nip';
+        return 'pengguna_id';
     }
 }

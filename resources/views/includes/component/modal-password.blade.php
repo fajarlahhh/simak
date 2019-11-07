@@ -1,5 +1,5 @@
 <link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
-<form action="/gantisandi" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
+<form action="{{ route('gantisandi') }}" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
 	<div class="modal-content">
 		@method('PATCH')
 		@csrf

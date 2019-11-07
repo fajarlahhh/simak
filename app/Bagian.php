@@ -1,6 +1,6 @@
 <?php
 
-namespace Akunting;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +12,6 @@ class Bagian extends Model
 
     public function seksi()
     {
-    	return $this->hasMany('Akunting\Seksi', 'kd_bagian', 'kd_bagian');
+    	return $this->hasMany('App\Seksi', 'kd_bagian', 'kd_bagian');
     }
 }

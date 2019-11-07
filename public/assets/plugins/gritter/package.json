@@ -1,35 +1,32 @@
 {
-  "_args": [
-    [
-      "gritter@1.7.4",
-      "D:\\www\\disposisi"
-    ]
-  ],
-  "_from": "gritter@1.7.4",
+  "_from": "gritter",
   "_id": "gritter@1.7.4",
   "_inBundle": false,
   "_integrity": "sha1-zbg5gr0Z4s6TvnOXHhMgoyYRM+E=",
   "_location": "/gritter",
   "_phantomChildren": {},
   "_requested": {
-    "type": "version",
+    "type": "tag",
     "registry": true,
-    "raw": "gritter@1.7.4",
+    "raw": "gritter",
     "name": "gritter",
     "escapedName": "gritter",
-    "rawSpec": "1.7.4",
+    "rawSpec": "",
     "saveSpec": null,
-    "fetchSpec": "1.7.4"
+    "fetchSpec": "latest"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/gritter/-/gritter-1.7.4.tgz",
-  "_spec": "1.7.4",
+  "_shasum": "cdb83982bd19e2ce93be73971e1320a3261133e1",
+  "_spec": "gritter",
   "_where": "D:\\www\\disposisi",
   "bugs": {
     "url": "https://github.com/jboesch/Gritter/issues"
   },
+  "bundleDependencies": false,
   "categories": [
     "UI"
   ],
@@ -39,6 +36,7 @@
       "url": "http://boedesign.com"
     }
   ],
+  "deprecated": false,
   "description": "A small growl-like notification plugin for jQuery",
   "github": "https://github.com/jboesch/Gritter",
   "homepage": "http://boedesign.com/blog/2009/07/11/growl-for-jquery-gritter/",

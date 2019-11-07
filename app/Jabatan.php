@@ -1,6 +1,6 @@
 <?php
 
-namespace Akunting;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 

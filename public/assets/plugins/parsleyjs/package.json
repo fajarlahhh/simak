@@ -1,31 +1,27 @@
 {
-  "_args": [
-    [
-      "parsleyjs@2.9.1",
-      "D:\\www\\disposisi"
-    ]
-  ],
-  "_from": "parsleyjs@2.9.1",
+  "_from": "parsleyjs",
   "_id": "parsleyjs@2.9.1",
   "_inBundle": false,
   "_integrity": "sha512-2WSe+HsOZEPqXh9bFdi/vgWNQtGRRnAgS3v12qesMAabxVdLE7Oj7b+2UzcZ80eG23g1SxiMUH978Dk/wSkt+w==",
   "_location": "/parsleyjs",
   "_phantomChildren": {},
   "_requested": {
-    "type": "version",
+    "type": "tag",
     "registry": true,
-    "raw": "parsleyjs@2.9.1",
+    "raw": "parsleyjs",
     "name": "parsleyjs",
     "escapedName": "parsleyjs",
-    "rawSpec": "2.9.1",
+    "rawSpec": "",
     "saveSpec": null,
-    "fetchSpec": "2.9.1"
+    "fetchSpec": "latest"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/parsleyjs/-/parsleyjs-2.9.1.tgz",
-  "_spec": "2.9.1",
+  "_shasum": "fd79f7a1b1fe9138993b5e82f9bbc3e38fd3763d",
+  "_spec": "parsleyjs",
   "_where": "D:\\www\\disposisi",
   "author": {
     "name": "Guillaume Potier",
@@ -35,9 +31,11 @@
   "bugs": {
     "url": "https://github.com/guillaumepotier/Parsley.js/issues"
   },
+  "bundleDependencies": false,
   "dependencies": {
     "jquery": ">=1.8.0"
   },
+  "deprecated": false,
   "description": "Validate your forms, frontend, without writing a single line of javascript!",
   "devDependencies": {
     "@babel/core": "^7.0.0",

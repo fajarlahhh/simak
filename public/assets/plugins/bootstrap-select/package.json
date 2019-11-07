@@ -1,31 +1,27 @@
 {
-  "_args": [
-    [
-      "bootstrap-select@1.13.12",
-      "D:\\www\\disposisi"
-    ]
-  ],
-  "_from": "bootstrap-select@1.13.12",
+  "_from": "bootstrap-select",
   "_id": "bootstrap-select@1.13.12",
   "_inBundle": false,
   "_integrity": "sha512-epsPt6WpgmL9Q9Y22JFntajdhhqvCwV/JKiBZF3YFvMHK9YzzDPQft/Cjqvsgq0bhF32BlvG03Qs3qA/pVRAqQ==",
   "_location": "/bootstrap-select",
   "_phantomChildren": {},
   "_requested": {
-    "type": "version",
+    "type": "tag",
     "registry": true,
-    "raw": "bootstrap-select@1.13.12",
+    "raw": "bootstrap-select",
     "name": "bootstrap-select",
     "escapedName": "bootstrap-select",
-    "rawSpec": "1.13.12",
+    "rawSpec": "",
     "saveSpec": null,
-    "fetchSpec": "1.13.12"
+    "fetchSpec": "latest"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/bootstrap-select/-/bootstrap-select-1.13.12.tgz",
-  "_spec": "1.13.12",
+  "_shasum": "81b9f1394cb8d7151aea16fb9030c112330dbf98",
+  "_spec": "bootstrap-select",
   "_where": "D:\\www\\disposisi",
   "author": {
     "name": "Casey Holzer",
@@ -44,6 +40,7 @@
   "bugs": {
     "url": "https://github.com/snapappointments/bootstrap-select/issues"
   },
+  "bundleDependencies": false,
   "contributors": [
     {
       "name": "Silvio Moreto",
@@ -55,6 +52,7 @@
     }
   ],
   "dependencies": {},
+  "deprecated": false,
   "description": "The jQuery plugin that brings select elements into the 21st century with intuitive multiselection, searching, and much more. Now with Bootstrap 4 support.",
   "devDependencies": {
     "autoprefixer": "^9.6.4",

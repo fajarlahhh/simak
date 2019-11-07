@@ -1,6 +1,6 @@
 <?php
 
-namespace Akunting;
+namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,25 +19,25 @@ class Pengguna extends Authenticatable
      * @var array
      */
     protected $table = 'pengguna';
-    protected $primaryKey = 'pengguna_nip';
+    protected $primaryKey = 'pengguna_id';
     public $incrementing = false;
     protected $rememberTokenName = 'remember_token';
     protected $keyType = 'string';
 
     protected $fillable = [
-        'pengguna_nip', 'pengguna_sandi'
+        'pengguna_id', 'pengguna_sandi'
     ];
 
     protected $hidden = [
         'password', 'remember_token',
     ];
-    
+
     public function getAuthPassword()
     {
         return $this->pengguna_sandi;
     }
 
     public function pegawai(){
-        return $this->hasOne('Akunting\Pegawai', 'nip', 'pengguna_nip');
+        return $this->hasOne('App\Pegawai', 'nip', 'pengguna_id');
 	}
 }

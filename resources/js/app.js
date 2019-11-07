@@ -4,9 +4,12 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+require('jqueryui');
 require('./bootstrap');
+require('jquery-slimscroll');
 
 window.Vue = require('vue');
+window.Cookies = require('js-cookie');
 
 /**
  * The following block of code may be used to automatically register your
