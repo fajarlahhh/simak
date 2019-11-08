@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 class PenggunaController extends Controller
@@ -18,34 +20,38 @@ class PenggunaController extends Controller
     //
 	public function __construct()
 	{
-		$this->middleware('auth');
+        $this->middleware('auth');
 	}
 
 	public function index(Request $req)
 	{
-		$data = Pengguna::with(['pegawai' => function($q) use ($req){
+		$pengguna = Pengguna::with(['pegawai' => function($q) use ($req){
 			$q->select('nip','kd_unit','kd_jabatan','kd_bagian','kd_seksi', 'nm_pegawai')->where('nm_pegawai', 'like', '%'.$req->cari.'%');
 		}])->paginate(10);
 
-		$data->appends($req->only('cari'));
-		return view('pages.setup.pengguna.index',compact('data'))
-					->with('i', ($req->input('page', 1) - 1) * 5)
-					->with('cari', $req->cari);
+		$pengguna->appends($req->only('cari'));
+		return view('pages.setup.pengguna.index', [
+            'data' => $pengguna,
+            'i' => ($req->input('page', 1) - 1) * 10,
+            'cari' => $req->cari,
+        ]);
 	}
 
 	public function tambah()
 	{
-		$pegawai = Pegawai::select('nip', 'nm_pegawai')
-		->orderBy('nm_pegawai', 'asc')
-		->whereNotIn('nip', Pengguna::select('pengguna_id')->get())
-		->where('kd_status', '!=', '07')
-		->get();
-		$level = \Spatie\Permission\Models\Role::all();
-		return view('pages.setup.pengguna.form')
-					->with('level', $level)
-					->with('pegawai', $pegawai)
-					->with('back', Str::contains(url()->previous(), ['datapengguna/tambah', 'datapengguna/edit'])? '/datapengguna': url()->previous())
-					->with('aksi', 'Tambah');
+        try{
+            return view('pages.setup.pengguna.form', [
+                'pegawai' => Pegawai::select('nip', 'nm_pegawai')->orderBy('nm_pegawai', 'asc')->whereNotIn('nip', Pengguna::select('pengguna_id')->get())->where('kd_status', '!=', '07')->get(),
+                'level' => \Spatie\Permission\Models\Role::all(),
+                'back' => Str::contains(url()->previous(), ['datapengguna/tambah', 'datapengguna/edit'])? '/datapengguna': url()->previous(),
+                'aksi' => 'Tambah'
+            ]);
+		}catch(\Exception $e){
+			return redirect(url()->previous()? url()->previous(): 'datapengguna')
+			->with('swal_pesan', $e->getMessage())
+			->with('swal_judul', 'Tambah Data')
+			->with('swal_tipe', 'error');
+		}
 	}
 
 	public function ganti_sandi($value='')
@@ -77,6 +83,7 @@ class PenggunaController extends Controller
 			$pengguna->pengguna_hp = $req->get('pengguna_hp');
 			$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
 			$pengguna->pengguna_foto = $foto;
+			$pengguna->created_operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
 			$pengguna->save();
 			$pengguna->assignRole($req->get('pengguna_level'));
 
@@ -101,17 +108,16 @@ class PenggunaController extends Controller
 	public function edit($id)
 	{
 		try{
-			$pengguna = Pengguna::findOrFail($id);
-			$level = (in_array($id, config('admin.nip'))? Role::where('name', 'Admin')->get(): Role::all());
-			return view('pages.setup.pengguna.form')
-						->with('pengguna', $pengguna)
-						->with('level', $level)
-						->with('back', Str::contains(url()->previous(), 'datapengguna/edit')? '/datapengguna': url()->previous())
-						->with('aksi', 'Edit');
+			return view('pages.setup.pengguna.form', [
+                'data' => Pengguna::findOrFail($id),
+                'level' => (in_array($id, config('admin.nip'))? Role::where('name', 'Admin')->get(): Role::all()),
+                'back' => Str::contains(url()->previous(), 'datapengguna/edit')? '/datapengguna': url()->previous(),
+                'aksi' => 'Edit',
+            ]);
 		}catch(\Exception $e){
 			return redirect(url()->previous()? url()->previous(): 'datapengguna')
 			->with('swal_pesan', $e->getMessage())
-			->with('swal_judul', 'Data Tidak Ditemukan')
+			->with('swal_judul', 'Edit Data')
 			->with('swal_tipe', 'error');
 		}
 	}
@@ -143,6 +149,7 @@ class PenggunaController extends Controller
 			}
 			$pengguna->pengguna_hp = $req->get('pengguna_hp');
 			$pengguna->pengguna_foto = $foto;
+			$pengguna->updated_operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
 			$pengguna->save();
 			$pengguna->removeRole($pengguna->getRoleNames()[0]);
 			$pengguna->assignRole($req->get('pengguna_level'));
@@ -194,6 +201,7 @@ class PenggunaController extends Controller
 			$pengguna->exists = true;
 			$pengguna->pengguna_id = Auth::user()->pegawai->nip;
 			$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi_baru'));
+			$pengguna->updated_operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
 			$pengguna->save();
 			return redirect()->back()
 			->with('swal_pesan', 'Berhasil mengubah kata sandi')

@@ -23,7 +23,7 @@
                     @endrole
                 </div>
                 <div class="col-md-6 col-lg-5 col-xl-3 col-xs-12">
-                	<form id="frm-cari" action="/pengguna" method="GET">
+                    <form id="frm-cari" action="{{ route('datapengguna') }}" method="GET">
 	                	<div class="input-group">
 							<input type="text" class="form-control" name="cari" placeholder="Cari Nama" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
 							<div class="input-group-append">
@@ -52,22 +52,35 @@
 						</tr>
 					</thead>
 					<tbody>
-					    @foreach ($data as $index => $pengguna)
-					    @if($pengguna->pegawai)
+					    @foreach ($data as $index => $row)
+					    @if($row->pegawai)
+                        @php
+                            if ($row->updated_at) {
+                                $aksi = 'Diubah oleh ';
+                                $operator = $row->updated_operator;
+                                $waktu = $row->updated_at;
+                            } else {
+                                $aksi = 'Dibuat oleh ';
+                                $operator = $row->created_operator;
+                                $waktu = $row->created_at;
+                            }
+                        @endphp
 					    <tr>
 					        <td>{{ ++$i }}</td>
-					        <td>{{ $pengguna->pengguna_id }}</td>
-					        <td>{{ $pengguna->pegawai->nm_pegawai }}</td>
-					        <td>{{ $pengguna->pegawai->unit->nm_unit }}</td>
-					        <td>{{ $pengguna->pegawai->jabatan->nm_jabatan }}</td>
-					        <td>{{ $pengguna->pegawai->bagian->nm_bagian }}</td>
-					        <td>{{ $pengguna->pegawai->seksi? $pengguna->pegawai->seksi->nm_seksi: '' }}</td>
-					        <td>{{ ucFirst($pengguna->getRoleNames()[0]) }}</td>
+					        <td>
+                                <label data-toggle="tooltip" data-container="#data{{ $row->pengguna_id }}" id="data{{ $row->pengguna_id }}" title="{{ $aksi.$operator.", ".\Carbon\Carbon::parse($waktu)->isoFormat('LLL') }}">{{ $row->pengguna_id }}</label>
+                            </td>
+					        <td>{{ $row->pegawai->nm_pegawai }}</td>
+					        <td>{{ $row->pegawai->unit->nm_unit }}</td>
+					        <td>{{ $row->pegawai->jabatan->nm_jabatan }}</td>
+					        <td>{{ $row->pegawai->bagian->nm_bagian }}</td>
+					        <td>{{ $row->pegawai->seksi? $row->pegawai->seksi->nm_seksi: '' }}</td>
+					        <td>{{ ucFirst($row->getRoleNames()[0]) }}</td>
 					        <td>
 					        	@role('user|admin')
-                                <a href="/datapengguna/edit/{{ $pengguna->pengguna_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
-                                @if (!in_array($pengguna->pengguna_id, config('admin.nip')))
-	                            <a href="javascript:;" onclick="hapus('{{ $pengguna->pengguna_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
+                                <a href="/datapengguna/edit/{{ $row->pengguna_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
+                                @if (!in_array($row->pengguna_id, config('admin.nip')))
+	                            <a href="javascript:;" onclick="hapus('{{ $row->pengguna_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
                                 @endif
 	                    		@endrole
 					        </td>

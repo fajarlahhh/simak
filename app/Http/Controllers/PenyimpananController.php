@@ -6,6 +6,8 @@ use App\Penyimpanan;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Session;
 
 class PenyimpananController extends Controller
 {
@@ -34,10 +36,12 @@ class PenyimpananController extends Controller
 				break;
 		}
 		$penyimpanan->appends([$req->cari, $req->tipe]);
-		return view('pages.setup.penyimpanan.index', compact('penyimpanan'))
-					->with('i', ($req->input('page', 1) - 1) * 5)
-					->with('cari', $req->cari)
-					->with('tipe', $req->tipe);
+		return view('pages.setup.penyimpanan.index', [
+            'data' => $penyimpanan,
+            'i' => ($req->input('page', 1) - 1) * 10,
+            'cari' => $req->cari,
+            'tipe' => $req->tipe,
+        ]);
     }
 
 	public function cari($cari)
@@ -49,9 +53,10 @@ class PenyimpananController extends Controller
 
 	public function tambah()
 	{
-		return view('pages.setup.penyimpanan.form')
-					->with('back', Str::contains(url()->previous(), ['datapenyimpanan/tambah', 'datapenyimpanan/edit'])? '/datapenyimpanan': url()->previous())
-					->with('aksi', 'Tambah');
+		return view('pages.setup.penyimpanan.form',[
+            'back' => Str::contains(url()->previous(), ['datapenyimpanan/tambah', 'datapenyimpanan/edit'])? '/datapenyimpanan': url()->previous(),
+            'aksi' => 'Tambah'
+        ]);
 	}
 
 	public function do_tambah(Request $req)
@@ -69,7 +74,7 @@ class PenyimpananController extends Controller
 			$penyimpanan = new Penyimpanan();
 			$penyimpanan->penyimpanan_nama = $req->get('penyimpanan_nama');
 			$penyimpanan->penyimpanan_deskripsi = $req->get('penyimpanan_deskripsi');
-			$penyimpanan->operator = Auth::user()->pegawai->nm_pegawai;
+			$penyimpanan->input_operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
             $penyimpanan->save();
 
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datapenyimpanan')
@@ -87,11 +92,12 @@ class PenyimpananController extends Controller
 	public function edit($id)
 	{
 		try{
-			$penyimpanan = Penyimpanan::findOrFail($id);
-			return view('pages.setup.penyimpanan.form', compact('penyimpanan'))
-						->with('penyimpanan', $penyimpanan)
-						->with('back', Str::contains(url()->previous(), ['datapenyimpanan/tambah', 'datapenyimpanan/edit'])? '/datapenyimpanan': url()->previous())
-						->with('aksi', 'Edit');
+			;
+			return view('pages.setup.penyimpanan.form', [
+                'data' => $penyimpanan = Penyimpanan::findOrFail($id),
+                'back' => Str::contains(url()->previous(), ['datapenyimpanan/tambah', 'datapenyimpanan/edit'])? '/datapenyimpanan': url()->previous(),
+                'aksi' => 'Edit'
+            ]);
 		}catch(\Exception $e){
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datapenyimpanan')
 			->with('swal_pesan', $e->getMessage())
@@ -115,7 +121,7 @@ class PenyimpananController extends Controller
 			$penyimpanan = Penyimpanan::findOrFail($req->get('penyimpanan_id'));
 			$penyimpanan->penyimpanan_nama = $req->get('penyimpanan_nama');
 			$penyimpanan->penyimpanan_deskripsi = $req->get('penyimpanan_deskripsi');
-			$penyimpanan->operator = Auth::user()->pegawai->nm_pegawai;
+			$penyimpanan->updated_operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
 			$penyimpanan->save();
 			return redirect($req->get('redirect')? $req->get('redirect'): 'datapenyimpanan')
 			->with('swal_pesan', 'Berhasil mengedit data penyimpanan '.$req->get('penyimpanan_nama'))
@@ -133,6 +139,8 @@ class PenyimpananController extends Controller
 	{
 		try{
             $penyimpanan = Penyimpanan::findOrFail($id);
+            $penyimpanan->deleted_operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
+            $penyimpanan->save();
 			$penyimpanan->delete();
 			return response()->json([
 				'swal_pesan' => 'Berhasil menghapus data penyimpanan '.$penyimpanan->penyimpanan_nama,
@@ -171,6 +179,8 @@ class PenyimpananController extends Controller
 	{
 		try{
             $penyimpanan = Penyimpanan::findOrFail($id);
+            $penyimpanan->deleted_operator = null;
+            $penyimpanan->save();
 			$penyimpanan->restore();
 			return response()->json([
 				'swal_pesan' => 'Berhasil merestore data penyimpanan '.$penyimpanan->penyimpanan_nama,

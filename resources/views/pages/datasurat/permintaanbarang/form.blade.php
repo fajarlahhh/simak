@@ -30,15 +30,15 @@
 			<div class="panel-body">
 				<input type="hidden" name="redirect" value="{{ $back }}">
                 @if($aksi == 'Edit')
-                <input type="hidden" name="penyimpanan_id" value="{{ $data->penyimpanan_id }}">
+                <input type="hidden" name="penyimpanan_id" value="{{ $penyimpanan->penyimpanan_id }}">
                 @endif
                 <div class="form-group">
-                    <label class="control-label">Tempat Penyimpanan</label>
-                    <input class="form-control" type="text" name="penyimpanan_nama" value="{{ $aksi == 'Edit'? $data->penyimpanan_nama: old('penyimpanan_nama') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
+                    <label class="control-label">Nama Tempat Penyimpanan</label>
+                    <input class="form-control" type="text" name="penyimpanan_nama" value="{{ $aksi == 'Edit'? $penyimpanan->penyimpanan_nama: old('penyimpanan_nama') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
                 </div>
                 <div class="form-group">
                     <label class="control-label">Deskripsi</label>
-                    <input class="form-control" type="text" name="penyimpanan_deskripsi" value="{{ $aksi == 'Edit'? $data->penyimpanan_deskripsi: old('penyimpanan_deskripsi') }}" required autocomplete="off"  />
+                    <input class="form-control" type="text" name="penyimpanan_deskripsi" value="{{ $aksi == 'Edit'? $penyimpanan->penyimpanan_deskripsi: old('penyimpanan_deskripsi') }}" required autocomplete="off"  />
                 </div>
 			</div>
 			<div class="panel-footer">

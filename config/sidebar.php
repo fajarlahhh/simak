@@ -71,11 +71,11 @@ return [
 		'url' => 'javascript:;',
 		'caret' => true,
 		'sub_menu' => [[
-			'url' => '/datapenyimpanan',
-			'title' => 'Data Penyimpanan'
-		],[
 			'url' => '/datapengguna',
 			'title' => 'Data Pengguna'
+        ],[
+			'url' => '/datapenyimpanan',
+			'title' => 'Data Penyimpanan'
 		]]
 	]]
 ];

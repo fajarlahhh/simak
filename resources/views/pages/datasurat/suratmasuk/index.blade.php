@@ -1,17 +1,18 @@
-@extends('pages.setup.main')
+@extends('pages.datasurat.main')
 
-@section('title', ' | Data Penyimpanan')
+@section('title', ' | Data Surat Masuk')
 
 @section('page')
-	<li class="breadcrumb-item active">Data Penyimpanan</li>
+	<li class="breadcrumb-item active">Data Surat Masuk</li>
 @endsection
 
 @push('css')
 	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
+	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
 @endpush
 
 @section('header')
-	<h1 class="page-header">Data Penyimpanan</h1>
+	<h1 class="page-header">Data Surat Masuk</h1>
 @endsection
 
 @section('subcontent')
@@ -22,13 +23,29 @@
                 <div class="col-md-4 col-lg-5 col-xl-3 col-xs-12">
                 	@role('user|admin')
                     <div class="form-inline">
-                        <a href="{{ route('datapenyimpanan.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
+                        <a href="{{ route('suratmasuk.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
                     </div>
                     @endrole
                 </div>
                 <div class="col-md-8 col-lg-7 col-xl-9 col-xs-12">
-                	<form action="{{ route('datapenyimpanan') }}" method="GET" id="frm-cari">
+                	<form action="{{ route('suratmasuk') }}" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepicker'>
+                                    <input type='text' class="form-control" value="{{ $periode }}" readonly/>
+                                    <span class="input-group-addon">
+                                        <span class="fas fa-calendar">
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>&nbsp;
+							<div class="form-group">
+								<select class="form-control selectpicker cari" name="arsip" data-live-search="true" data-style="btn-info" data-width="100%">
+									<option value="0" {{ $arsip == '0'? 'selected': '' }}>Semua</option>
+									<option value="1" {{ $arsip == '1'? 'selected': '' }}>Belum Diarsipkan</option>
+									<option value="2" {{ $arsip == '2'? 'selected': '' }}>Sudah Diarsipkan</option>
+								</select>
+							</div>&nbsp;
 							<div class="form-group">
 								<select class="form-control selectpicker cari" name="tipe" data-live-search="true" data-style="btn-warning" data-width="100%">
 									<option value="0" {{ $tipe == '0'? 'selected': '' }}>Exist</option>
@@ -38,7 +55,7 @@
 							</div>&nbsp;
 							@if($tipe != '1')
 		                	<div class="input-group">
-								<input type="text" class="form-control cari" name="cari" placeholder="Cari Nama/Deskripsi" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
+								<input type="text" class="form-control cari" name="cari" placeholder="Cari Nomor/Perihal/Asal/Penerima" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
 								<div class="input-group-append">
 									 <span class="input-group-text" id="basic-addon2"><i class="fa fa-search"></i></span>
 								</div>
@@ -48,6 +65,7 @@
 					</form>
                 </div>
             </div>
+
 		</div>
 		<div class="panel-body">
 			<div class="table-responsive">
@@ -55,8 +73,13 @@
                     <thead>
 						<tr>
 							<th>No.</th>
-							<th>Tempat Penyimpanan</th>
-							<th>Deskripsi</th>
+							<th>Nomor</th>
+							<th>Tanggal Surat</th>
+							<th>Perihal</th>
+							<th>Asal</th>
+							<th>Penerima</th>
+							<th>Catatan</th>
+							<th>Pengarsipan</th>
 							<th class="width-90"></th>
 						</tr>
 					</thead>
@@ -82,17 +105,26 @@
 					    <tr>
 					        <td>{{ ++$i }}</td>
 					        <td>
-                                <label data-toggle="tooltip" data-container="#data{{ $row->penyimpanan_id }}" id="data{{ $row->penyimpanan_id }}" title="{{ $aksi.$operator.", ".\Carbon\Carbon::parse($waktu)->isoFormat('LLL') }}">{{ $row->penyimpanan_nama }}</label>
+                                <label data-toggle="tooltip" data-container="#sm{{ $i }}" id="sm{{ $i }}" title="{{ $aksi.$operator.", ".\Carbon\Carbon::parse($waktu)->isoFormat('LLL') }}">{{ $row->surat_masuk_nomor }}</label>
                             </td>
-					        <td>{{ $row->penyimpanan_deskripsi }}</td>
+					        <td>{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal)->isoFormat('LL') }}</td>
+					        <td>{{ $row->surat_masuk_perihal }}</td>
+					        <td>{{ $row->surat_masuk_asal }}</td>
+					        <td>
+                                <label data-toggle="tooltip" data-html="true" data-container="#penerima{{ $i }}" id="penerima{{ $i }}" title="{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal_terima)->isoFormat('LL') }}">{{ $row->surat_masuk_penerima }}</label>
+                            </td>
+					        <td>{{ $row->surat_masuk_catatan }}</td>
+                            <td>
+                                <label data-toggle="tooltip" data-container="#arsip{{ $i }}" id="arsip{{ $i }}" title="{{ $row->pengarsipan? $row->pengarsipan->penyimpanan_deskripsi: '' }}">{{ $row->pengarsipan? $row->pengarsipan->penyimpanan_nama: '' }}</label>
+                            </td>
 					        <td>
 					        	@role('user|admin')
 								@if(!$row->deleted_at)
-	                            <a href="/datapenyimpanan/edit/{{ $row->penyimpanan_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
-	                            <a href="javascript:;" onclick="hapus('{{ $row->penyimpanan_id }}', '{{ $row->penyimpanan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
+	                            <a href="/suratmasuk/edit/{{ $row->surat_masuk_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
+	                            <a href="javascript:;" onclick="hapus('{{ $row->surat_masuk_id }}', '{{ $row->penyimpanan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
 	                            @else
-	                            <a href="javascript:;" onclick="restore('{{ $row->penyimpanan_id }}')" id='btn-del' class='btn btn-info btn-xs'><i class='fas fa-undo'></i></a>
-	                            <a href="javascript:;" onclick="hapus_permanen('{{ $row->penyimpanan_id }}', '{{ $row->penyimpanan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
+	                            <a href="javascript:;" onclick="restore('{{ $row->surat_masuk_id }}')" id='btn-del' class='btn btn-info btn-xs'><i class='fas fa-undo'></i></a>
+	                            <a href="javascript:;" onclick="hapus_permanen('{{ $row->surat_masuk_id }}', '{{ $row->penyimpanan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
 	                            @endif
 	                    		@endrole
 					        </td>
@@ -115,11 +147,22 @@
 @endsection
 
 @push('scripts')
-	<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 	<script>
 		$(".cari").change(function() {
 		     $("#frm-cari").submit();
 		});
+
+        $(function () {
+            $('#datetimepicker').datepicker({
+                autoclose: true,
+                minViewMode: 1,
+                format: 'MM yyyy'
+            }).on('changeDate', function(selected){
+                $("#frm-cari").submit();
+            });
+        });
 
 		function hapus(id, nama) {
 			swal({
@@ -150,7 +193,7 @@
 					    }
 					});
 	          		$.ajax({
-	          			url: "/datapenyimpanan/hapus/" + id,
+	          			url: "/suratmasuk/hapus/" + id,
 	          			type: "POST",
 	          			data: {
 	          				"_method": 'PATCH',
@@ -202,7 +245,7 @@
 					    }
 					});
 	          		$.ajax({
-	          			url: "/datapenyimpanan/hapuspermanen/" + id,
+	          			url: "/suratmasuk/hapuspermanen/" + id,
 	          			type: "POST",
 	          			data: {
 	          				"_method": 'DELETE',
@@ -232,7 +275,7 @@
 			    }
 			});
       		$.ajax({
-      			url: "/datapenyimpanan/restore/" + id,
+      			url: "/suratmasuk/restore/" + id,
       			type: "POST",
       			data: {
       				"_method": 'PATCH',

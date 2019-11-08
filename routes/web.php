@@ -25,14 +25,31 @@ Route::group(['middleware' => ['auth']], function () {
 	});
 
     Route::group(['middleware' => ['role_or_permission:admin|datapenyimpanan']], function () {
-		Route::get('/datapenyimpanan', 'PenyimpananController@index')->name('datapenyimpanan');
-		Route::get('/datapenyimpanan/edit/{id}', 'PenyimpananController@edit')->middleware(['role:admin|user']);
-		Route::put('/datapenyimpanan/edit', 'PenyimpananController@do_edit')->middleware(['role:admin|user'])->name('datapenyimpanan.edit');
-		Route::get('/datapenyimpanan/tambah', 'PenyimpananController@tambah')->middleware(['role:admin|user'])->name('datapenyimpanan.tambah');
-		Route::post('/datapenyimpanan/tambah', 'PenyimpananController@do_tambah')->middleware(['role:admin|user']);
-		Route::patch('/datapenyimpanan/hapus/{id}', 'PenyimpananController@hapus')->middleware(['role:admin|user']);
-		Route::patch('/datapenyimpanan/restore/{id}', 'PenyimpananController@hapus')->middleware(['role:admin|user']);
-		Route::delete('/datapenyimpanan/hapuspermanen/{id}', 'PenyimpananController@hapus_permanen')->middleware(['role:admin|user']);
+        Route::prefix('datapenyimpanan')->group(function () {
+            Route::get('/', 'PenyimpananController@index')->name('datapenyimpanan');
+            Route::get('edit/{id}', 'PenyimpananController@edit')->middleware(['role:admin|user']);
+            Route::put('edit', 'PenyimpananController@do_edit')->middleware(['role:admin|user'])->name('datapenyimpanan.edit');
+            Route::get('tambah', 'PenyimpananController@tambah')->middleware(['role:admin|user'])->name('datapenyimpanan.tambah');
+            Route::post('tambah', 'PenyimpananController@do_tambah')->middleware(['role:admin|user']);
+            Route::patch('hapus/{id}', 'PenyimpananController@hapus')->middleware(['role:admin|user']);
+            Route::patch('restore/{id}', 'PenyimpananController@hapus')->middleware(['role:admin|user']);
+            Route::delete('hapuspermanen/{id}', 'PenyimpananController@hapus_permanen')->middleware(['role:admin|user']);
+        });
+	});
+
+    Route::group(['middleware' => ['role_or_permission:admin|suratmasuk']], function () {
+        Route::prefix('suratmasuk')->group(function () {
+            Route::get('/', 'SuratmasukController@index')->name('suratmasuk');
+            Route::get('tambah', 'SuratmasukController@tambah')->middleware(['role:admin|user'])->name('suratmasuk.tambah');
+            Route::post('tambah', 'SuratmasukController@do_tambah')->middleware(['role:admin|user']);
+            Route::get('edit/{id}', 'SuratmasukController@edit')->middleware(['role:admin|user']);
+            Route::put('edit', 'SuratmasukController@do_edit')->middleware(['role:admin|user'])->name('suratmasuk.edit');
+            Route::get('pengarsipan/{id}', 'SuratmasukController@pengarsipan')->middleware(['role:admin|user']);
+            Route::put('pengarsipan', 'SuratmasukController@do_pengarsipan')->middleware(['role:admin|user']);
+            Route::patch('hapus/{id}', 'SuratmasukController@hapus')->middleware(['role:admin|user']);
+            Route::patch('restore/{id}', 'SuratmasukController@hapus')->middleware(['role:admin|user']);
+            Route::delete('hapuspermanen/{id}', 'SuratmasukController@hapus_permanen')->middleware(['role:admin|user']);
+        });
 	});
 });
 

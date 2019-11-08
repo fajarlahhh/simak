@@ -1,9 +1,9 @@
-@extends('pages.setup.main')
+@extends('pages.datasurat.main')
 
-@section('title', ' | Data Penyimpanan')
+@section('title', ' | Data Permintaan Barang')
 
 @section('page')
-	<li class="breadcrumb-item active">Data Penyimpanan</li>
+	<li class="breadcrumb-item active">Data Permintaan Barang</li>
 @endsection
 
 @push('css')
@@ -11,7 +11,7 @@
 @endpush
 
 @section('header')
-	<h1 class="page-header">Data Penyimpanan</h1>
+	<h1 class="page-header">Data Permintaan Barang</h1>
 @endsection
 
 @section('subcontent')
@@ -22,12 +22,12 @@
                 <div class="col-md-4 col-lg-5 col-xl-3 col-xs-12">
                 	@role('user|admin')
                     <div class="form-inline">
-                        <a href="{{ route('datapenyimpanan.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
+                        <a href="{{ route('permintaanbarang.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
                     </div>
                     @endrole
                 </div>
                 <div class="col-md-8 col-lg-7 col-xl-9 col-xs-12">
-                	<form action="{{ route('datapenyimpanan') }}" method="GET" id="frm-cari">
+                	<form action="{{ route('permintaanbarang') }}" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
 							<div class="form-group">
 								<select class="form-control selectpicker cari" name="tipe" data-live-search="true" data-style="btn-warning" data-width="100%">
@@ -48,6 +48,7 @@
 					</form>
                 </div>
             </div>
+
 		</div>
 		<div class="panel-body">
 			<div class="table-responsive">
@@ -55,8 +56,8 @@
                     <thead>
 						<tr>
 							<th>No.</th>
-							<th>Tempat Penyimpanan</th>
-							<th>Deskripsi</th>
+							<th>Nomor</th>
+							<th>Tanggal</th>
 							<th class="width-90"></th>
 						</tr>
 					</thead>
@@ -81,18 +82,16 @@
                         @endphp
 					    <tr>
 					        <td>{{ ++$i }}</td>
-					        <td>
-                                <label data-toggle="tooltip" data-container="#data{{ $row->penyimpanan_id }}" id="data{{ $row->penyimpanan_id }}" title="{{ $aksi.$operator.", ".\Carbon\Carbon::parse($waktu)->isoFormat('LLL') }}">{{ $row->penyimpanan_nama }}</label>
-                            </td>
+					        <td>{{ $row->pb_nomor }}</td>
 					        <td>{{ $row->penyimpanan_deskripsi }}</td>
 					        <td>
 					        	@role('user|admin')
 								@if(!$row->deleted_at)
-	                            <a href="/datapenyimpanan/edit/{{ $row->penyimpanan_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
-	                            <a href="javascript:;" onclick="hapus('{{ $row->penyimpanan_id }}', '{{ $row->penyimpanan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
+	                            <a href="/permintaanbarang/edit/{{ $row->pb_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
+	                            <a href="javascript:;" onclick="hapus('{{ $row->pb_id }}', '{{ $row->penyimpanan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
 	                            @else
-	                            <a href="javascript:;" onclick="restore('{{ $row->penyimpanan_id }}')" id='btn-del' class='btn btn-info btn-xs'><i class='fas fa-undo'></i></a>
-	                            <a href="javascript:;" onclick="hapus_permanen('{{ $row->penyimpanan_id }}', '{{ $row->penyimpanan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
+	                            <a href="javascript:;" onclick="restore('{{ $row->pb_id }}')" id='btn-del' class='btn btn-info btn-xs'><i class='fas fa-undo'></i></a>
+	                            <a href="javascript:;" onclick="hapus_permanen('{{ $row->pb_id }}', '{{ $row->penyimpanan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
 	                            @endif
 	                    		@endrole
 					        </td>
@@ -150,7 +149,7 @@
 					    }
 					});
 	          		$.ajax({
-	          			url: "/datapenyimpanan/hapus/" + id,
+	          			url: "/permintaanbarang/hapus/" + id,
 	          			type: "POST",
 	          			data: {
 	          				"_method": 'PATCH',
@@ -202,7 +201,7 @@
 					    }
 					});
 	          		$.ajax({
-	          			url: "/datapenyimpanan/hapuspermanen/" + id,
+	          			url: "/permintaanbarang/hapuspermanen/" + id,
 	          			type: "POST",
 	          			data: {
 	          				"_method": 'DELETE',
@@ -232,7 +231,7 @@
 			    }
 			});
       		$.ajax({
-      			url: "/datapenyimpanan/restore/" + id,
+      			url: "/permintaanbarang/restore/" + id,
       			type: "POST",
       			data: {
       				"_method": 'PATCH',

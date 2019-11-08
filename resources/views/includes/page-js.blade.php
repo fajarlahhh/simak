@@ -12,10 +12,12 @@
 	$(document).ready(function() {
 		App.init();
 
+        $('[data-toggle="tooltip"]').tooltip();
+
 		@if(Session::get('swal_pesan'))
             swal("{{ Session::get('swal_judul') }}", "{{ Session::get('swal_pesan') }}", "{{ Session::get('swal_tipe') }}");
         @endif
-        
+
         @if(Session::get('gritter_judul'))
 	    setTimeout(function() {
 			$.gritter.add({

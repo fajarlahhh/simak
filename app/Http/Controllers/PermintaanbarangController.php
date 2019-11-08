@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\PermintaanBarang;
 use Illuminate\Http\Request;
 
-class PermintaanBarang extends Controller
+class PermintaanbarangController extends Controller
 {
     //
 	public function index(Request $req)
@@ -35,10 +37,12 @@ class PermintaanBarang extends Controller
 				break;
 		}
 		$permintaanbarang->appends([$req->cari, $req->tipe]);
-		return view('pages.datasurat.permintaanbarang.index', compact('permintaanbarang'))
-					->with('i', ($req->input('page', 1) - 1) * 5)
-					->with('cari', $req->cari)
-					->with('tipe', $req->tipe);
+		return view('pages.datasurat.permintaanbarang.index', [
+            'data' => $permintaanbarang,
+            'i' => (($req->input('page', 1) - 1) * 5),
+            'cari' => $req->cari,
+            'tipe' => $req->tipe,
+        ]);
     }
 
 	public function cari($cari)
@@ -69,8 +73,16 @@ class PermintaanBarang extends Controller
 		try{
 			$permintaanbarang = new PermintaanBarang();
 			$permintaanbarang->pb_nomor = $req->get('pb_nomor');
+			$permintaanbarang->pb_tanggal = $req->get('pb_tanggal');
+			$permintaanbarang->pb_peminta = $req->get('pb_peminta');
 			$permintaanbarang->pb_keterangan = $req->get('pb_keterangan');
-			$permintaanbarang->operator = Auth::user()->pegawai->nm_pegawai;
+            $permintaanbarang->pb_file = $req->get('pb_file');
+            if ($req->get('penyimpanan_id')) {
+                $permintaanbarang->penyimpanan_id = $req->get('penyimpanan_id');
+                $permintaanbarang->arsip_operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
+                $permintaanbarang->arsip_waktu = Carbon::now();
+            }
+			$permintaanbarang->created_operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
             $permintaanbarang->save();
 
 			return redirect($req->get('redirect')? $req->get('redirect'): 'permintaanbarang')
@@ -116,7 +128,7 @@ class PermintaanBarang extends Controller
 			$permintaanbarang = PermintaanBarang::findOrFail($req->get('penyimpanan_id'));
 			$permintaanbarang->pb_nomor = $req->get('pb_nomor');
 			$permintaanbarang->pb_keterangan = $req->get('pb_keterangan');
-			$permintaanbarang->operator = Auth::user()->pegawai->nm_pegawai;
+			$permintaanbarang->operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
 			$permintaanbarang->save();
 			return redirect($req->get('redirect')? $req->get('redirect'): 'permintaanbarang')
 			->with('swal_pesan', 'Berhasil mengedit data permintaan barang '.$req->get('pb_nomor'))
