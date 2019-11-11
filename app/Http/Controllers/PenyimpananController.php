@@ -35,7 +35,10 @@ class PenyimpananController extends Controller
 								->orderBy('penyimpanan_nama')->paginate(10);
 				break;
 		}
-		$penyimpanan->appends([$req->cari, $req->tipe]);
+		$penyimpanan->appends([
+			'cari' => $req->cari,
+			'tipe' => $req->tipe
+			]);
 		return view('pages.setup.penyimpanan.index', [
             'data' => $penyimpanan,
             'i' => ($req->input('page', 1) - 1) * 10,
