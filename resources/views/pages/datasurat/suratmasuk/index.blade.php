@@ -30,20 +30,33 @@
                 <div class="col-md-8 col-lg-7 col-xl-9 col-xs-12">
                 	<form action="{{ route('suratmasuk') }}" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
+							@if($tipe != '1')
+							<div class="form-group">
+								<select class="form-control selectpicker cari" name="tanggal" data-live-search="true" data-width="100%">
+									<option value="surat_masuk_tanggal_terima" {{ $tanggal == 'surat_masuk_tanggal_terima'? 'selected': '' }}>Tgl. Terima</option>
+									<option value="surat_masuk_tanggal" {{ $tanggal == 'surat_masuk_tanggal'? 'selected': '' }}>Tgl. Surat</option>
+								</select>
+							</div>&nbsp;
                             <div class="form-group">
+<<<<<<< HEAD
                                 <div class='input-group date' id='datetimepicker' name="periode">
                                     <input type='text' class="form-control" value="{{ $periode }}" readonly/>
+=======
+                                <div class='input-group date' id='datetimepicker'>
+                                    <input type='text' class="form-control" name="periode" value="{{ $periode }}" readonly/>
+>>>>>>> a537b0bab989d5747cb364faeb8e1bde93c9cd1b
                                     <span class="input-group-addon">
                                         <span class="fas fa-calendar">
                                         </span>
                                     </span>
                                 </div>
                             </div>&nbsp;
+							@endif
 							<div class="form-group">
 								<select class="form-control selectpicker cari" name="arsip" data-live-search="true" data-style="btn-info" data-width="100%">
 									<option value="0" {{ $arsip == '0'? 'selected': '' }}>Semua</option>
-									<option value="1" {{ $arsip == '1'? 'selected': '' }}>Belum Diarsipkan</option>
-									<option value="2" {{ $arsip == '2'? 'selected': '' }}>Sudah Diarsipkan</option>
+									<option value="1" {{ $arsip == '1'? 'selected': '' }}>Sudah Diarsipkan</option>
+									<option value="2" {{ $arsip == '2'? 'selected': '' }}>Belum Diarsipkan</option>
 								</select>
 							</div>&nbsp;
 							<div class="form-group">
@@ -53,14 +66,12 @@
 									<option value="2" {{ $tipe == '2'? 'selected': '' }}>All</option>
 								</select>
 							</div>&nbsp;
-							@if($tipe != '1')
 		                	<div class="input-group">
 								<input type="text" class="form-control cari" name="cari" placeholder="Cari Nomor/Perihal/Asal/Penerima" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
 								<div class="input-group-append">
 									 <span class="input-group-text" id="basic-addon2"><i class="fa fa-search"></i></span>
 								</div>
 							</div>
-							@endif
                 		</div>
 					</form>
                 </div>
@@ -115,7 +126,7 @@
                             </td>
 					        <td>{{ $row->surat_masuk_catatan }}</td>
                             <td>
-                                <label data-toggle="tooltip" data-container="#arsip{{ $i }}" id="arsip{{ $i }}" title="{{ $row->pengarsipan? $row->pengarsipan->penyimpanan_deskripsi: '' }}">{{ $row->pengarsipan? $row->pengarsipan->penyimpanan_nama: '' }}</label>
+                                <label data-toggle="tooltip" data-container="#arsip{{ $i }}" id="arsip{{ $i }}" title="{{ $row->pengarsipan? 'Oleh '.$row->penyimpanan_operator.', '.\Carbon\Carbon::parse($row->penyimpanan_waktu)->isoFormat('LL'): '' }}">{{ $row->pengarsipan? $row->pengarsipan->penyimpanan_nama: '' }}</label>
                             </td>
 					        <td>
 					        	@role('user|admin')

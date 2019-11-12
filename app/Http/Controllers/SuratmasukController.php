@@ -10,42 +10,98 @@ class SuratmasukController extends Controller
     //
 	public function index(Request $req)
 	{
-        $arsip = $req->arsip? $req->arsip: '%%';
-        $periode = $req->periode? $req->periode: date('F Y');
+        $arsip = $req->arsip? $req->arsip: '0';
+		$periode = $req->periode? $req->periode: date('F Y');
+		$tanggal = $req->tanggal? $req->tanggal: 'surat_masuk_tanggal_terima';
+		
 		switch ($req->tipe) {
 			case '0':
-				$suratmasuk = SuratMasuk::with('pengarsipan')->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
-								->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
-								->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
-								->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%')
+				$suratmasuk = SuratMasuk::with('pengarsipan')->whereRaw('date_format('.$tanggal.', \'%M %Y\')=\''.$periode.'\'')
+								->where(function($q) use ($req){
+									$q->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%');
+								})
+								->where(function($q) use ($arsip){
+									if($arsip == '1'){
+										$q->whereNotNull('penyimpanan_id');
+									}else if($arsip == '2'){
+										$q->whereNull('penyimpanan_id');
+									}
+									
+								})
 								->orderBy('surat_masuk_nomor')->paginate(10);
 				break;
 			case '1':
-				$suratmasuk = SuratMasuk::with('pengarsipan')->onlyTrashed()->orderBy('surat_masuk_nomor')->paginate(10);
+				$suratmasuk = SuratMasuk::with('pengarsipan')->onlyTrashed()
+								->where(function($q) use ($req){
+									$q->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%');
+								})
+								->where(function($q) use ($arsip){
+									if($arsip == '1'){
+										$q->whereNotNull('penyimpanan_id');
+									}else if($arsip == '2'){
+										$q->whereNull('penyimpanan_id');
+									}
+									
+								})
+								->orderBy('surat_masuk_nomor')->paginate(10);
 				break;
 			case '2':
-				$suratmasuk = SuratMasuk::with('pengarsipan')->withTrashed()->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
-								->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
-								->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
-								->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%')
+				$suratmasuk = SuratMasuk::with('pengarsipan')->withTrashed()->whereRaw('date_format('.$tanggal.', \'%M %Y\')=\''.$periode.'\'')
+								->where(function($q) use ($req){
+									$q->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%');
+								})
+								->where(function($q) use ($arsip){
+									if($arsip == '1'){
+										$q->whereNotNull('penyimpanan_id');
+									}else if($arsip == '2'){
+										$q->whereNull('penyimpanan_id');
+									}
+									
+								})
 								->orderBy('surat_masuk_nomor')->paginate(10);
 				break;
 
 			default:
-				$suratmasuk = SuratMasuk::with('pengarsipan')->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
-								->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
-								->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
+				$suratmasuk = SuratMasuk::with('pengarsipan')->whereRaw('date_format('.$tanggal.', \'%M %Y\')=\''.$periode.'\'')
+								->where(function($q) use ($req){
+									$q->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
+									->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%');
+								})
+								->where(function($q) use ($arsip){
+									if($arsip == '1'){
+										$q->whereNotNull('penyimpanan_id');
+									}else if($arsip == '2'){
+										$q->whereNull('penyimpanan_id');
+									}
+									
+								})
 								->orderBy('surat_masuk_nomor')->paginate(10);
 				break;
         }
-		$suratmasuk->appends([$req->cari, $req->tipe, $req->arsip]);
+		$suratmasuk->appends([
+			'cari' => $req->cari, 
+			'tipe' => $req->tipe, 
+			'arsip' => $arsip, 
+			'periode' => $periode]);
 		return view('pages.datasurat.suratmasuk.index', [
             'data' => $suratmasuk,
             'i' => ($req->input('page', 1) - 1) * 10,
             'cari' => $req->cari,
             'tipe' => $req->tipe,
-            'arsip' => $req->arsip,
-            'periode' => $req->periode,
+			'arsip' => $arsip,
+			'tanggal' => $req->tanggal,
+            'periode' => $periode,
         ]);
     }
 
