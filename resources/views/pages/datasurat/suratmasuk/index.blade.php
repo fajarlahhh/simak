@@ -31,7 +31,7 @@
                 	<form action="{{ route('suratmasuk') }}" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
                             <div class="form-group">
-                                <div class='input-group date' id='datetimepicker'>
+                                <div class='input-group date' id='datetimepicker' name="periode">
                                     <input type='text' class="form-control" value="{{ $periode }}" readonly/>
                                     <span class="input-group-addon">
                                         <span class="fas fa-calendar">

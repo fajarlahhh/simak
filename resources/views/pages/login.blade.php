@@ -46,8 +46,8 @@
 			</form>
 
 			<br>
-			© 2019 | <a href="http://www.pdamgirimenang.com" target="_blank">PDAM Giri Menang</a>
-			<small class="float-right pt-1">V2.0</small>
+			© 2019 | <a href="http://www.pdamgirimenang.com" target="_blank">IT PDAM Giri Menang</a>
+			<small class="float-right pt-1">V3.0</small>
 		</div>
 		<!-- end login-content -->
 	</div>
