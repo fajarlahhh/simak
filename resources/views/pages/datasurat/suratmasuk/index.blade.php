@@ -38,13 +38,8 @@
 								</select>
 							</div>&nbsp;
                             <div class="form-group">
-<<<<<<< HEAD
-                                <div class='input-group date' id='datetimepicker' name="periode">
-                                    <input type='text' class="form-control" value="{{ $periode }}" readonly/>
-=======
                                 <div class='input-group date' id='datetimepicker'>
                                     <input type='text' class="form-control" name="periode" value="{{ $periode }}" readonly/>
->>>>>>> a537b0bab989d5747cb364faeb8e1bde93c9cd1b
                                     <span class="input-group-addon">
                                         <span class="fas fa-calendar">
                                         </span>
