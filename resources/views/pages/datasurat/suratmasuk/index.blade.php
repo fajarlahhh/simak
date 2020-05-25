@@ -121,7 +121,12 @@
                             </td>
 					        <td>{{ $row->surat_masuk_catatan }}</td>
                             <td>
-                                <label data-toggle="tooltip" data-container="#arsip{{ $i }}" id="arsip{{ $i }}" title="{{ $row->pengarsipan? 'Oleh '.$row->penyimpanan_operator.', '.\Carbon\Carbon::parse($row->penyimpanan_waktu)->isoFormat('LL'): '' }}">{{ $row->pengarsipan? $row->pengarsipan->penyimpanan_nama: '' }}</label>
+								@if ($row->penyimpanan_id)
+								<label data-toggle="tooltip" data-container="#arsip{{ $i }}" id="arsip{{ $i }}" title="{{ $row->pengarsipan? 'Oleh '.$row->penyimpanan_operator.', '.\Carbon\Carbon::parse($row->penyimpanan_waktu)->isoFormat('LL'): '' }}">{{ $row->pengarsipan? $row->pengarsipan->penyimpanan_nama: '' }}</label><br>
+								@endif
+								<a href="/suratmasuk/pengarsipan/{{ $row->surat_masuk_id }}" id='btn-del' class='btn btn-success btn-xs m-r-3'>
+									<i class='fas fa-folder-open'></i> {{ $row->penyimpanan_id? "Pindah": "Arsipkan" }}
+								</a>
                             </td>
 					        <td>
 					        	@role('user|admin')
