@@ -28,8 +28,6 @@ class LogSuccessfulLogin
      */
     public function handle(Login $event)
     {
-        $id = Auth::user()->pengguna_id;
-        $pegawai = Pegawai::find($id);
-        Redis::set(Session::getId(), $pegawai? $pegawai->nm_pegawai: $id);
+
     }
 }

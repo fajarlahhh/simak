@@ -16,7 +16,7 @@
 		<div class="panel-heading">
 			<div class="row">
                 <div class="col-md-6 col-lg-7 col-xl-9 col-xs-12">
-                	@role('user|admin')
+                	@role('user|super-admin')
                     <div class="form-inline">
                         <a href="{{ route('datapengguna.tambah') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah</a>
                     </div>
@@ -43,41 +43,23 @@
 							<th>No.</th>
 							<th>ID</th>
 							<th>Nama</th>
-							<th>Unit</th>
+							<th>No. Hp</th>
 							<th>Jabatan</th>
-							<th>Bagian</th>
-							<th>Seksi</th>
-							<th>Level</th>
+							<th>Pimpinan</th>
 							<th class="width-90"></th>
 						</tr>
 					</thead>
 					<tbody>
 					    @foreach ($data as $index => $row)
-					    @if($row->pegawai)
-                        @php
-                            if ($row->updated_at) {
-                                $aksi = 'Diubah oleh ';
-                                $operator = $row->updated_operator;
-                                $waktu = $row->updated_at;
-                            } else {
-                                $aksi = 'Dibuat oleh ';
-                                $operator = $row->created_operator;
-                                $waktu = $row->created_at;
-                            }
-                        @endphp
 					    <tr>
 					        <td>{{ ++$i }}</td>
+                            <td>{{ $row->pengguna_id }}</td>
+                            <td>{{ $row->pengguna_nama }}</td>
+                            <td>{{ $row->pengguna_hp }}</td>
+                            <td>{{ $row->jabatan->jabatan_nama }}</td>
+                            <td>{{ $row->jabatan->jabatan_pimpinan == 1? "YA": "TIDAK" }}</td>
 					        <td>
-                                <label data-toggle="tooltip" data-container="#data{{ $row->pengguna_id }}" id="data{{ $row->pengguna_id }}" title="{{ $aksi.$operator.", ".\Carbon\Carbon::parse($waktu)->isoFormat('LLL') }}">{{ $row->pengguna_id }}</label>
-                            </td>
-					        <td>{{ $row->pegawai->nm_pegawai }}</td>
-					        <td>{{ $row->pegawai->unit->nm_unit }}</td>
-					        <td>{{ $row->pegawai->jabatan->nm_jabatan }}</td>
-					        <td>{{ $row->pegawai->bagian->nm_bagian }}</td>
-					        <td>{{ $row->pegawai->seksi? $row->pegawai->seksi->nm_seksi: '' }}</td>
-					        <td>{{ ucFirst($row->getRoleNames()[0]) }}</td>
-					        <td>
-					        	@role('user|admin')
+					        	@role('user|super-admin')
                                 <a href="/datapengguna/edit/{{ $row->pengguna_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
                                 @if (!in_array($row->pengguna_id, config('admin.nip')))
 	                            <a href="javascript:;" onclick="hapus('{{ $row->pengguna_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
@@ -85,7 +67,6 @@
 	                    		@endrole
 					        </td>
 				      	</tr>
-				      	@endif
 					    @endforeach
 				    </tbody>
 				</table>
@@ -109,56 +90,42 @@
 		     $("#frm-cari").submit();
 		});
 
-		function hapus(id) {
-			swal({
-				title: 'Hapus Data',
-				text: 'Anda akan menghapus pengguna dengan ID: ' + id + '',
-				icon: 'warning',
-				buttons: {
-					cancel: {
-						text: 'Batal',
-						value: null,
-						visible: true,
-						className: 'btn btn-default',
-						closeModal: true,
-					},
-					confirm: {
-						text: 'Ya',
-						value: true,
-						visible: true,
-						className: 'btn btn-danger',
-						closeModal: true
-					}
-				}
-			}).then(function(isConfirm) {
-		      	if (isConfirm) {
-    				$.ajaxSetup({
-					    headers: {
-					        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-					    }
-					});
-	          		$.ajax({
-	          			url: "/datapengguna/hapus/" + id,
-	          			type: "POST",
-	          			data: {
-	          				"_method": 'DELETE'
-	          			},
-	          			success: function(data){
-	          				swal({
-						       	title: data['swal_judul'],
-						       	text: data['swal_pesan'],
-						       	icon: data['swal_tipe'],
-
-						   	}).then(function() {
-							    location.reload(true)
-							});
-	          			},
-	          			error: function (xhr, ajaxOptions, thrownError) {
-            				swal("Hapus data", xhr.status, "error");
-      					}
-	          		})
-		      	}
-		    });
-		}
+        function hapus(id) {
+            Swal.fire({
+                title: 'Hapus Data',
+                text: 'Anda akan menghapus pengguna ' + id + '',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                if (result.value == true) {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: "/datapengguna/hapus/" + id,
+                        type: "POST",
+                        data: {
+                            "_method": 'DELETE'
+                        },
+                        success: function(data){
+                            location.reload(true);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hapus data',
+                                text: xhr.status
+                            })
+                        }
+                    });
+                }
+            });
+        }
 	</script>
 @endpush

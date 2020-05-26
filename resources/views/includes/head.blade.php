@@ -2,7 +2,7 @@
 <title>{{ config("app.name") }} @yield('title')</title>
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 <link rel="icon" href="/assets/img/logo/favicon.png" type="image/gif">
-<meta content="Akunting PDAM Giri Menang" name="description" />
+<meta content="{{ config("app.name")." ".env('APP_COMPANY') }}" name="description" />
 <meta content="Andi Fajar Nugraha" name="author" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -20,9 +20,6 @@
 <script src="/assets/plugins/pace/pace.min.js"></script>
 <!-- ================== END BASE JS ================== -->
 <style type="text/css">
-	.numbering{
-		text-align: right;
-	}
 	@page {
 	    size: auto;
 	}

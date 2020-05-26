@@ -1,27 +1,27 @@
 {
-  "_from": "parsleyjs",
-  "_id": "parsleyjs@2.9.1",
+  "_from": "parsleyjs@2.9.2",
+  "_id": "parsleyjs@2.9.2",
   "_inBundle": false,
-  "_integrity": "sha512-2WSe+HsOZEPqXh9bFdi/vgWNQtGRRnAgS3v12qesMAabxVdLE7Oj7b+2UzcZ80eG23g1SxiMUH978Dk/wSkt+w==",
+  "_integrity": "sha512-DKS2XXTjEUZ1BJWUzgXAr+550kFBZrom2WYweubqdV7WzdNC1hjOajZDfeBPoAZMkXumJPlB3v37IKatbiW8zQ==",
   "_location": "/parsleyjs",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "version",
     "registry": true,
-    "raw": "parsleyjs",
+    "raw": "parsleyjs@2.9.2",
     "name": "parsleyjs",
     "escapedName": "parsleyjs",
-    "rawSpec": "",
+    "rawSpec": "2.9.2",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "2.9.2"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/parsleyjs/-/parsleyjs-2.9.1.tgz",
-  "_shasum": "fd79f7a1b1fe9138993b5e82f9bbc3e38fd3763d",
-  "_spec": "parsleyjs",
+  "_resolved": "https://registry.npmjs.org/parsleyjs/-/parsleyjs-2.9.2.tgz",
+  "_shasum": "67c96961d371821f2623965fa2cc81a4522874cb",
+  "_spec": "parsleyjs@2.9.2",
   "_where": "D:\\www\\disposisi",
   "author": {
     "name": "Guillaume Potier",
@@ -47,24 +47,21 @@
     "docco": "~0.6.3",
     "expect.js": "*",
     "glob": "^5.0.14",
-    "gulp": "^3.9.0",
+    "gulp": "~4.0.0",
     "gulp-cli": "^2.0.0",
     "gulp-eslint": "*",
     "gulp-git": "*",
     "gulp-load-plugins": "^0.10.0",
     "gulp-mocha": "*",
     "gulp-replace": "*",
-    "gulp-sourcemaps": "^1.3.0",
-    "gulp-uglify": "^1.2.0",
     "inputevent": "*",
     "jsdom": "^9.2",
     "mocha": "*",
     "moment": "*",
-    "rollup": "^0.65.2",
-    "rollup-plugin-babel": "",
-    "rollup-plugin-replace": "",
-    "rollup-plugin-uglify": "",
-    "run-sequence": "^1.0.2",
+    "rollup": "*",
+    "rollup-plugin-babel": "*",
+    "rollup-plugin-replace": "*",
+    "rollup-plugin-uglify": "*",
     "sinon": "^1.12.2"
   },
   "homepage": "http://parsleyjs.org",
@@ -95,5 +92,5 @@
     "test": "gulp",
     "test-browser": "gulp test-browser"
   },
-  "version": "2.9.1"
+  "version": "2.9.2"
 }

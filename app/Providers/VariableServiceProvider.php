@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
@@ -28,8 +27,8 @@ class VariableServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->composer('*', function ($view){
-            $foto = Auth::user() && Auth::user()->pengguna_foto? Storage::url(Auth::user()->pengguna_foto): '../assets/img/user/user.png';
-            $nama = strtoupper(Redis::get(Session::getId()));
+            $foto = '../assets/img/user/user.png';
+            $nama = Auth::check()? strtoupper(Auth::user()->pengguna_nama): null;
             return $view->with('foto_pegawai', $foto)->with('nama_pegawai', $nama);
         });
     }

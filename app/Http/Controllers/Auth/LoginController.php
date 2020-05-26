@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -58,15 +58,18 @@ class LoginController extends Controller
 
     public function login(Request $req)
     {
-		$req->validate(
-			[
-				'uid' => 'required',
-				'password' => 'required'
-			],[
-         	    'uid.required'  => 'NIP tidak boleh kosong',
-         	    'password.required'  => 'Kata Sandi tidak boleh kosong'
-        	]
-        );
+        $validator = Validator::make($req->all(), [
+            'uid' => 'required',
+            'password' => 'required'
+        ],[
+            'uid.required'  => 'ID Pengguna tidak boleh kosong',
+            'password.required'  => 'Kata Sandi tidak boleh kosong'
+        ]);
+
+        if ($validator->fails()) {
+            alert()->error('Login Gagal', implode('<br>', $validator->messages()->all()))->toHtml()->autoClose(5000);
+            return Redirect::back()->withInput();
+        }
 
         $remember = ($req->remember == 'on') ? true : false;
 
@@ -88,11 +91,14 @@ class LoginController extends Controller
             $pengguna->save();
 
             return redirect()->intended('dashboard')
-            ->with('gritter_judul', 'Selamat datang ')
-            ->with('gritter_teks', 'Selamat bekerja dan semoga sukses')
-            ->with('gritter_gambar', (Auth::user()->pengguna_foto? Storage::url(Auth::user()->pengguna_foto): '../assets/img/user/user.png'));
+            ->with([
+                'gritter_judul' => 'Selamat datang ',
+                'gritter_teks' => 'Selamat bekerja dan semoga sukses',
+                'gritter_gambar' => '/assets/img/user/user.png'
+                ]);
         }
-        return Redirect::back()->withInput()->with('alert', 'ID Pengguna atau Kata Sandi salah');
+        alert()->error('Login Gagal','ID Pengguna atau Kata Sandi salah');
+        return Redirect::back()->withInput();
     }
 
     private function username()

@@ -26,6 +26,6 @@ class LogSuccessfulLogout
      */
     public function handle(Logout $event)
     {
-        Redis::del(Session::getId());
+
     }
 }

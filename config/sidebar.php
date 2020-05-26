@@ -16,66 +16,81 @@ return [
     'menu' => [[
 		'icon' => 'fas fa-th-large',
 		'title' => 'Dashboard',
+		'id' => 'dashboard',
 		'url' => '/'
-	],[
-		'icon' => 'fas fa-mail-bulk',
-		'title' => 'Data Surat',
-		'url' => 'javascript:;',
-		'caret' => true,
-		'sub_menu' => [[
-			'url' => '/permintaanbarang',
-			'title' => 'Permintaan Barang'
-		],[
-			'url' => '/proposal',
-			'title' => 'Proposal'
-		],[
-			'url' => '/suratedaran',
-			'title' => 'Surat Edaran'
-		],[
-			'url' => '/suratkeluar',
-			'title' => 'Surat Keluar'
-		],[
-			'url' => '/suratkeputusan',
-			'title' => 'Surat Keputusan'
-		],[
-			'url' => '/suratmasuk',
-			'title' => 'Surat Masuk'
-		],[
-			'url' => '/suratperjanjian',
-			'title' => 'Surat Perjanjian'
-		],[
-			'url' => '/undangan',
-			'title' => 'Undangan'
-		]]
-	],[
-		'icon' => 'fas fa-file-invoice-dollar',
-		'title' => 'Pengelolaan Proposal',
-		'url' => 'javascript:;',
-		'caret' => true,
-		'sub_menu' => [[
-			'url' => '/inputproposal',
-			'title' => 'Input Proposal'
-		],[
-			'url' => '/verifikasiproposal',
-			'title' => 'Verifikasi Proposal'
-		],[
-			'url' => '/validasiproposal',
-			'title' => 'Validasi Proposal'
-		],[
-			'url' => '/pembatalanproposal',
-			'title' => 'Pembatalan Proposal'
-		]]
 	],[
 		'icon' => 'fas fa-cog',
 		'title' => 'Setup',
 		'url' => 'javascript:;',
+		'id' => 'setup',
 		'caret' => true,
 		'sub_menu' => [[
-			'url' => '/datapengguna',
-			'title' => 'Data Pengguna'
+			'url' => '/datajabatan',
+			'id' => '/datajabatan',
+			'title' => 'Data Jabatan'
         ],[
-			'url' => '/datapenyimpanan',
-			'title' => 'Data Penyimpanan'
+			'url' => '/datapengguna',
+			'id' => '/datapengguna',
+			'title' => 'Data Pengguna'
+        ],]
+	],[
+		'icon' => 'fas fa-paper-plane',
+		'title' => 'Surat Keluar',
+		'id' => 'datasurat',
+		'url' => 'javascript:;',
+		'caret' => true,
+		'sub_menu' => [[
+			'url' => '/edaran',
+			'id' => 'edaran',
+			'title' => 'Edaran'
+		],[
+			'url' => '/sk',
+			'id' => 'sk',
+			'title' => 'Surat Keputusan'
+		],[
+			'url' => '/suratpengantar',
+			'id' => 'suratpengantar',
+			'title' => 'Surat Pengantar'
+		],[
+			'url' => '/surattugas',
+			'id' => 'surattugas',
+			'title' => 'Surat Tugas'
+		],[
+			'url' => '/undangan',
+			'id' => 'undangan',
+			'title' => 'Undangan'
+		]]
+	],[
+		'icon' => 'fas fa-inbox',
+		'title' => 'Surat Masuk',
+		'id' => 'suratmasuk',
+		'url' => '/suratmasuk'
+	],[
+		'icon' => 'fas fa-file-alt',
+		'title' => 'Template',
+		'id' => 'template',
+		'url' => 'javascript:;',
+		'caret' => true,
+		'sub_menu' => [[
+			'url' => '/templateedaran',
+			'id' => 'templateedaran',
+			'title' => 'Edaran'
+		],[
+			'url' => '/templatesk',
+			'id' => 'templatesk',
+			'title' => 'Surat Keputusan'
+		],[
+			'url' => '/templatesuratpengantar',
+			'id' => 'templatesuratpengantar',
+			'title' => 'Surat Pengantar'
+		],[
+			'url' => '/templatesurattugas',
+			'id' => 'templatesurattugas',
+			'title' => 'Surat Tugas'
+		],[
+			'url' => '/templateundangan',
+			'id' => 'templateundangan',
+			'title' => 'Undangan'
 		]]
 	]]
 ];

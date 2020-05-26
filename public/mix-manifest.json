@@ -1,7 +1,5 @@
 {
     "/assets/js/bundle.js": "/assets/js/bundle.js",
     "/assets/css/app.css": "/assets/css/app.css",
-    "/assets/plugins/sweetalert/sweetalert.min.js": "/assets/plugins/sweetalert/sweetalert.min.js",
-    "/assets/js/firebase.js": "/assets/js/firebase.js",
     "/assets/plugins/jquery-sparkline/jquery.sparkline.min.js": "/assets/plugins/jquery-sparkline/jquery.sparkline.min.js"
 }

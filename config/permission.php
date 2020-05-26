@@ -81,7 +81,7 @@ return [
          * that case, name this `model_uuid`.
          */
 
-        'model_morph_key' => 'pengguna_id',
+        'model_morph_key' => 'model_id',
     ],
 
     /*

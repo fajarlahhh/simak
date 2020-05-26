@@ -37,7 +37,8 @@ class Pengguna extends Authenticatable
         return $this->pengguna_sandi;
     }
 
-    public function pegawai(){
-        return $this->hasOne('App\Pegawai', 'nip', 'pengguna_id');
+	public function jabatan()
+	{
+		return $this->hasOne('App\Jabatan', 'jabatan_id', 'jabatan_id');
 	}
 }
