@@ -39,6 +39,6 @@ class Pengguna extends Authenticatable
 
 	public function jabatan()
 	{
-		return $this->hasOne('App\Jabatan', 'jabatan_id', 'jabatan_id');
+		return $this->hasOne('App\Jabatan', 'jabatan_nama', 'jabatan_nama');
 	}
 }

@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Jabatan extends Model
 {
     protected $table = 'jabatan';
-    protected $primaryKey = 'jabatan_id';
+    protected $primaryKey = 'jabatan_nama';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
 	public function pengguna()
 	{
-		return $this->belongsTo('App\Jabatan', 'jabatan_id', 'jabatan_id');
+		return $this->belongsTo('App\Jabatan', 'jabatan_nama', 'jabatan_nama');
 	}
 }

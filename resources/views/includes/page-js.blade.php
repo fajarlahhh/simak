@@ -5,7 +5,7 @@
 
 <script>
 	$(document).ready(function() {
-		App.init();
+        App.init();
 
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 

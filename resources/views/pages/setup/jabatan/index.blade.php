@@ -23,7 +23,7 @@
             <div class="col-md-2 col-lg-2 col-xl-2 col-xs-12">
                 @role('user|super-admin|supervisor')
                 <div class="form-inline">
-                    <a href="{{ route('datajabatan.tambah') }}" class="btn btn-primary"><i class="fad fa-plus"></i> Tambah</a>
+                    <a href="{{ route('datajabatan.tambah') }}" class="btn btn-primary">Tambah</a>
                 </div>
                 @endrole
             </div>
@@ -48,7 +48,9 @@
                     <tr>
                         <th>No.</th>
                         <th>Nama Jabatan</th>
+                        <th>Atasan</th>
                         <th>Pimpinan</th>
+                        <th>Struktural</th>
                         <th class="width-90"></th>
                     </tr>
                 </thead>
@@ -57,7 +59,9 @@
                     <tr>
                         <td>{{ ++$i }}</td>
                         <td class="align-middle">{{ $row->jabatan_nama }}</td>
-                        <td class="align-middle">{{ $row->jabatan_pimpinan == 0? "Tidak": "Ya" }}</td>
+                        <td class="align-middle">{{ $row->jabatan_parent }}</td>
+                        <td class="align-middle">{{ $row->jabatan_pimpinan == 0? "": "Ya" }}</td>
+                        <td class="align-middle">{{ $row->jabatan_struktural == 0? "": "Ya" }}</td>
                         <td class="text-center">
                             @role('user|super-admin|supervisor')
                             <a href="/datajabatan/edit/{{ $row->jabatan_nama }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
@@ -103,10 +107,11 @@
          $("#frm-cari").submit();
     });
 
-    function hapus(id, ket) {
+
+    function hapus(id) {
         Swal.fire({
             title: 'Hapus Data',
-            text: 'Anda akan menghapus data program/kegiatan ' + ket + '',
+            text: 'Anda akan menghapus jabatan ' + id + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

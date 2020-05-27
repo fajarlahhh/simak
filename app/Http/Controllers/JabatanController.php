@@ -38,30 +38,20 @@ class JabatanController extends Controller
 
 	public function tambah(Request $req)
 	{
-        try{
-            return view('pages.datamaster.barangdanpekerjaan.form', [
-                'aksi' => 'tambah',
-                'back' => Str::contains(url()->previous(), ['barangdanpekerjaan/tambah', 'barangdanpekerjaan/edit'])? '/barangdanpekerjaan': url()->previous(),
-            ]);
-		}catch(\Exception $e){
-            alert()->error('Tambah Data', $e->getMessage());
-			return redirect(url()->previous()? url()->previous(): 'barangdanpekerjaan');
-		}
+        return view('pages.setup.jabatan.form', [
+            'aksi' => 'Tambah',
+            'jabatan' => Jabatan::all(),
+            'back' => Str::contains(url()->previous(), ['datajabatan/tambah', 'datajabatan/edit'])? '/datajabatan': url()->previous(),
+        ]);
     }
 
 	public function do_tambah(Request $req)
 	{
         $validator = Validator::make($req->all(),
             [
-                'jabatan_nama' => 'required',
-                'barang_dan_pekerjaan_harga' => 'required',
-                'barang_dan_pekerjaan_satuan' => 'required',
-                'barang_dan_pekerjaan_jenis' => 'required'
+                'jabatan_nama' => 'required'
             ],[
-                'jabatan_nama.required'  => 'Nama Barang/Pekerjaan tidak boleh kosong',
-                'barang_dan_pekerjaan_harga.required'  => 'Harga Satuan (Rp.) tidak boleh kosong',
-                'barang_dan_pekerjaan_satuan.required'  => 'Satuan tidak boleh kosong',
-                'barang_dan_pekerjaan_jenis.required'  => 'Satuan tidak boleh kosong'
+                'jabatan_nama.required'  => 'Nama Jabatan tidak boleh kosong'
             ]
         );
 
@@ -70,48 +60,44 @@ class JabatanController extends Controller
         }
 
         try{
-			$barang_dan_pekerjaan = new Jabatan();
-			$barang_dan_pekerjaan->jabatan_nama = $req->get('jabatan_nama');
-			$barang_dan_pekerjaan->barang_dan_pekerjaan_harga = str_replace(',', '', $req->get('barang_dan_pekerjaan_harga'));
-			$barang_dan_pekerjaan->barang_dan_pekerjaan_satuan = $req->get('barang_dan_pekerjaan_satuan');
-			$barang_dan_pekerjaan->barang_dan_pekerjaan_jenis = $req->get('barang_dan_pekerjaan_jenis');
-			$barang_dan_pekerjaan->operator = Auth::id();
-            $barang_dan_pekerjaan->save();
-            toast('Berhasil menambah barang dan kegiatan '.$req->get('jabatan_nama'), 'success')->autoClose(2000);
-			return redirect($req->get('redirect')? $req->get('redirect'): route('barangdanpekerjaan'));
+            $parent = $req->get('jabatan_parent')? $req->get('jabatan_parent'): null;
+            $silsilah = null;
+            if($parent){
+                $silsilah = (Jabatan::findOrFail($parent)->jabatan_silsilah? Jabatan::findOrFail($parent)->jabatan_silsilah.";": "").$parent;
+            }
+
+			$data = new Jabatan();
+			$data->jabatan_nama = $req->get('jabatan_nama');
+			$data->jabatan_parent = $parent;
+			$data->jabatan_silsilah = $silsilah;
+			$data->jabatan_pimpinan = $req->get('jabatan_pimpinan')? 1: 0;
+			$data->jabatan_struktural = $req->get('jabatan_struktural')? 1: 0;
+            $data->save();
+            toast('Berhasil menambah jabatan '.$req->get('jabatan_nama'), 'success')->autoClose(2000);
+			return redirect($req->get('redirect')? $req->get('redirect'): route('datajabatan'));
         }catch(\Exception $e){
             alert()->error('Tambah Data', $e->getMessage());
             return redirect()->back()->withInput();
         }
 	}
 
-	public function edit(Request $req)
+	public function edit($id)
 	{
-        try{
-            return view('pages.datamaster.barangdanpekerjaan.form', [
-                'aksi' => 'edit',
-                'data' => Jabatan::findOrFail($req->get('id')),
-                'back' => Str::contains(url()->previous(), ['barangdanpekerjaan/tambah', 'barangdanpekerjaan/edit'])? '/barangdanpekerjaan': url()->previous(),
-            ]);
-		}catch(\Exception $e){
-            alert()->error('Edit Data', $e->getMessage());
-			return redirect(url()->previous()? url()->previous(): 'barangdanpekerjaan');
-		}
+        return view('pages.setup.jabatan.form', [
+            'aksi' => 'Edit',
+            'jabatan' => Jabatan::all(),
+            'data' => Jabatan::findOrFail($id),
+            'back' => Str::contains(url()->previous(), ['datajabatan/tambah', 'datajabatan/edit'])? '/datajabatan': url()->previous(),
+        ]);
     }
 
 	public function do_edit(Request $req)
 	{
         $validator = Validator::make($req->all(),
             [
-                'jabatan_nama' => 'required',
-                'barang_dan_pekerjaan_harga' => 'required',
-                'barang_dan_pekerjaan_satuan' => 'required',
-                'barang_dan_pekerjaan_jenis' => 'required'
+                'jabatan_nama' => 'required'
             ],[
-                'jabatan_nama.required'  => 'Nama Barang/Pekerjaan tidak boleh kosong',
-                'barang_dan_pekerjaan_harga.required'  => 'Harga Satuan (Rp.) tidak boleh kosong',
-                'barang_dan_pekerjaan_satuan.required'  => 'Satuan tidak boleh kosong',
-                'barang_dan_pekerjaan_jenis.required'  => 'Satuan tidak boleh kosong'
+                'jabatan_nama.required'  => 'Nama Jabatan tidak boleh kosong'
             ]
         );
 
@@ -120,15 +106,22 @@ class JabatanController extends Controller
         }
 
         try{
-			$barang_dan_pekerjaan = Jabatan::findOrFail($req->get('id'));
-			$barang_dan_pekerjaan->jabatan_nama = $req->get('jabatan_nama');
-			$barang_dan_pekerjaan->barang_dan_pekerjaan_harga = str_replace(',', '', $req->get('barang_dan_pekerjaan_harga'));
-			$barang_dan_pekerjaan->barang_dan_pekerjaan_satuan = $req->get('barang_dan_pekerjaan_satuan');
-			$barang_dan_pekerjaan->barang_dan_pekerjaan_jenis = $req->get('barang_dan_pekerjaan_jenis');
-			$barang_dan_pekerjaan->operator = Auth::id();
-            $barang_dan_pekerjaan->save();
-            toast('Berhasil menambah barang dan kegiatan '.$req->get('jabatan_nama'), 'success')->autoClose(2000);
-			return redirect($req->get('redirect')? $req->get('redirect'): route('barangdanpekerjaan'));
+            $parent = $req->get('jabatan_parent')? $req->get('jabatan_parent'): null;
+            $silsilah = null;
+            if($parent){
+                $silsilah = (Jabatan::findOrFail($parent)->jabatan_silsilah? Jabatan::findOrFail($parent)->jabatan_silsilah.";": "").$parent;
+            }
+
+			$data = Jabatan::findOrFail($req->get('id'));
+			$data->jabatan_nama = $req->get('jabatan_nama');
+			$data->jabatan_parent = $parent;
+			$data->jabatan_silsilah = $silsilah;
+			$data->jabatan_pimpinan = $req->get('jabatan_pimpinan')? 1: 0;
+			$data->jabatan_struktural = $req->get('jabatan_struktural')? 1: 0;
+            $data->save();
+
+            toast('Berhasil mengedit jabatan '.$req->get('jabatan_nama'), 'success')->autoClose(2000);
+			return redirect($req->get('redirect')? $req->get('redirect'): route('datajabatan'));
         }catch(\Exception $e){
             alert()->error('Edit Data', $e->getMessage());
             return redirect()->back()->withInput();
@@ -138,9 +131,9 @@ class JabatanController extends Controller
 	public function hapus($id)
 	{
 		try{
-            $barang_dan_pekerjaan = Jabatan::findOrFail($id);
-            $barang_dan_pekerjaan->delete();
-            toast('Berhasil menghapus barang dan pekerjaan '.$barang_dan_pekerjaan->jabatan_nama, 'success')->autoClose(2000);
+            $data = Jabatan::findOrFail($id);
+            $data->delete();
+            toast('Berhasil menghapus jabatan '.$data->jabatan_nama, 'success')->autoClose(2000);
 		}catch(\Exception $e){
             alert()->error('Hapus Data', $e->getMessage());
 		}

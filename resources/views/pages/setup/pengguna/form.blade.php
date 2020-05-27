@@ -49,9 +49,9 @@
                     </div>
                     <div class="form-group input-group-sm">
                         <label class="control-label">Jabatan</label>
-                        <select class="form-control selectpicker" name="jabatan_id" data-live-search="true" data-style="btn-info" data-width="100%">
+                        <select class="form-control selectpicker" name="jabatan_nama" data-live-search="true" data-style="btn-info" data-width="100%">
                             @foreach($jabatan as $row)
-                            <option value="{{ $row->jabatan_id }}" {{ ($aksi == 'Edit' && $data->jabatan_id == $row->jabatan_id? 'selected': (old('jabatan_id') == $row->jabatan_id? 'selected': '')) }}>{{ $row->jabatan_nama }}</option>
+                            <option value="{{ $row->jabatan_nama }}" {{ ($aksi == 'Edit' && $data->jabatan_nama == $row->jabatan_nama? 'selected': (old('jabatan_nama') == $row->jabatan_nama? 'selected': '')) }}>{{ $row->jabatan_nama }}</option>
                             @endforeach
                         </select>
                     </div>

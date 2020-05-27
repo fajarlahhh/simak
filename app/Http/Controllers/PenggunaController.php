@@ -105,7 +105,7 @@ class PenggunaController extends Controller
 			$pengguna->pengguna_nama = $req->get('pengguna_nama');
 			$pengguna->pengguna_hp = $req->get('pengguna_hp');
 			$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
-			$pengguna->jabatan_id = $req->get('jabatan_id');
+			$pengguna->jabatan_nama = $req->get('jabatan_nama');
 			$pengguna->save();
 			$pengguna->assignRole($req->get('pengguna_level'));
 
@@ -129,7 +129,7 @@ class PenggunaController extends Controller
 			return view('pages.setup.pengguna.form', [
                 'jabatan' => Jabatan::all(),
                 'data' => Pengguna::findOrFail($id),
-                'level' => (in_array($id, config('admin.nip'))? Role::where('name', 'Admin')->get(): Role::all()),
+                'level' => (in_array($id, config('admin.nip'))? Role::where('name', 'super-admin')->get(): Role::all()),
                 'back' => Str::contains(url()->previous(), 'datapengguna/edit')? '/datapengguna': url()->previous(),
                 'aksi' => 'Edit',
                 'menu' => $this->menu(),
@@ -170,7 +170,7 @@ class PenggunaController extends Controller
 			if ($req->get('pengguna_sandi')) {
 				$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
 			}
-			$pengguna->jabatan_id = $req->get('jabatan_id');
+			$pengguna->jabatan_nama = $req->get('jabatan_nama');
 			$pengguna->save();
             $pengguna->syncPermissions();
 			$pengguna->removeRole($pengguna->getRoleNames()[0]);

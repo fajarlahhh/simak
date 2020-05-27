@@ -20,11 +20,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['role_or_permission:super-admin|datapengguna']], function () {
         Route::prefix('datapengguna')->group(function () {
             Route::get('/', 'PenggunaController@index')->name('datapengguna');
-            Route::get('/edit', 'PenggunaController@edit')->middleware(['role:super-admin|user']);
+            Route::get('/edit/{id}', 'PenggunaController@edit')->middleware(['role:super-admin|user']);
             Route::put('/edit', 'PenggunaController@do_edit')->middleware(['role:super-admin|user'])->name('datapengguna.edit');
             Route::get('/tambah', 'PenggunaController@tambah')->middleware(['role:super-admin|user'])->name('datapengguna.tambah');
             Route::post('/tambah', 'PenggunaController@do_tambah')->middleware(['role:super-admin|user'])->name('datapengguna.tambah');
-            Route::delete('/hapus', 'PenggunaController@hapus')->middleware(['role:super-admin|user']);
+            Route::delete('/hapus/{id}', 'PenggunaController@hapus')->middleware(['role:super-admin|user']);
             Route::patch('/restore', 'PenggunaController@restore')->middleware(['role:super-admin|supervisor']);
             Route::get('/detail', 'PenggunaController@detail')->name('datapengguna.detail');
         });
@@ -33,11 +33,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['role_or_permission:super-admin|datajabatan']], function () {
         Route::prefix('datajabatan')->group(function () {
             Route::get('/', 'JabatanController@index')->name('datajabatan');
-            Route::get('/edit', 'JabatanController@edit')->middleware(['role:super-admin|user']);
+            Route::get('/edit/{id}', 'JabatanController@edit')->middleware(['role:super-admin|user']);
             Route::put('/edit', 'JabatanController@do_edit')->middleware(['role:super-admin|user'])->name('datajabatan.edit');
             Route::get('/tambah', 'JabatanController@tambah')->middleware(['role:super-admin|user'])->name('datajabatan.tambah');
             Route::post('/tambah', 'JabatanController@do_tambah')->middleware(['role:super-admin|user'])->name('datajabatan.tambah');
-            Route::delete('/hapus', 'JabatanController@hapus')->middleware(['role:super-admin|user']);
+            Route::delete('/hapus/{id}', 'JabatanController@hapus')->middleware(['role:super-admin|user']);
             Route::patch('/restore', 'JabatanController@restore')->middleware(['role:super-admin|supervisor']);
             Route::get('/detail', 'JabatanController@detail')->name('datajabatan.detail');
         });

@@ -45,6 +45,7 @@
 							<th>Nama</th>
 							<th>No. Hp</th>
 							<th>Jabatan</th>
+							<th>Struktural</th>
 							<th>Pimpinan</th>
 							<th class="width-90"></th>
 						</tr>
@@ -57,7 +58,8 @@
                             <td>{{ $row->pengguna_nama }}</td>
                             <td>{{ $row->pengguna_hp }}</td>
                             <td>{{ $row->jabatan->jabatan_nama }}</td>
-                            <td>{{ $row->jabatan->jabatan_pimpinan == 1? "YA": "TIDAK" }}</td>
+                            <td>{{ $row->jabatan->jabatan_struktural == 1? "YA": "" }}</td>
+                            <td>{{ $row->jabatan->jabatan_pimpinan == 1? "YA": "" }}</td>
 					        <td>
 					        	@role('user|super-admin')
                                 <a href="/datapengguna/edit/{{ $row->pengguna_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>

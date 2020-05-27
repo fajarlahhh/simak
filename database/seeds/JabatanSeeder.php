@@ -15,7 +15,7 @@ class JabatanSeeder extends Seeder
     {
         Jabatan::insert([
             'jabatan_nama' => "Staff",
-            'jabatan_level' => 0,
+            'jabatan_parent' => null,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);

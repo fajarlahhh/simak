@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePenggunaTable extends Migration
+class CreatePenggunaTables extends Migration
 {
     /**
      * Run the migrations.
@@ -19,10 +19,11 @@ class CreatePenggunaTable extends Migration
             $table->string('pengguna_sandi');
             $table->string('pengguna_hp')->nullable();
             $table->string('session_id')->nullable();
-            $table->bigInteger('jabatan_id');
+            $table->string('jabatan_nama');
             $table->rememberToken();
             $table->timestamps();
             $table->primary('pengguna_id');
+            $table->foreign('jabatan_nama')->references('jabatan_nama')->on('jabatan')->onDelete('restrict')->onUpdate('cascade');
         });
     }
 
