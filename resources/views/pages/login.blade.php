@@ -17,7 +17,7 @@
 		<div class="login-header">
 			<div class="brand">
 	            <img src="/assets/img/logo/favicon.png" height="30"> {{ config("app.name") }}
-				<small>{{ env('APP_COMPANY') }}</small>
+				<small>{{ env('APP_COMPANY_ALIAS') }}</small>
 			</div>
 			<div class="icon">
 				<i class="fas fa-lock"></i>
@@ -46,7 +46,7 @@
 				</div>
 			</form>
 			<br>
-			© 2020 | <a href="http://www.pdamgirimenang.com" target="_blank">IT {{ env('APP_COMPANY') }}</a>
+			© 2020 | <a href="https://dikbud.ntbprov.go.id/" target="_blank">{{ env('APP_COMPANY_ALIAS') }}</a>
 			<small class="float-right pt-1">V1.0</small>
 		</div>
 		<!-- end login-content -->

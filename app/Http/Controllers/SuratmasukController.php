@@ -2,260 +2,185 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\SuratMasuk;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class SuratmasukController extends Controller
 {
     //
 	public function index(Request $req)
 	{
-        $arsip = $req->arsip? $req->arsip: '0';
-		$periode = $req->periode? $req->periode: date('F Y');
-		$tanggal = $req->tanggal? $req->tanggal: 'surat_masuk_tanggal_terima';
-		
-		switch ($req->tipe) {
-			case '0':
-				$suratmasuk = SuratMasuk::with('pengarsipan')->whereRaw('date_format('.$tanggal.', \'%M %Y\')=\''.$periode.'\'')
-								->where(function($q) use ($req){
-									$q->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%');
-								})
-								->where(function($q) use ($arsip){
-									if($arsip == '1'){
-										$q->whereNotNull('penyimpanan_id');
-									}else if($arsip == '2'){
-										$q->whereNull('penyimpanan_id');
-									}
-									
-								})
-								->orderBy('surat_masuk_nomor')->paginate(10);
-				break;
-			case '1':
-				$suratmasuk = SuratMasuk::with('pengarsipan')->onlyTrashed()
-								->where(function($q) use ($req){
-									$q->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%');
-								})
-								->where(function($q) use ($arsip){
-									if($arsip == '1'){
-										$q->whereNotNull('penyimpanan_id');
-									}else if($arsip == '2'){
-										$q->whereNull('penyimpanan_id');
-									}
-									
-								})
-								->orderBy('surat_masuk_nomor')->paginate(10);
-				break;
-			case '2':
-				$suratmasuk = SuratMasuk::with('pengarsipan')->withTrashed()->whereRaw('date_format('.$tanggal.', \'%M %Y\')=\''.$periode.'\'')
-								->where(function($q) use ($req){
-									$q->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%');
-								})
-								->where(function($q) use ($arsip){
-									if($arsip == '1'){
-										$q->whereNotNull('penyimpanan_id');
-									}else if($arsip == '2'){
-										$q->whereNull('penyimpanan_id');
-									}
-									
-								})
-								->orderBy('surat_masuk_nomor')->paginate(10);
-				break;
+        $data = SuratMasuk::where(function($q) use ($req){
+            $q->where('surat_masuk_asal', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_keterangan', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_nomor', 'like', '%'.$req->cari.'%');
+        })->orderBy('surat_masuk_tanggal_masuk', 'desc');
 
-			default:
-				$suratmasuk = SuratMasuk::with('pengarsipan')->whereRaw('date_format('.$tanggal.', \'%M %Y\')=\''.$periode.'\'')
-								->where(function($q) use ($req){
-									$q->where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_penerima', 'like', '%'.$req->cari.'%')
-									->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%');
-								})
-								->where(function($q) use ($arsip){
-									if($arsip == '1'){
-										$q->whereNotNull('penyimpanan_id');
-									}else if($arsip == '2'){
-										$q->whereNull('penyimpanan_id');
-									}
-									
-								})
-								->orderBy('surat_masuk_nomor')->paginate(10);
-				break;
+        switch ($req->tipe) {
+            case '1':
+                $data = $data->onlyTrashed();
+                break;
+            case '2':
+                $data = $data->withTrashed();
+                break;
+
+            default:
+                # code...
+                break;
         }
-		$suratmasuk->appends([
-			'cari' => $req->cari, 
-			'tipe' => $req->tipe, 
-			'arsip' => $arsip, 
-			'periode' => $periode]);
-		return view('pages.datasurat.suratmasuk.index', [
-            'data' => $suratmasuk,
+
+        $data = $data->paginate(10);
+
+        $data->appends(['cari' => $req->tipe, 'cari' => $req->tipe]);
+        return view('pages.suratmasuk.index', [
+            'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,
-            'cari' => $req->cari,
             'tipe' => $req->tipe,
-			'arsip' => $arsip,
-			'tanggal' => $req->tanggal,
-            'periode' => $periode,
+            'cari' => $req->cari
         ]);
     }
 
-	public function cari($cari)
-	{
-        return SuratMasuk::where('surat_masuk_nomor', 'like', '%'.$req->cari.'%')
-        ->orWhere('surat_masuk_asal', 'like', '%'.$req->cari.'%')
-        ->orderBy('surat_masuk_nomor')->get();
-	}
-
 	public function tambah()
 	{
-		return view('pages.datasurat.suratmasuk.form')
-					->with('back', Str::contains(url()->previous(), ['suratmasuk/tambah', 'suratmasuk/edit'])? '/suratmasuk': url()->previous())
-					->with('aksi', 'Tambah');
+        return view('pages.suratmasuk.form', [
+            'aksi' => 'Tambah',
+            'back' => Str::contains(url()->previous(), ['suratmasuk/tambah', 'suratmasuk/edit'])? '/suratmasuk': url()->previous(),
+        ]);
 	}
 
 	public function do_tambah(Request $req)
 	{
-		$req->validate(
-			[
-				'surat_masuk_nomor' => 'required',
-				'surat_masuk_asal' => 'required'
-			],[
-         	   'surat_masuk_nomor.required' => 'Nama tempat permintaan barang tidak boleh kosong',
-         	   'surat_masuk_asal.required'  => 'Deskripsi tidak boleh kosong',
-        	]
-		);
-		try{
-			$suratmasuk = new SuratMasuk();
-			$suratmasuk->surat_masuk_nomor = $req->get('surat_masuk_nomor');
-			$suratmasuk->pb_tanggal = $req->get('pb_tanggal');
-			$suratmasuk->surat_masuk_penerima = $req->get('surat_masuk_penerima');
-			$suratmasuk->surat_masuk_asal = $req->get('surat_masuk_asal');
-            $suratmasuk->pb_file = $req->get('pb_file');
-            if ($req->get('penyimpanan_id')) {
-                $suratmasuk->penyimpanan_id = $req->get('penyimpanan_id');
-                $suratmasuk->arsip_operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
-                $suratmasuk->arsip_waktu = Carbon::now();
-            }
-			$suratmasuk->created_operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
-            $suratmasuk->save();
+        $validator = Validator::make($req->all(),
+            [
+                'surat_masuk_nomor' => 'required',
+                'surat_masuk_tanggal_masuk' => 'required',
+                'surat_masuk_tanggal_surat' => 'required',
+                'surat_masuk_perihal' => 'required',
+                'surat_masuk_asal' => 'required',
+                'file' => 'required|mimes:pdf'
+            ],[
+                'surat_masuk_nomor.required'  => 'Nomor Surat tidak boleh kosong',
+                'surat_masuk_tanggal_masuk.required'  => 'Tanggal Masuk tidak boleh kosong',
+                'surat_masuk_tanggal_surat.required'  => 'Tanggal Surat tidak boleh kosong',
+                'surat_masuk_perihal.required'  => 'Perihal tidak boleh kosong',
+                'surat_masuk_asal.required'  => 'Asal tidak boleh kosong',
+                'file.required'  => 'File tidak boleh kosong'
+            ]
+        );
 
-			return redirect($req->get('redirect')? $req->get('redirect'): 'suratmasuk')
-			->with('swal_pesan', 'Berhasil menambah data permintaan barang '.$req->get('surat_masuk_nomor'))
-			->with('swal_judul', 'Tambah data')
-			->with('swal_tipe', 'success');
-		}catch(\Exception $e){
-			return redirect($req->get('redirect')? $req->get('redirect'): 'suratmasuk')
-			->with('swal_pesan', $e->getMessage())
-			->with('swal_judul', 'Tambah data')
-			->with('swal_tipe', 'error');
-		}
+        if ($validator->fails()) {
+            alert()->error('Validasi Gagal', implode('<br>', $validator->messages()->all()))->toHtml()->autoClose(5000);
+            return redirect()->back()->withInput()->with('error', $validator->messages()->all());
+        }
+
+        try{
+            $file = $req->file('file');
+
+            $ext = $file->getClientOriginalExtension();
+            $nama_file = time().Str::random().".".$ext;
+            $file->move(public_path('uploads/suratmasuk'), $nama_file);
+
+			$data = new SuratMasuk();
+			$data->surat_masuk_nomor = $req->get('surat_masuk_nomor');
+			$data->surat_masuk_tanggal_masuk = Carbon::parse($req->get('surat_masuk_tanggal_masuk'))->format('Y-m-d');
+			$data->surat_masuk_tanggal_surat = Carbon::parse($req->get('surat_masuk_tanggal_surat'))->format('Y-m-d');
+			$data->surat_masuk_perihal = $req->get('surat_masuk_perihal');
+			$data->surat_masuk_asal = $req->get('surat_masuk_asal');
+			$data->surat_masuk_keterangan = $req->get('surat_masuk_keterangan');
+            $data->file = 'uploads/suratmasuk/'.$nama_file;
+			$data->operator = Auth::user()->pengguna_nama;
+            $data->save();
+
+            toast('Berhasil menambah surat masuk '.$req->get('surat_masuk_nomor'), 'success')->autoClose(2000);
+			return redirect($req->get('redirect')? $req->get('redirect'): route('suratmasuk'));
+        }catch(\Exception $e){
+            alert()->error('Tambah Data', $e->getMessage());
+            return redirect()->back()->withInput();
+        }
 	}
 
-	public function edit($id)
+	public function edit(Request $req)
 	{
-		try{
-			$suratmasuk = SuratMasuk::findOrFail($id);
-			return view('pages.datasurat.suratmasuk.form', compact('suratmasuk'))
-						->with('suratmasuk', $suratmasuk)
-						->with('back', Str::contains(url()->previous(), ['suratmasuk/tambah', 'suratmasuk/edit'])? '/suratmasuk': url()->previous())
-						->with('aksi', 'Edit');
-		}catch(\Exception $e){
-			return redirect($req->get('redirect')? $req->get('redirect'): 'suratmasuk')
-			->with('swal_pesan', $e->getMessage())
-			->with('swal_judul', 'Edit data')
-			->with('swal_tipe', 'error');
-		}
+        return view('pages.suratmasuk.form', [
+            'aksi' => 'Edit',
+            'data' => SuratMasuk::findOrFail($req->no),
+            'back' => Str::contains(url()->previous(), ['suratmasuk/tambah', 'suratmasuk/edit'])? '/suratmasuk': url()->previous(),
+        ]);
 	}
 
 	public function do_edit(Request $req)
 	{
-		$req->validate(
-			[
-				'surat_masuk_nomor' => 'required',
-				'surat_masuk_asal' => 'required'
-			],[
-         	   'surat_masuk_nomor.required' => 'Nama permintaan barang tidak boleh kosong',
-         	   'surat_masuk_asal.required'  => 'Deskripsi tidak boleh kosong',
-        	]
-		);
+        $validator = Validator::make($req->all(),
+            [
+                'surat_masuk_nomor' => 'required',
+                'surat_masuk_tanggal_masuk' => 'required',
+                'surat_masuk_tanggal_surat' => 'required',
+                'surat_masuk_perihal' => 'required',
+                'surat_masuk_asal' => 'required'
+            ],[
+                'surat_masuk_nomor.required'  => 'Nomor Surat tidak boleh kosong',
+                'surat_masuk_tanggal_masuk.required'  => 'Tanggal Masuk tidak boleh kosong',
+                'surat_masuk_tanggal_surat.required'  => 'Tanggal Surat tidak boleh kosong',
+                'surat_masuk_perihal.required'  => 'Perihal tidak boleh kosong',
+                'surat_masuk_asal.required'  => 'Asal tidak boleh kosong'
+            ]
+        );
+
+        if ($validator->fails()) {
+            alert()->error('Validasi Gagal', implode('<br>', $validator->messages()->all()))->toHtml()->autoClose(5000);
+            return redirect()->back()->withInput()->with('error', $validator->messages()->all());
+        }
+
+        try{
+			$data = SuratMasuk::findOrFail($req->get('ID'));
+			$data->surat_masuk_nomor = $req->get('surat_masuk_nomor');
+			$data->surat_masuk_tanggal_masuk = Carbon::parse($req->get('surat_masuk_tanggal_masuk'))->format('Y-m-d');
+			$data->surat_masuk_tanggal_surat = Carbon::parse($req->get('surat_masuk_tanggal_surat'))->format('Y-m-d');
+			$data->surat_masuk_perihal = $req->get('surat_masuk_perihal');
+			$data->surat_masuk_asal = $req->get('surat_masuk_asal');
+			$data->surat_masuk_keterangan = $req->get('surat_masuk_keterangan');
+            if($req->file('file')){
+                if($req->get('file_old')){
+                    File::delete(public_path($req->get('file_old')));
+                }
+                $file = $req->file('file');
+
+                $ext = $file->getClientOriginalExtension();
+                $nama_file = time().Str::random().".".$ext;
+                $file->move(public_path('uploads/suratmasuk'), $nama_file);
+                $data->file = 'uploads/suratmasuk/'.$nama_file;
+            }
+			$data->operator = Auth::user()->pengguna_nama;
+            $data->save();
+
+            toast('Berhasil menambah surat masuk '.$req->get('surat_masuk_nomor'), 'success')->autoClose(2000);
+			return redirect($req->get('redirect')? $req->get('redirect'): route('suratmasuk'));
+        }catch(\Exception $e){
+            alert()->error('Tambah Data', $e->getMessage());
+            return redirect()->back()->withInput();
+        }
+	}
+
+	public function hapus(Request $req)
+	{
 		try{
-			$suratmasuk = SuratMasuk::findOrFail($req->get('penyimpanan_id'));
-			$suratmasuk->surat_masuk_nomor = $req->get('surat_masuk_nomor');
-			$suratmasuk->surat_masuk_asal = $req->get('surat_masuk_asal');
-			$suratmasuk->operator = ucfirst(strtolower(explode(', ', Redis::get(Session::getId()))[0]));
-			$suratmasuk->save();
-			return redirect($req->get('redirect')? $req->get('redirect'): 'suratmasuk')
-			->with('swal_pesan', 'Berhasil mengedit data permintaan barang '.$req->get('surat_masuk_nomor'))
-			->with('swal_judul', 'Edit data')
-			->with('swal_tipe', 'success');
+            SuratMasuk::findOrFail($req->get('no'))->delete();
+            toast('Berhasil menghapus data', 'success')->autoClose(2000);
 		}catch(\Exception $e){
-			return redirect($req->get('redirect')? $req->get('redirect'): 'suratmasuk')
-			->with('swal_pesan', $e->getMessage())
-			->with('swal_judul', 'Edit data')
-			->with('swal_tipe', 'error');
+            alert()->error('Hapus Data', $e->getMessage());
 		}
 	}
 
-	public function hapus($id)
+	public function restore(Request $req)
 	{
 		try{
-            $suratmasuk = SuratMasuk::findOrFail($id);
-			$suratmasuk->delete();
-			return response()->json([
-				'swal_pesan' => 'Berhasil menghapus data permintaan barang '.$suratmasuk->surat_masuk_nomor,
-				'swal_judul' => 'Hapus data',
-				'swal_tipe' =>'success',
-			]);
+            SuratMasuk::withTrashed()->findOrFail($req->get('no'))->restore();
+            toast('Berhasil mengembalikan data', 'success')->autoClose(2000);
 		}catch(\Exception $e){
-			return response()->json([
-				'swal_pesan' => $e->getMessage(),
-				'swal_judul' => 'Hapus data',
-				'swal_tipe' =>'error',
-			]);
-		}
-	}
-
-	public function hapus_permanen($id)
-	{
-		try{
-            $suratmasuk = SuratMasuk::withTrashed()->findOrFail($id);
-			$suratmasuk->forceDelete();
-			return response()->json([
-				'swal_pesan' => 'Berhasil menghapus secara permanen data permintaan barang '.$suratmasuk->surat_masuk_nomor,
-				'swal_judul' => 'Hapus data',
-				'swal_tipe' =>'success',
-			]);
-		}catch(\Exception $e){
-			return response()->json([
-				'swal_pesan' => $e->getMessage(),
-				'swal_judul' => 'Hapus data',
-				'swal_tipe' =>'error',
-			]);
-		}
-	}
-
-	public function restore($id)
-	{
-		try{
-            $suratmasuk = SuratMasuk::findOrFail($id);
-			$suratmasuk->restore();
-			return response()->json([
-				'swal_pesan' => 'Berhasil merestore data permintaan barang '.$suratmasuk->surat_masuk_nomor,
-				'swal_judul' => 'Restore data',
-				'swal_tipe' =>'success',
-			]);
-		}catch(\Exception $e){
-			return response()->json([
-				'swal_pesan' => $e->getMessage(),
-				'swal_judul' => 'Restore data',
-				'swal_tipe' =>'error',
-			]);
+            alert()->error('Restore Data', $e->getMessage());
 		}
 	}
 }

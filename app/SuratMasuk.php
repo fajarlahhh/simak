@@ -13,10 +13,7 @@ class SuratMasuk extends Model
     use LogsActivity;
 
     protected $table = 'surat_masuk';
-    protected $primaryKey = 'surat_masuk_id';
+    protected $primaryKey = 'surat_masuk_nomor';
     public $incrementing = false;
-
-    public function pengarsipan(){
-        return $this->hasOne('App\Penyimpanan', 'penyimpanan_id', 'penyimpanan_id');
-	}
+    protected $keyType = 'string';
 }

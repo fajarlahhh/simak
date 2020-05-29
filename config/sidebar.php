@@ -19,20 +19,39 @@ return [
 		'id' => 'dashboard',
 		'url' => '/'
 	],[
-		'icon' => 'fas fa-cog',
-		'title' => 'Setup',
+		'icon' => 'fas fa-database',
+		'title' => 'Data Master',
 		'url' => 'javascript:;',
-		'id' => 'setup',
+		'id' => 'datamaster',
 		'caret' => true,
 		'sub_menu' => [[
 			'url' => '/datajabatan',
 			'id' => '/datajabatan',
 			'title' => 'Data Jabatan'
         ],[
+			'url' => '/gambar',
+			'id' => '/gambar',
+			'title' => 'Gambar'
+        ]]
+	],[
+		'icon' => 'fas fa-cog',
+		'title' => 'Setup',
+		'url' => 'javascript:;',
+		'id' => 'setup',
+		'caret' => true,
+		'sub_menu' => [[
 			'url' => '/datapengguna',
 			'id' => '/datapengguna',
 			'title' => 'Data Pengguna'
-        ],]
+        ],[
+			'url' => '/kopsurat',
+			'id' => '/kopsurat',
+			'title' => 'Kop Surat'
+        ],[
+			'url' => '/salam',
+			'id' => '/salam',
+			'title' => 'Salam'
+        ]]
 	],[
 		'icon' => 'fas fa-paper-plane',
 		'title' => 'Surat Keluar',
@@ -65,32 +84,5 @@ return [
 		'title' => 'Surat Masuk',
 		'id' => 'suratmasuk',
 		'url' => '/suratmasuk'
-	],[
-		'icon' => 'fas fa-file-alt',
-		'title' => 'Template',
-		'id' => 'template',
-		'url' => 'javascript:;',
-		'caret' => true,
-		'sub_menu' => [[
-			'url' => '/templateedaran',
-			'id' => 'templateedaran',
-			'title' => 'Edaran'
-		],[
-			'url' => '/templatesk',
-			'id' => 'templatesk',
-			'title' => 'Surat Keputusan'
-		],[
-			'url' => '/templatesuratpengantar',
-			'id' => 'templatesuratpengantar',
-			'title' => 'Surat Pengantar'
-		],[
-			'url' => '/templatesurattugas',
-			'id' => 'templatesurattugas',
-			'title' => 'Surat Tugas'
-		],[
-			'url' => '/templateundangan',
-			'id' => 'templateundangan',
-			'title' => 'Undangan'
-		]]
 	]]
 ];

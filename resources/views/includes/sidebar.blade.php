@@ -109,7 +109,7 @@
 				}
 			@endphp
 			<!-- begin sidebar minify button -->
-			<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fad fa-angle-double-left"></i></a></li>
+			<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fas fa-angle-double-left"></i></a></li>
 			<!-- end sidebar minify button -->
 		</ul>
 		<!-- end sidebar nav -->

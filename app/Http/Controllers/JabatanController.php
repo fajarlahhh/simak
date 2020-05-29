@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Jabatan;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class JabatanController extends Controller
@@ -23,7 +22,7 @@ class JabatanController extends Controller
         })->orderBy('jabatan_nama')->paginate(10);
 
         $data->appends(['cari' => $req->cari]);
-        return view('pages.setup.jabatan.index', [
+        return view('pages.datamaster.jabatan.index', [
             'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,
             'cari' => $req->cari
@@ -38,7 +37,7 @@ class JabatanController extends Controller
 
 	public function tambah(Request $req)
 	{
-        return view('pages.setup.jabatan.form', [
+        return view('pages.datamaster.jabatan.form', [
             'aksi' => 'Tambah',
             'jabatan' => Jabatan::all(),
             'back' => Str::contains(url()->previous(), ['datajabatan/tambah', 'datajabatan/edit'])? '/datajabatan': url()->previous(),
@@ -56,7 +55,8 @@ class JabatanController extends Controller
         );
 
         if ($validator->fails()) {
-            return implode('<br>', $validator->messages()->all());
+            alert()->error('Validasi Gagal', implode('<br>', $validator->messages()->all()))->toHtml()->autoClose(5000);
+            return redirect()->back()->withInput()->with('error', $validator->messages()->all());
         }
 
         try{
@@ -83,7 +83,7 @@ class JabatanController extends Controller
 
 	public function edit($id)
 	{
-        return view('pages.setup.jabatan.form', [
+        return view('pages.datamaster.jabatan.form', [
             'aksi' => 'Edit',
             'jabatan' => Jabatan::all(),
             'data' => Jabatan::findOrFail($id),
@@ -101,8 +101,10 @@ class JabatanController extends Controller
             ]
         );
 
+
         if ($validator->fails()) {
-            return implode('<br>', $validator->messages()->all());
+            alert()->error('Validasi Gagal', implode('<br>', $validator->messages()->all()))->toHtml()->autoClose(5000);
+            return redirect()->back()->withInput()->with('error', $validator->messages()->all());
         }
 
         try{

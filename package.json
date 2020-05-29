@@ -21,6 +21,7 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^19.0.1",
         "autonumeric": "^4.6.0",
         "bootstrap": "^4.5.0",
         "bootstrap-combobox": "^1.0.2",
@@ -30,6 +31,7 @@
         "bootstrap-show-password": "^1.2.1",
         "bootstrap-timepicker": "^0.5.2",
         "bootstrap3-wysihtml5-bower": "^0.3.3",
+        "ckeditor4": "^4.14.0",
         "gritter": "^1.7.4",
         "highcharts": "^7.2.1",
         "jquery": "^3.5.1",

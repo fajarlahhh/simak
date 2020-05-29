@@ -15,15 +15,17 @@ class CreateSuratMasukTables extends Migration
     {
         Schema::create('surat_masuk', function (Blueprint $table) {
             $table->string('surat_masuk_nomor');
-            $table->string('surat_masuk_tanggal_masuk');
-            $table->string('surat_masuk_tanggal_surat');
-            $table->string('surat_masuk_perihal');
+            $table->date('surat_masuk_tanggal_masuk');
+            $table->date('surat_masuk_tanggal_surat');
+            $table->text('surat_masuk_perihal');
             $table->string('surat_masuk_asal');
-            $table->string('surat_masuk_keterangan');
-            $table->string('surat_masuk_file');
-            $table->string('kirim');
+            $table->text('surat_masuk_keterangan');
+            $table->string('file');
+            $table->tinyInteger('kirim')->default(0);
             $table->string('operator');
             $table->timestamps();
+            $table->softDeletes();
+            $table->primary('surat_masuk_nomor');
         });
     }
 

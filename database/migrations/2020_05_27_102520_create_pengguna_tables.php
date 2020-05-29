@@ -18,6 +18,8 @@ class CreatePenggunaTables extends Migration
             $table->string('pengguna_nama');
             $table->string('pengguna_sandi');
             $table->string('pengguna_hp')->nullable();
+            $table->string('pengguna_ttd')->nullable();
+            $table->string('pengguna_pangkat')->nullable();
             $table->string('session_id')->nullable();
             $table->string('jabatan_nama');
             $table->rememberToken();
