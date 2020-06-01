@@ -16,7 +16,6 @@ class CreateRevisiTables extends Migration
         Schema::create('revisi_edaran', function (Blueprint $table) {
             $table->string('edaran_nomor');
             $table->tinyInteger('revisi_nomor');
-            text
             $table->string('revisi_catatan');
             $table->string('operator');
             $table->timestamps();
