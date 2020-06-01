@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Gambar;
 use App\Jabatan;
 use App\Pegawai;
 use App\Pengguna;
@@ -27,13 +28,31 @@ class PenggunaController extends Controller
 
 	public function index(Request $req)
 	{
-		$pengguna = Pengguna::with('jabatan')->where('pengguna_nama', 'like', '%'.$req->cari.'%')->orWhere('pengguna_id', 'like', '%'.$req->cari.'%')->paginate(10);
+		$data = Pengguna::with('jabatan')->where(function($q) use ($req){
+            $q->where('pengguna_nama', 'like', '%'.$req->cari.'%')->orWhere('pengguna_id', 'like', '%'.$req->cari.'%');
+        });
 
-		$pengguna->appends($req->only('cari'));
+        switch ($req->tipe) {
+            case '1':
+                $data = $data->onlyTrashed();
+                break;
+            case '2':
+                $data = $data->withTrashed();
+                break;
+
+            default:
+                # code...
+                break;
+        }
+        
+        $data = $data->paginate(10);
+
+        $data->appends(['cari' => $req->tipe, 'cari' => $req->tipe]);
 		return view('pages.setup.pengguna.index', [
-            'data' => $pengguna,
+            'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,
             'cari' => $req->cari,
+            'tipe' => $req->tipe,
         ]);
     }
 
@@ -69,6 +88,7 @@ class PenggunaController extends Controller
         return view('pages.setup.pengguna.form', [
             'jabatan' => Jabatan::all(),
             'level' => Role::all(),
+            'gambar' => Gambar::all(),
             'back' => Str::contains(url()->previous(), ['datapengguna/tambah', 'datapengguna/edit'])? '/datapengguna': url()->previous(),
             'menu' => $this->menu(),
             'aksi' => 'Tambah',
@@ -100,12 +120,19 @@ class PenggunaController extends Controller
             return redirect()->back()->withInput()->with('error', $validator->messages()->all());
         }
 		try{
+            if (Pengguna::where('jabatan_nama', $req->get('jabatan_nama'))->get()->count() > 0) {
+                alert()->error('Tambah Data', 'Pengguna dengan jabatan')->toHtml()->autoClose(5000);
+                return redirect()->back()->withInput()->with('error', $validator->messages()->all());
+            }
 			$pengguna = new Pengguna();
 			$pengguna->pengguna_id = $req->get('pengguna_id');
 			$pengguna->pengguna_nama = $req->get('pengguna_nama');
 			$pengguna->pengguna_hp = $req->get('pengguna_hp');
 			$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
 			$pengguna->jabatan_nama = $req->get('jabatan_nama');
+            $pengguna->pengguna_pangkat = $req->get('pengguna_pangkat');
+			$pengguna->gambar_nama = $req->get('gambar_nama');
+            $pengguna->token = Hash::make($req->get('pengguna_id'));
 			$pengguna->save();
 			$pengguna->assignRole($req->get('pengguna_level'));
 
@@ -129,6 +156,7 @@ class PenggunaController extends Controller
 			return view('pages.setup.pengguna.form', [
                 'jabatan' => Jabatan::all(),
                 'data' => Pengguna::findOrFail($id),
+                'gambar' => Gambar::all(),
                 'level' => (in_array($id, config('admin.nip'))? Role::where('name', 'super-admin')->get(): Role::all()),
                 'back' => Str::contains(url()->previous(), 'datapengguna/edit')? '/datapengguna': url()->previous(),
                 'aksi' => 'Edit',
@@ -171,6 +199,8 @@ class PenggunaController extends Controller
 				$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
 			}
 			$pengguna->jabatan_nama = $req->get('jabatan_nama');
+			$pengguna->pengguna_pangkat = $req->get('pengguna_pangkat');
+			$pengguna->gambar_nama = $req->get('gambar_nama');
 			$pengguna->save();
             $pengguna->syncPermissions();
 			$pengguna->removeRole($pengguna->getRoleNames()[0]);
@@ -246,9 +276,19 @@ class PenggunaController extends Controller
 		try{
             $pengguna = Pengguna::findOrFail($id);
 			$pengguna->delete();
-            toast('Berhasil menghapus data pengguna '.$id, 'success')->autoClose(2000);
+            toast('Berhasil menghapus data '.$id, 'success')->autoClose(2000);
 		}catch(\Exception $e){
             alert()->error('Hapus Data', $e->getMessage());
+		}
+	}
+
+	public function restore($id)
+	{
+		try{
+            Pengguna::withTrashed()->findOrFail($id)->restore();
+            toast('Berhasil mengembalikan data', 'success')->autoClose(2000);
+		}catch(\Exception $e){
+            alert()->error('Restore Data', $e->getMessage());
 		}
 	}
 }

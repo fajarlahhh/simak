@@ -19,9 +19,9 @@ class CreateSuratMasukTables extends Migration
             $table->date('surat_masuk_tanggal_surat');
             $table->text('surat_masuk_perihal');
             $table->string('surat_masuk_asal');
-            $table->text('surat_masuk_keterangan');
+            $table->longText('surat_masuk_keterangan');
             $table->string('file');
-            $table->tinyInteger('kirim')->default(0);
+            $table->tinyInteger('kirim')->default(1);
             $table->string('operator');
             $table->timestamps();
             $table->softDeletes();

@@ -1,6 +1,7 @@
 <?php
 
 use App\Salam;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class SalamSeeder extends Seeder

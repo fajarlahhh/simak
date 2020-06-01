@@ -72,6 +72,7 @@ class JabatanController extends Controller
 			$data->jabatan_silsilah = $silsilah;
 			$data->jabatan_pimpinan = $req->get('jabatan_pimpinan')? 1: 0;
 			$data->jabatan_struktural = $req->get('jabatan_struktural')? 1: 0;
+			$data->jabatan_verifikator = $req->get('jabatan_verifikator')? 1: 0;
             $data->save();
             toast('Berhasil menambah jabatan '.$req->get('jabatan_nama'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('datajabatan'));
@@ -120,6 +121,7 @@ class JabatanController extends Controller
 			$data->jabatan_silsilah = $silsilah;
 			$data->jabatan_pimpinan = $req->get('jabatan_pimpinan')? 1: 0;
 			$data->jabatan_struktural = $req->get('jabatan_struktural')? 1: 0;
+			$data->jabatan_verifikator = $req->get('jabatan_verifikator')? 1: 0;
             $data->save();
 
             toast('Berhasil mengedit jabatan '.$req->get('jabatan_nama'), 'success')->autoClose(2000);

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Edaran;
+use App\KopSurat;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +17,8 @@ class EdaranController extends Controller
 	public function index(Request $req)
 	{
         $data = Edaran::where(function($q) use ($req){
-            $q->where('surat_masuk_asal', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_keterangan', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_nomor', 'like', '%'.$req->cari.'%');
-        })->orderBy('surat_masuk_tanggal_masuk', 'desc');
+            $q->where('edaran_sifat', 'like', '%'.$req->cari.'%')->orWhere('edaran_perihal', 'like', '%'.$req->cari.'%')->orWhere('edaran_nomor', 'like', '%'.$req->cari.'%');
+        })->orderBy('edaran_tanggal', 'desc');
 
         switch ($req->tipe) {
             case '1':
@@ -35,7 +36,7 @@ class EdaranController extends Controller
         $data = $data->paginate(10);
 
         $data->appends(['cari' => $req->tipe, 'cari' => $req->tipe]);
-        return view('pages.suratmasuk.index', [
+        return view('pages.suratkeluar.edaran.index', [
             'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,
             'tipe' => $req->tipe,
@@ -45,9 +46,9 @@ class EdaranController extends Controller
 
 	public function tambah()
 	{
-        return view('pages.suratmasuk.form', [
+        return view('pages.suratkeluar.edaran.form', [
             'aksi' => 'Tambah',
-            'back' => Str::contains(url()->previous(), ['suratmasuk/tambah', 'suratmasuk/edit'])? '/suratmasuk': url()->previous(),
+            'back' => Str::contains(url()->previous(), ['edaran/tambah', 'edaran/edit'])? '/edaran': url()->previous(),
         ]);
 	}
 
@@ -55,19 +56,17 @@ class EdaranController extends Controller
 	{
         $validator = Validator::make($req->all(),
             [
-                'surat_masuk_nomor' => 'required',
+                'edaran_nomor' => 'required',
                 'surat_masuk_tanggal_masuk' => 'required',
-                'surat_masuk_tanggal_surat' => 'required',
-                'surat_masuk_perihal' => 'required',
-                'surat_masuk_asal' => 'required',
-                'file' => 'required|mimes:pdf'
+                'edaran_tanggal' => 'required',
+                'edaran_perihal' => 'required',
+                'edaran_sifat' => 'required'
             ],[
-                'surat_masuk_nomor.required'  => 'Nomor Surat tidak boleh kosong',
+                'edaran_nomor.required'  => 'Nomor Surat tidak boleh kosong',
                 'surat_masuk_tanggal_masuk.required'  => 'Tanggal Masuk tidak boleh kosong',
-                'surat_masuk_tanggal_surat.required'  => 'Tanggal Surat tidak boleh kosong',
-                'surat_masuk_perihal.required'  => 'Perihal tidak boleh kosong',
-                'surat_masuk_asal.required'  => 'Asal tidak boleh kosong',
-                'file.required'  => 'File tidak boleh kosong'
+                'edaran_tanggal.required'  => 'Tanggal Surat tidak boleh kosong',
+                'edaran_perihal.required'  => 'Perihal tidak boleh kosong',
+                'edaran_sifat.required'  => 'Asal tidak boleh kosong'
             ]
         );
 
@@ -81,21 +80,21 @@ class EdaranController extends Controller
 
             $ext = $file->getClientOriginalExtension();
             $nama_file = time().Str::random().".".$ext;
-            $file->move(public_path('uploads/suratmasuk'), $nama_file);
+            $file->move(public_path('uploads/edaran'), $nama_file);
 
 			$data = new Edaran();
-			$data->surat_masuk_nomor = $req->get('surat_masuk_nomor');
+			$data->edaran_nomor = $req->get('edaran_nomor');
 			$data->surat_masuk_tanggal_masuk = Carbon::parse($req->get('surat_masuk_tanggal_masuk'))->format('Y-m-d');
-			$data->surat_masuk_tanggal_surat = Carbon::parse($req->get('surat_masuk_tanggal_surat'))->format('Y-m-d');
-			$data->surat_masuk_perihal = $req->get('surat_masuk_perihal');
-			$data->surat_masuk_asal = $req->get('surat_masuk_asal');
+			$data->edaran_tanggal = Carbon::parse($req->get('edaran_tanggal'))->format('Y-m-d');
+			$data->edaran_perihal = $req->get('edaran_perihal');
+			$data->edaran_sifat = $req->get('edaran_sifat');
 			$data->surat_masuk_keterangan = $req->get('surat_masuk_keterangan');
-            $data->file = 'uploads/suratmasuk/'.$nama_file;
+            $data->file = 'uploads/edaran/'.$nama_file;
 			$data->operator = Auth::user()->pengguna_nama;
             $data->save();
 
-            toast('Berhasil menambah surat masuk '.$req->get('surat_masuk_nomor'), 'success')->autoClose(2000);
-			return redirect($req->get('redirect')? $req->get('redirect'): route('suratmasuk'));
+            toast('Berhasil menambah surat masuk '.$req->get('edaran_nomor'), 'success')->autoClose(2000);
+			return redirect($req->get('redirect')? $req->get('redirect'): route('edaran'));
         }catch(\Exception $e){
             alert()->error('Tambah Data', $e->getMessage());
             return redirect()->back()->withInput();
@@ -104,10 +103,10 @@ class EdaranController extends Controller
 
 	public function edit(Request $req)
 	{
-        return view('pages.suratmasuk.form', [
+        return view('pages.suratkeluar.edaran.form', [
             'aksi' => 'Edit',
             'data' => Edaran::findOrFail($req->no),
-            'back' => Str::contains(url()->previous(), ['suratmasuk/tambah', 'suratmasuk/edit'])? '/suratmasuk': url()->previous(),
+            'back' => Str::contains(url()->previous(), ['edaran/tambah', 'edaran/edit'])? '/edaran': url()->previous(),
         ]);
 	}
 
@@ -115,17 +114,17 @@ class EdaranController extends Controller
 	{
         $validator = Validator::make($req->all(),
             [
-                'surat_masuk_nomor' => 'required',
+                'edaran_nomor' => 'required',
                 'surat_masuk_tanggal_masuk' => 'required',
-                'surat_masuk_tanggal_surat' => 'required',
-                'surat_masuk_perihal' => 'required',
-                'surat_masuk_asal' => 'required'
+                'edaran_tanggal' => 'required',
+                'edaran_perihal' => 'required',
+                'edaran_sifat' => 'required'
             ],[
-                'surat_masuk_nomor.required'  => 'Nomor Surat tidak boleh kosong',
+                'edaran_nomor.required'  => 'Nomor Surat tidak boleh kosong',
                 'surat_masuk_tanggal_masuk.required'  => 'Tanggal Masuk tidak boleh kosong',
-                'surat_masuk_tanggal_surat.required'  => 'Tanggal Surat tidak boleh kosong',
-                'surat_masuk_perihal.required'  => 'Perihal tidak boleh kosong',
-                'surat_masuk_asal.required'  => 'Asal tidak boleh kosong'
+                'edaran_tanggal.required'  => 'Tanggal Surat tidak boleh kosong',
+                'edaran_perihal.required'  => 'Perihal tidak boleh kosong',
+                'edaran_sifat.required'  => 'Asal tidak boleh kosong'
             ]
         );
 
@@ -136,11 +135,11 @@ class EdaranController extends Controller
 
         try{
 			$data = Edaran::findOrFail($req->get('ID'));
-			$data->surat_masuk_nomor = $req->get('surat_masuk_nomor');
+			$data->edaran_nomor = $req->get('edaran_nomor');
 			$data->surat_masuk_tanggal_masuk = Carbon::parse($req->get('surat_masuk_tanggal_masuk'))->format('Y-m-d');
-			$data->surat_masuk_tanggal_surat = Carbon::parse($req->get('surat_masuk_tanggal_surat'))->format('Y-m-d');
-			$data->surat_masuk_perihal = $req->get('surat_masuk_perihal');
-			$data->surat_masuk_asal = $req->get('surat_masuk_asal');
+			$data->edaran_tanggal = Carbon::parse($req->get('edaran_tanggal'))->format('Y-m-d');
+			$data->edaran_perihal = $req->get('edaran_perihal');
+			$data->edaran_sifat = $req->get('edaran_sifat');
 			$data->surat_masuk_keterangan = $req->get('surat_masuk_keterangan');
             if($req->file('file')){
                 if($req->get('file_old')){
@@ -150,14 +149,14 @@ class EdaranController extends Controller
 
                 $ext = $file->getClientOriginalExtension();
                 $nama_file = time().Str::random().".".$ext;
-                $file->move(public_path('uploads/suratmasuk'), $nama_file);
-                $data->file = 'uploads/suratmasuk/'.$nama_file;
+                $file->move(public_path('uploads/edaran'), $nama_file);
+                $data->file = 'uploads/edaran/'.$nama_file;
             }
 			$data->operator = Auth::user()->pengguna_nama;
             $data->save();
 
-            toast('Berhasil menambah surat masuk '.$req->get('surat_masuk_nomor'), 'success')->autoClose(2000);
-			return redirect($req->get('redirect')? $req->get('redirect'): route('suratmasuk'));
+            toast('Berhasil menambah surat masuk '.$req->get('edaran_nomor'), 'success')->autoClose(2000);
+			return redirect($req->get('redirect')? $req->get('redirect'): route('edaran'));
         }catch(\Exception $e){
             alert()->error('Tambah Data', $e->getMessage());
             return redirect()->back()->withInput();

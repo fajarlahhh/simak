@@ -2,14 +2,15 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Pengguna extends Authenticatable
 {
-
+    use SoftDeletes;
     use Notifiable;
     use HasRoles;
     use LogsActivity;
@@ -40,5 +41,10 @@ class Pengguna extends Authenticatable
 	public function jabatan()
 	{
 		return $this->hasOne('App\Jabatan', 'jabatan_nama', 'jabatan_nama');
+	}
+
+	public function gambar()
+	{
+		return $this->hasOne('App\Gambar', 'gambar_nama', 'gambar_nama');
 	}
 }

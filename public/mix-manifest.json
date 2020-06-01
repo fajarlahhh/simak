@@ -1,5 +1,4 @@
 {
     "/assets/js/bundle.js": "/assets/js/bundle.js",
-    "/assets/css/app.css": "/assets/css/app.css",
-    "/assets/plugins/jquery-sparkline/jquery.sparkline.min.js": "/assets/plugins/jquery-sparkline/jquery.sparkline.min.js"
+    "/assets/css/app.css": "/assets/css/app.css"
 }

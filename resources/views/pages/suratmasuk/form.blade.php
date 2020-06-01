@@ -30,51 +30,45 @@
 			@method(strtolower($aksi) == 'tambah'? 'POST': 'PUT')
 			@csrf
 			<div class="panel-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <input type="hidden" name="redirect" value="{{ $back }}">
-                        @if($aksi == 'Edit')
-                        <input type="hidden" name="ID" value="{{ $data->surat_masuk_nomor }}">
-                        <input type="hidden" name="file_old" value="{{ $data->file }}">
-                        @endif
-                        <div class="form-group">
-                            <label class="control-label">Nomor Surat</label>
-                            <input class="form-control" type="text" name="surat_masuk_nomor" value="{{ $aksi == 'Edit'? $data->surat_masuk_nomor: old('surat_masuk_nomor') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Tanggal Masuk</label>
-                            <input type="text" readonly class="form-control datepicker" name="surat_masuk_tanggal_masuk" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->surat_masuk_tanggal_masuk: (old('surat_masuk_tanggal_masuk')? old('surat_masuk_tanggal_masuk'): now()))) }}"/>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Tanggal Surat</label>
-                            <input type="text" readonly class="form-control datepicker" name="surat_masuk_tanggal_surat" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->surat_masuk_tanggal_surat: (old('surat_masuk_tanggal_surat')? old('surat_masuk_tanggal_surat'): now()))) }}"/>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Asal</label>
-                            <input class="form-control" type="text" name="surat_masuk_asal" value="{{ $aksi == 'Edit'? $data->surat_masuk_asal: old('surat_masuk_asal') }}" required />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Perihal</label>
-                            <textarea class="form-control" rows="3" name="surat_masuk_perihal">{{ $aksi == 'Edit'? $data->surat_masuk_perihal: old('surat_masuk_perihal') }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Keterangan</label>
-                            <input class="form-control" type="text" name="surat_masuk_keterangan" value="{{ $aksi == 'Edit'? $data->surat_masuk_keterangan: old('surat_masuk_keterangan') }}" autocomplete="off" />
-                        </div>
+                <input type="hidden" name="redirect" value="{{ $back }}">
+                @if($aksi == 'Edit')
+                <input type="hidden" name="ID" value="{{ $data->surat_masuk_nomor }}">
+                <input type="hidden" name="file_old" value="{{ $data->file }}">
+                @endif
+                <div class="form-group">
+                    <label class="control-label">Nomor Surat</label>
+                    <input class="form-control" type="text" name="surat_masuk_nomor" value="{{ $aksi == 'Edit'? $data->surat_masuk_nomor: old('surat_masuk_nomor') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Tanggal Masuk</label>
+                    <input type="text" readonly class="form-control datepicker" name="surat_masuk_tanggal_masuk" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->surat_masuk_tanggal_masuk: (old('surat_masuk_tanggal_masuk')? old('surat_masuk_tanggal_masuk'): now()))) }}"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Tanggal Surat</label>
+                    <input type="text" readonly class="form-control datepicker" name="surat_masuk_tanggal_surat" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->surat_masuk_tanggal_surat: (old('surat_masuk_tanggal_surat')? old('surat_masuk_tanggal_surat'): now()))) }}"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Asal</label>
+                    <input class="form-control" type="text" name="surat_masuk_asal" value="{{ $aksi == 'Edit'? $data->surat_masuk_asal: old('surat_masuk_asal') }}" required />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Perihal</label>
+                    <textarea class="form-control" rows="3" name="surat_masuk_perihal">{{ $aksi == 'Edit'? $data->surat_masuk_perihal: old('surat_masuk_perihal') }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Rangkuman Isi Surat</label>
+                    <textarea class="form-control" rows="3" id="editor1" name="surat_masuk_keterangan">{{ $aksi == 'Edit'? $data->surat_masuk_keterangan: old('surat_masuk_keterangan') }}</textarea>
+                </div>
+                <div class="note note-danger">
+                    <div class="form-group">
+                        <label class="control-label">Upload PDF</label>
+                        <input class="form-control" type="file" name="file" accept="application/pdf" {{ $aksi == "Edit"? "": "required" }} autocomplete="off" />
                     </div>
-                    <div class="col-md-8">
-                        <div class="note note-danger">
-                            <div class="form-group">
-                                <label class="control-label">Upload PDF</label>
-                                <input class="form-control" type="file" name="file" accept="application/pdf" {{ $aksi == "Edit"? "": "required" }} autocomplete="off" />
-                            </div>
-                            @if ($aksi == "Edit")
-                            <div class="overflow-auto">
-                                @include('includes.component.pdf')
-                            </div>
-                            @endif
-                        </div>
+                    @if ($aksi == "Edit")
+                    <div class="overflow-auto">
+                        @include('includes.component.pdf')
                     </div>
+                    @endif
                 </div>
 			</div>
 			<div class="panel-footer">
@@ -102,7 +96,10 @@
 @push('scripts')
 	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
 	<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-	<script>
+    <script src="/assets/plugins/ckeditor4/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace( 'editor1' );
+        
 		$('.datepicker').datepicker({
 			todayHighlight: true,
 			format: 'dd MM yyyy',

@@ -8,7 +8,6 @@
 
 @push('css')
 	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
-	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
 @endpush
 
 @section('header')
@@ -60,7 +59,6 @@
 							<th>Tanggal Surat</th>
 							<th>Asal</th>
 							<th>Perihal</th>
-							<th>Keterangan</th>
 							<th class="width-110"></th>
 						</tr>
 					</thead>
@@ -75,7 +73,6 @@
 					        <td>{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal_surat)->isoFormat('LL') }}</td>
 					        <td>{{ $row->surat_masuk_asal }}</td>
 					        <td>{{ $row->surat_masuk_perihal }}</td>
-					        <td>{{ $row->surat_masuk_keterangan }}</td>
 					        <td class="text-right">
 	                            <a href="{{ $row->file }}" target="_blank" class='btn btn-success btn-xs m-r-3'><i class='fas fa-file-pdf'></i></a>
 					        	@role('user|super-admin|supervisor')

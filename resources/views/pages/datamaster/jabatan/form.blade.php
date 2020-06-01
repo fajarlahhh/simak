@@ -52,8 +52,12 @@
                     <label class="control-label">Pimpinan</label>
                 </div>
                 <div class="form-group">
-                    <input type="checkbox" data-render="switchery" data-theme="yellow" value="1" {{ ($aksi == 'Edit' && $data->jabatan_struktural == 1? 'checked': (old('jabatan_struktural') == 1? 'checked': '')) }} data-change="check-switchery-state-text" name="jabatan_struktural"/>
+                    <input type="checkbox" data-render="switchery" data-theme="yellow" value="1" {{ $aksi == 'Tambah'? 'checked': ($aksi == 'Edit' && $data->jabatan_struktural == 1? 'checked': (old('jabatan_struktural') == 1? 'checked': '')) }} data-change="check-switchery-state-text" name="jabatan_struktural"/>
                     <label class="control-label">Jabatan Struktural</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" data-render="switchery" data-theme="yellow" value="1" {{ ($aksi == 'Edit' && $data->jabatan_verifikator == 1? 'checked': (old('jabatan_verifikator') == 1? 'checked': '')) }} data-change="check-switchery-state-text" name="jabatan_verifikator"/>
+                    <label class="control-label">Verifikator</label>
                 </div>
 			</div>
 			<div class="panel-footer">

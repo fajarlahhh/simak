@@ -1,9 +1,9 @@
-@extends('pages.main')
+@extends('pages.suratkeluar.main')
 
-@section('title', ' | Surat Masuk')
+@section('title', ' | Edaran')
 
 @section('page')
-	<li class="breadcrumb-item active">Surat Masuk</li>
+	<li class="breadcrumb-item active">Edaran</li>
 @endsection
 
 @push('css')
@@ -12,7 +12,7 @@
 @endpush
 
 @section('header')
-	<h1 class="page-header">Surat Masuk</h1>
+	<h1 class="page-header">Edaran</h1>
 @endsection
 
 @section('subcontent')
@@ -23,12 +23,12 @@
                 <div class="col-md-4 col-lg-5 col-xl-3 col-xs-12">
                 	@role('user|super-admin|supervisor')
                     <div class="form-inline">
-                        <a href="{{ route('suratmasuk.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
+                        <a href="{{ route('edaran.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
                     </div>
                     @endrole
                 </div>
                 <div class="col-md-8 col-lg-7 col-xl-9 col-xs-12">
-                	<form action="{{ route('suratmasuk') }}" method="GET" id="frm-cari">
+                	<form action="{{ route('edaran') }}" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
 							<div class="form-group">
 								<select class="form-control selectpicker cari" name="tipe" data-live-search="true" data-style="btn-warning" data-width="100%">
@@ -38,7 +38,7 @@
 								</select>
 							</div>&nbsp;
 		                	<div class="input-group">
-								<input type="text" class="form-control cari" name="cari" placeholder="Cari Nomor/Perihal/Asal/Keterangan" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
+								<input type="text" class="form-control cari" name="cari" placeholder="Cari Nomor/edaran_perihal/Asal/Keterangan" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
 								<div class="input-group-append">
 									 <span class="input-group-text" id="basic-addon2"><i class="fa fa-search"></i></span>
 								</div>
@@ -56,11 +56,9 @@
 						<tr>
 							<th>No.</th>
 							<th>Nomor</th>
-							<th>Tanggal Masuk</th>
 							<th>Tanggal Surat</th>
-							<th>Asal</th>
+							<th>Sifat</th>
 							<th>Perihal</th>
-							<th>Keterangan</th>
 							<th class="width-110"></th>
 						</tr>
 					</thead>
@@ -69,21 +67,19 @@
 					    <tr>
 					        <td>{{ ++$i }}</td>
 					        <td>
-                                <label data-toggle="tooltip" data-container="#sm{{ $i }}" id="sm{{ $i }}" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->updated_at)->isoFormat('LLL') }}">{{ $row->surat_masuk_nomor }}</label>
+                                <label data-toggle="tooltip" data-container="#sm{{ $i }}" id="sm{{ $i }}" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->updated_at)->isoFormat('LLL') }}">{{ $row->edaran_nomor }}</label>
                             </td>
-					        <td>{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal_masuk)->isoFormat('LL') }}</td>
-					        <td>{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal_surat)->isoFormat('LL') }}</td>
-					        <td>{{ $row->surat_masuk_asal }}</td>
-					        <td>{{ $row->surat_masuk_perihal }}</td>
-					        <td>{{ $row->surat_masuk_keterangan }}</td>
+					        <td>{{ \Carbon\Carbon::parse($row->edaran_tanggal)->isoFormat('LL') }}</td>
+					        <td>{{ $row->edaran_sifat }}</td>
+					        <td>{{ $row->surat_masuk_edaran_perihal }}</td>
 					        <td class="text-right">
 	                            <a href="{{ $row->file }}" target="_blank" class='btn btn-success btn-xs m-r-3'><i class='fas fa-file-pdf'></i></a>
 					        	@role('user|super-admin|supervisor')
                                 @if (!$row->trashed())
-                                <a href="{{ route('suratmasuk.edit', array('no' => $row->surat_masuk_nomor)) }}" class="btn btn-secondary btn-xs m-r-3"><i class='fas fa-edit'></i></a>
-                                <a href="javascript:;" onclick="hapus('{{ $row->surat_masuk_nomor }}', '{{ $row->jumlah_total }}')" class="btn btn-danger btn-xs m-r-3" id='btn-del' data-toggle="tooltip" title="Hapus Data"><i class='fas fa-trash'></i></a>
+                                <a href="{{ route('edaran.edit', array('no' => $row->edaran_nomor)) }}" class="btn btn-secondary btn-xs m-r-3"><i class='fas fa-edit'></i></a>
+                                <a href="javascript:;" onclick="hapus('{{ $row->edaran_nomor }}', '{{ $row->jumlah_total }}')" class="btn btn-danger btn-xs m-r-3" id='btn-del' data-toggle="tooltip" title="Hapus Data"><i class='fas fa-trash'></i></a>
                                 @else
-                                <a href="javascript:;" onclick="restore('{{ $row->surat_masuk_nomor }}', '{{ $row->jumlah_total }}')" class="btn btn-info btn-xs m-r-3" id='btn-restore' data-toggle="tooltip" title="Restore Data"><i class='fas fa-undo'></i></a>
+                                <a href="javascript:;" onclick="restore('{{ $row->edaran_nomor }}', '{{ $row->jumlah_total }}')" class="btn btn-info btn-xs m-r-3" id='btn-restore' data-toggle="tooltip" title="Restore Data"><i class='fas fa-undo'></i></a>
                                 @endif
                                 @endrole
 					        </td>
@@ -126,7 +122,7 @@
     function restore(id, ket) {
         Swal.fire({
             title: 'Restore Data',
-            text: 'Anda akan mengembalikan surat masuk ' + ket + '',
+            text: 'Anda akan mengembalikan edaran ' + ket + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -141,7 +137,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/suratmasuk/restore?no=" + id,
+                    url: "/edaran/restore?no=" + id,
                     type: "POST",
                     data: {
                         "_method": 'PATCH'
@@ -164,7 +160,7 @@
     function hapus(id, ket) {
         Swal.fire({
             title: 'Hapus Data',
-            text: 'Anda akan menghapus surat masuk ' + ket + '',
+            text: 'Anda akan menghapus edaran ' + ket + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -179,7 +175,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/suratmasuk/hapus?no=" + id,
+                    url: "/edaran/hapus?no=" + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'

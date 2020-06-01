@@ -13,7 +13,7 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/assets/js/bundle.js')
     .sass('resources/sass/app.scss', 'public/assets/css');
-mix.copy('node_modules/jqueryui/', 'public/assets/css/jqueryui');
+/*mix.copy('node_modules/jqueryui/', 'public/assets/css/jqueryui');
 
 //mix.copy('../assets/img/', 'public/assets/img/');
 
@@ -61,4 +61,4 @@ mix.copy('node_modules/select2/', 'public/assets/plugins/select2/');
 
 mix.copy('node_modules/bootstrap3-wysihtml5-bower/dist/', 'public/assets/plugins/bootstrap3-wysihtml5/');
 
-mix.copy('node_modules/smartwizard/', 'public/assets/plugins/smartwizard/');
+mix.copy('node_modules/smartwizard/', 'public/assets/plugins/smartwizard/');*/

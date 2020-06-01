@@ -6,6 +6,11 @@
 	<li class="breadcrumb-item active">Data Pengguna</li>
 @endsection
 
+@push('css')
+	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
+@endpush
+
+
 @section('header')
 	<h1 class="page-header">Data Pengguna</h1>
 @endsection
@@ -24,12 +29,21 @@
                 </div>
                 <div class="col-md-6 col-lg-5 col-xl-3 col-xs-12">
                     <form id="frm-cari" action="{{ route('datapengguna') }}" method="GET">
-	                	<div class="input-group">
-							<input type="text" class="form-control" name="cari" placeholder="Cari Nama" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
-							<div class="input-group-append">
-								 <span class="input-group-text" id="basic-addon2"><i class="fa fa-search"></i></span>
-							</div>
-						</div>
+                		<div class="form-inline pull-right">
+                            <div class="form-group">
+                                <select class="form-control selectpicker cari" name="tipe" data-live-search="true" data-style="btn-warning" data-width="100%">
+                                    <option value="0" {{ $tipe == '0'? 'selected': '' }}>Exist</option>
+                                    <option value="1" {{ $tipe == '1'? 'selected': '' }}>Deleted</option>
+                                    <option value="2" {{ $tipe == '2'? 'selected': '' }}>All</option>
+                                </select>
+                            </div>&nbsp;
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="cari" placeholder="Cari Nama" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2"><i class="fa fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
 					</form>
                 </div>
             </div>
@@ -45,9 +59,10 @@
 							<th>Nama</th>
 							<th>No. Hp</th>
 							<th>Jabatan</th>
+							<th>Pangkat</th>
 							<th>Struktural</th>
 							<th>Pimpinan</th>
-							<th class="width-90"></th>
+							<th class="width-120"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -57,10 +72,14 @@
                             <td>{{ $row->pengguna_id }}</td>
                             <td>{{ $row->pengguna_nama }}</td>
                             <td>{{ $row->pengguna_hp }}</td>
+                            <td>{{ $row->pengguna_pangkat }}</td>
                             <td>{{ $row->jabatan->jabatan_nama }}</td>
                             <td>{{ $row->jabatan->jabatan_struktural == 1? "YA": "" }}</td>
                             <td>{{ $row->jabatan->jabatan_pimpinan == 1? "YA": "" }}</td>
-					        <td>
+					        <td class="text-right">
+                                @if ($row->gambar_nama)
+                                <a href="/{{ $row->gambar->gambar_lokasi }}" target="_blank" class='btn btn-warning btn-xs m-r-3'><i class='fas fa-signature'></i></a>
+                                @endif
 					        	@role('user|super-admin')
                                 <a href="/datapengguna/edit/{{ $row->pengguna_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
                                 @if (!in_array($row->pengguna_id, config('admin.nip')))
@@ -87,6 +106,7 @@
 @endsection
 
 @push('scripts')
+    <script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 	<script>
 		$(".cari").change(function() {
 		     $("#frm-cari").submit();

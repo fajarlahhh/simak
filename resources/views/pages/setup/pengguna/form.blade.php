@@ -55,32 +55,42 @@
                             @endforeach
                         </select>
                     </div>
-                    <hr>
                     <div class="form-group">
-                        <label class="control-label">Kata Sandi</label>
-                        <input class="form-control" type="password" name="pengguna_sandi" autocomplete="off" id="pengguna_sandi" />
+                        <label class="control-label">Pangkat</label>
+                        <input  class="form-control" type="text" name="pengguna_pangkat" value="{{ $aksi == 'Edit'? $data->pengguna_pangkat: old('pengguna_pangkat') }}" required />
                     </div>
-                    <div class="form-group">
-                        <label class="control-label">Level</label>
-                        <select class="form-control selectpicker" style="width : 100%" name="pengguna_level" id="pengguna_level" data-style="btn-info" onchange="hakakses()" data-width="100%">
-                            @foreach($level as $lvl)
-                            <option value="{{ $lvl->id }}" {{ ($aksi == 'Edit' && $data->getRoleNames()[0] == $lvl->name? 'selected': (old('pengguna_level') == $lvl->id? 'selected': '')) }}>{{ ucfirst($lvl->name) }}</option>
+                    <div class="form-group input-group-sm">
+                        <label class="control-label">Tanda Tangan</label>
+                        <select class="form-control selectpicker" name="gambar_nama" data-live-search="true" data-style="btn-info" data-width="100%">
+                            <option value="">Tidak Ada</option>
+                            @foreach($gambar as $row)
+                            <option data-thumbnail="/{{ $row->gambar_lokasi }}" value="{{ $row->gambar_nama }}" {{ ($aksi == 'Edit' && $data->gambar_nama == $row->gambar_nama? 'selected': (old('gambar_nama') == $row->gambar_nama? 'selected': '')) }}>{{ $row->gambar_nama }}</option>
                             @endforeach
                         </select>
                     </div>
+                    @if ($aksi == 'Edit')
+                        @if ($data->gambar_nama)
+                            <img src="/{{ $data->gambar->gambar_lokasi }}" alt="" class="width-full">
+                        @endif
+                    @endif
                     @include('includes.error')
                 </div>
                 <div class="col-md-7">
-                     <div class="panel panel-default">
-                        <!-- begin panel-heading -->
-                        <div class="panel-heading">
-                            <div class="panel-heading-btn">
-                                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-                            </div>
-                            <h4 class="panel-title">Hak Akses</h4>
+                    <div class="note note-secondary">
+                        <div class="form-group">
+                            <label class="control-label">Kata Sandi</label>
+                            <input class="form-control" type="password" name="pengguna_sandi" autocomplete="off" id="pengguna_sandi" />
                         </div>
-                        <!-- end panel-heading -->
-                        <!-- begin panel-body -->
+                        <div class="form-group">
+                            <label class="control-label">Level</label>
+                            <select class="form-control selectpicker" style="width : 100%" name="pengguna_level" id="pengguna_level" data-style="btn-info" onchange="hakakses()" data-width="100%">
+                                @foreach($level as $lvl)
+                                <option value="{{ $lvl->id }}" {{ ($aksi == 'Edit' && $data->getRoleNames()[0] == $lvl->name? 'selected': (old('pengguna_level') == $lvl->id? 'selected': '')) }}>{{ ucfirst($lvl->name) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <hr>
+                        <h4>Hak Akses</h4>
                         <div class="panel-body row">
                             @foreach ($menu as $menu)
                             <div class="hakakses checkbox checkbox-css col-md-6 col-lg-4">
@@ -99,7 +109,6 @@
                             </div>
                             @endforeach
                         </div>
-                        <!-- end panel-body -->
                     </div>
                 </div>
             </div>

@@ -50,6 +50,5 @@
 
     @include('sweetalert::alert')
 	@include('includes.page-js')
-	@include('includes.pusher')
 </body>
 </html>

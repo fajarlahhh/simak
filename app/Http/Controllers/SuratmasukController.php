@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\SuratMasuk;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Events\SuratMasukEvent;
+use App\Events\SuratMasukTerinput;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +36,7 @@ class SuratmasukController extends Controller
 
         $data = $data->paginate(10);
 
-        $data->appends(['cari' => $req->tipe, 'cari' => $req->tipe]);
+        $data->appends(['tipe' => $req->tipe, 'cari' => $req->tipe]);
         return view('pages.suratmasuk.index', [
             'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,

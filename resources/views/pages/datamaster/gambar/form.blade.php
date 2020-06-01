@@ -34,7 +34,7 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label">Upload Gambar</label>
-                    <input class="form-control" type="file" name="gambar_lokasi" required autocomplete="off" />
+                    <input class="form-control" type="file" accept="image/*" name="gambar_lokasi" required autocomplete="off" />
                 </div>
 			</div>
 			<div class="panel-footer">

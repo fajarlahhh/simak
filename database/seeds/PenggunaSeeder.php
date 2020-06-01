@@ -18,6 +18,7 @@ class PenggunaSeeder extends Seeder
             'pengguna_nama' => "Administrator",
             'pengguna_sandi' => Hash::make('admin'),
             'remember_token' => Str::random(10),
+            'token' => Hash::make('admin'),
             'jabatan_nama' => "Staff",
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
