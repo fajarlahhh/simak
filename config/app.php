@@ -180,6 +180,8 @@ return [
          * Library
          */
         Spatie\Permission\PermissionServiceProvider::class,
+        niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class
     ],
 
     /*
@@ -230,6 +232,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class
 
     ],
 

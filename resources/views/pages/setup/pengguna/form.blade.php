@@ -44,8 +44,24 @@
                         <input  class="form-control" type="text" name="pengguna_nama" value="{{ $aksi == 'Edit'? $data->pengguna_nama: old('pengguna_nama') }}" required />
                     </div>
                     <div class="form-group">
+                        <label class="control-label">NIP</label>
+                        <input  class="form-control" type="text" name="pengguna_nip" value="{{ $aksi == 'Edit'? $data->pengguna_nip: old('pengguna_nip') }}" required />
+                    </div>
+                    <div class="form-group">
                         <label class="control-label">No. Hp</label>
                         <input  class="form-control" type="text" name="pengguna_hp" value="{{ $aksi == 'Edit'? $data->pengguna_hp: old('pengguna_hp') }}" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Pangkat</label>
+                        <input  class="form-control" type="text" name="pengguna_pangkat" value="{{ $aksi == 'Edit'? $data->pengguna_pangkat: old('pengguna_pangkat') }}" required />
+                    </div>
+                    <div class="form-group input-group-sm">
+                        <label class="control-label">Bidang</label>
+                        <select class="form-control selectpicker" name="bidang_nama" data-live-search="true" data-style="btn-info" data-width="100%">
+                            @foreach($bidang as $row)
+                            <option value="{{ $row->bidang_nama }}" {{ ($aksi == 'Edit' && $data->bidang_nama == $row->bidang_nama? 'selected': (old('bidang_nama') == $row->bidang_nama? 'selected': '')) }}>{{ $row->bidang_nama }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group input-group-sm">
                         <label class="control-label">Jabatan</label>
@@ -55,16 +71,12 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label">Pangkat</label>
-                        <input  class="form-control" type="text" name="pengguna_pangkat" value="{{ $aksi == 'Edit'? $data->pengguna_pangkat: old('pengguna_pangkat') }}" required />
-                    </div>
                     <div class="form-group input-group-sm">
                         <label class="control-label">Tanda Tangan</label>
                         <select class="form-control selectpicker" name="gambar_nama" data-live-search="true" data-style="btn-info" data-width="100%">
                             <option value="">Tidak Ada</option>
                             @foreach($gambar as $row)
-                            <option data-thumbnail="/{{ $row->gambar_lokasi }}" value="{{ $row->gambar_nama }}" {{ ($aksi == 'Edit' && $data->gambar_nama == $row->gambar_nama? 'selected': (old('gambar_nama') == $row->gambar_nama? 'selected': '')) }}>{{ $row->gambar_nama }}</option>
+                            <option value="{{ $row->gambar_nama }}" {{ ($aksi == 'Edit' && $data->gambar_nama == $row->gambar_nama? 'selected': (old('gambar_nama') == $row->gambar_nama? 'selected': '')) }}>{{ $row->gambar_nama }}</option>
                             @endforeach
                         </select>
                     </div>

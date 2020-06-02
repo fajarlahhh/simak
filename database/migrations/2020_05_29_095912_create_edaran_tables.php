@@ -15,19 +15,23 @@ class CreateEdaranTables extends Migration
     {
         Schema::create('edaran', function (Blueprint $table) {
             $table->string('edaran_nomor');
-            $table->string('kop_isi');
-            $table->string('edaran_tanggal');
-            $table->string('edaran_lampiran');
-            $table->string('edaran_sifat');
+            $table->date('edaran_tanggal');
+            $table->string('edaran_sifat')->nullable();
             $table->text('edaran_perihal');
+            $table->text('edaran_lampiran');
             $table->text('edaran_kepada');
-            $table->string('salam_pembuka');
             $table->longText('edaran_isi');
-            $table->string('salam_penutup');
+            $table->string('edaran_ttd');
+            $table->text('edaran_tembusan')->nullable();
+
             $table->string('jabatan_nama');
-            $table->string('edaran_ttd_gambar');
-            $table->string('edaran_pejabat');
-            $table->text('edaran_tembusan');
+            $table->text('edaran_pejabat');
+            $table->text('salam_pembuka');
+            $table->text('salam_penutup');
+            $table->text('kop_isi');
+
+            $table->tinyInteger('fix')->default(0);
+            $table->integer('urutan');
             $table->string('operator');
             $table->timestamps();
             $table->softDeletes();

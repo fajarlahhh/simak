@@ -18,7 +18,7 @@ class SalamController extends Controller
     public function index(Request $req)
 	{
         $data = Salam::all()->first();
-        return view('pages.setup.salam.form', [
+        return view('pages.template.salam.form', [
             'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,
             'cari' => $req->cari
@@ -50,7 +50,7 @@ class SalamController extends Controller
 			$data->operator = Auth::user()->pengguna_nama;
             $data->save();
 
-            toast('Berhasil mengedit salam ', 'success')->autoClose(2000);
+            toast('Berhasil menyimpan salam ', 'success')->autoClose(2000);
 			return redirect(route('salam'));
         }catch(\Exception $e){
             alert()->error('Edit Data', $e->getMessage());

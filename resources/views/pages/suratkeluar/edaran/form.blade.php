@@ -4,6 +4,8 @@
 
 @push('css')
 	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
+	<link href="/assets/plugins/smartwizard/dist/css/smart_wizard.css" rel="stylesheet" />
+	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
 	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
 	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
 @endpush
@@ -18,78 +20,191 @@
 @endsection
 
 @section('subcontent')
-	<div class="panel panel-inverse" data-sortable-id="form-stuff-1">
-		<!-- begin panel-heading -->
-		<div class="panel-heading">
-			<div class="panel-heading-btn">
-                <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+<div class="panel panel-inverse" data-sortable-id="form-stuff-1">
+    <!-- begin panel-heading -->
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+        </div>
+        <h4 class="panel-title"><i class="far fa-file-alt"></i> Form</h4>
+    </div>
+<form action="{{ route('edaran.'.strtolower($aksi)) }}" name="form-wizard" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
+    @csrf
+    @method(strtolower($aksi) == 'tambah'? 'POST': 'PUT')
+    <div id="wizard">
+        <ul>
+            <li class="col-md-3 col-sm-4 col-6">
+                <a href="#step-1">
+                    <span class="number">1</span>
+                    <span class="info text-ellipsis">
+                        Header
+                        <small class="text-ellipsis">Tanggal, Sifat, Perihal</small>
+                    </span>
+                </a>
+            </li>
+            <li class="col-md-3 col-sm-4 col-6">
+                <a href="#step-2">
+                    <span class="number">2</span>
+                    <span class="info text-ellipsis">
+                        Lampiran & Tujuan
+                        <small class="text-ellipsis">Lampiran, Tujuan</small>
+                    </span>
+                </a>
+            </li>
+            <li class="col-md-3 col-sm-4 col-6">
+                <a href="#step-3">
+                    <span class="number">3</span>
+                    <span class="info text-ellipsis">
+                        Isi Surat
+                        <small class="text-ellipsis">Isi</small>
+                    </span>
+                </a>
+            </li>
+            <li class="col-md-3 col-sm-4 col-6">
+                <a href="#step-4">
+                    <span class="number">4</span>
+                    <span class="info text-ellipsis">
+                        Footer
+                        <small class="text-ellipsis">Tanda Tangan, Tembusan</small>
+                    </span>
+                </a>
+            </li>
+        </ul>
+        <div>
+            <div id="step-1">
+                <!-- begin fieldset -->
+                <fieldset>
+                    @if ($aksi == 'Edit')
+                    <div class="form-group">
+                        <label class="control-label">Nomor</label>
+                        <input class="form-control" type="text" name="edaran_nomor" value="{{ $aksi == 'Edit'? $data->edaran_nomor: old('edaran_nomor') }}" readonly/>
+                    </div>
+                    @endif
+                    <div class="form-group">
+                        <label class="control-label">Tanggal Surat</label>
+                        <input type="text" readonly class="form-control datepicker" name="edaran_tanggal" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->edaran_tanggal:(old('edaran_tanggal')? old('edaran_tanggal'): now()))) }}" data-parsley-group="step-1"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Sifat</label>
+                        <input class="form-control"  type="text" name="edaran_sifat" value="{{ $aksi == 'Edit'? $data->edaran_sifat: old('edaran_sifat') }}" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Perihal</label>
+                        <textarea class="form-control" rows="3" data-parsley-group="step-1" data-parsley-required="true" data-parsley-errors-messages-disabled="" required name="edaran_perihal">{{ $aksi == 'Edit'? $data->edaran_perihal: old('edaran_perihal') }}</textarea>
+                    </div>
+                </fieldset>
+                <!-- end fieldset -->
             </div>
-			<h4 class="panel-title">Form</h4>
-		</div>
-		<form action="{{ route('suratmasuk.'.strtolower($aksi)) }}" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
-			@method(strtolower($aksi) == 'tambah'? 'POST': 'PUT')
-			@csrf
-			<div class="panel-body">
-                <input type="hidden" name="redirect" value="{{ $back }}">
-                @if($aksi == 'Edit')
-                <input type="hidden" name="ID" value="{{ $data->edaran_nomor }}">
-                <input type="hidden" name="file_old" value="{{ $data->file }}">
-                @endif
-                <div class="form-group">
-                    <label class="control-label">Nomor Edaran</label>
-                    <input class="form-control" type="text" name="edaran_nomor" value="{{ $aksi == 'Edit'? $data->edaran_nomor: old('edaran_nomor') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Tanggal Surat</label>
-                    <input type="text" readonly class="form-control datepicker" name="edaran_tanggal" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->edaran_tanggal: (old('edaran_tanggal')? old('edaran_tanggal'): now()))) }}"/>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Sifat</label>
-                    <input class="form-control" type="text" name="edaran_sifat" value="{{ $aksi == 'Edit'? $data->edaran_sifat: old('edaran_sifat') }}" required />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Perihal</label>
-                    <input class="form-control" type="text" name="edaran_perihal" value="{{ $aksi == 'Edit'? $data->edaran_perihal: old('edaran_perihal') }}" required />
-                </div>
-                <div class="form-group">
-                    <label class="control-label">Isi Edaran</label>
-                    <textarea class="form-control" rows="3" id="editor1" name="surat_masuk_keterangan">{{ $aksi == 'Edit'? $data->surat_masuk_keterangan: old('surat_masuk_keterangan') }}</textarea>
-                </div>
-			</div>
-			<div class="panel-footer">
-				@role('user|super-admin|supervisor')
-				<input type="submit" value="Simpan" class="btn btn-sm btn-success m-r-3"  />
-				@endrole
-	            <a href="{{ $back }}" class="btn btn-sm btn-danger">Batal</a>
-	            <div class="pull-right">
-					This page took {{ (microtime(true) - LARAVEL_START) }} seconds to render
-				</div>
-	        </div>
-		</form>
-	</div>
-    @if ($errors->any())
-	<div class="alert alert-danger">
-		<ul>
-		    @foreach ($errors->all() as $error)
-	      	<li>{{ $error }}</li>
-		    @endforeach
-		</ul>
-	</div>
-    @endif
+            <div id="step-2">
+                <!-- begin fieldset -->
+                <fieldset>
+                    <div class="form-group">
+                        <label class="control-label">Lampiran</label>
+                        <textarea class="form-control" id="editor0" rows="3" name="edaran_lampiran" >{{ $aksi == 'Edit'? $data->edaran_lampiran: old('edaran_lampiran') }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Kepada</label>
+                        <textarea class="form-control" id="editor1" rows="3" name="edaran_kepada" >{{ $aksi == 'Edit'? $data->edaran_kepada: old('edaran_kepada') }}</textarea>
+                    </div>
+                </fieldset>
+                <!-- end fieldset -->
+            </div>
+            <div id="step-3">
+                <fieldset>
+                    <textarea class="form-control" rows="3" id="editor2"  name="edaran_isi">{{ $aksi == 'Edit'? $data->edaran_isi: old('edaran_isi') }}</textarea>
+                </fieldset>
+            </div>
+            <div id="step-4">
+                <fieldset>
+                    <div class="form-group input-group-sm">
+                        <label class="control-label">Tanda Tangan</label>
+                        <select class="form-control selectpicker" name="edaran_pejabat" data-live-search="true" data-style="btn-info" data-width="100%">
+                            @foreach($pengguna as $row)
+                            <option value="{{ $row->pengguna_id }}" {{ ($aksi == 'Edit' && $data->pengguna_nama == $row->pengguna_nama? 'selected': (old('gambar_nama') == $row->gambar_nama? 'selected': '')) }}>{{ $row->jabatan_nama }} - {{ $row->pengguna_nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group input-group-sm">
+                        <label class="control-label">Jenis Tanda Tangan</label>
+                        <select class="form-control selectpicker" name="edaran_jenis_ttd" data-live-search="true" data-style="btn-info" data-width="100%">
+                            <option value="1" {{ ($aksi == 'Edit' && $data->edaran_ttd == 1? 'selected': (old('edaran_jenis_ttd') == 1? 'selected': '')) }}>QR Code</option>
+                            <option value="2" {{ ($aksi == 'Edit' && $data->edaran_ttd != 1? 'selected': (old('edaran_jenis_ttd') == 1? 'selected': '')) }}>Gambar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Tembusan</label>
+                        <textarea class="form-control" id="editor3" rows="3" name="edaran_tembusan" required>{{ $aksi == 'Edit'? $data->edaran_tembusan: old('edaran_tembusan') }}</textarea>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</form>
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 @endsection
 
 @push('scripts')
+    <script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
-	<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	<script src="/assets/plugins/smartwizard/dist/js/jquery.smartWizard.js"></script>
     <script src="/assets/plugins/ckeditor4/ckeditor.js"></script>
+	<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script>
-        CKEDITOR.replace( 'editor1' );
-        
+        CKEDITOR.replace( 'editor0' , {
+            height: '150px',
+        });
+        CKEDITOR.replace( 'editor1' , {
+            height: '150px',
+        });
+        CKEDITOR.replace( 'editor2' );
+        CKEDITOR.replace( 'editor3' , {
+            height: '150px',
+        });
+
 		$('.datepicker').datepicker({
 			todayHighlight: true,
 			format: 'dd MM yyyy',
 			orientation: "bottom",
 			autoclose: true
 		});
+
+        $('#wizard').smartWizard({
+            selected: 0,
+            theme: 'default',
+            transitionEffect:'',
+            transitionSpeed: 0,
+            useURLhash: false,
+            showStepURLhash: false,
+            toolbarSettings: {
+                toolbarPosition: 'bottom',
+                toolbarExtraButtons: [
+                    $('<a></a>').text('Simpan').addClass('btn btn-success').on('click', function(){
+                        $('form[name="form-wizard"]').submit();
+                    }),
+                    $('<a></a>').text('Batal').addClass('btn btn-danger').on('click', function(){
+                        window.history.back();
+                    }),
+                ]
+            }
+        });
+
+        $('#wizard').on('leaveStep', function(e, anchorObject, stepNumber, stepDirection) {
+            var res = $('form[name="form-wizard"]').parsley().validate('step-' + (stepNumber + 1));
+            return res;
+        });
+
+        $('#wizard').keypress(function( event ) {
+            if (event.which == 13 ) {
+                $('#wizard').smartWizard('next');
+            }
+        });
     </script>
 @endpush

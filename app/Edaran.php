@@ -13,7 +13,7 @@ class Edaran extends Model
     use LogsActivity;
 
     protected $table = 'edaran';
-    protected $primaryKey = 'edaran_id';
+    protected $primaryKey = 'edaran_nomor';
     public $incrementing = false;
     protected $keyType = 'string';
 }

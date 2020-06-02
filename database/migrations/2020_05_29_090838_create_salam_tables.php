@@ -14,8 +14,8 @@ class CreateSalamTables extends Migration
     public function up()
     {
         Schema::create('salam', function (Blueprint $table) {
-            $table->string('salam_pembuka');
-            $table->string('salam_penutup');
+            $table->text('salam_pembuka');
+            $table->text('salam_penutup');
             $table->string('operator');
             $table->timestamps();
         });

@@ -29,12 +29,6 @@ class JabatanController extends Controller
         ]);
     }
 
-	public function cari(Request $req)
-	{
-        $barang_dan_pekerjaan = Jabatan::where('jabatan_nama', 'like', '%'.$req->cari.'%')->orderBy('jabatan_nama')->get();
-		return $barang_dan_pekerjaan;
-    }
-
 	public function tambah(Request $req)
 	{
         return view('pages.datamaster.jabatan.form', [

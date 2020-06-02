@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Bidang;
 use App\Gambar;
 use App\Jabatan;
 use App\Pegawai;
@@ -44,7 +45,7 @@ class PenggunaController extends Controller
                 # code...
                 break;
         }
-        
+
         $data = $data->paginate(10);
 
         $data->appends(['cari' => $req->tipe, 'cari' => $req->tipe]);
@@ -89,6 +90,7 @@ class PenggunaController extends Controller
             'jabatan' => Jabatan::all(),
             'level' => Role::all(),
             'gambar' => Gambar::all(),
+            'bidang' => Bidang::all(),
             'back' => Str::contains(url()->previous(), ['datapengguna/tambah', 'datapengguna/edit'])? '/datapengguna': url()->previous(),
             'menu' => $this->menu(),
             'aksi' => 'Tambah',
@@ -127,11 +129,13 @@ class PenggunaController extends Controller
 			$pengguna = new Pengguna();
 			$pengguna->pengguna_id = $req->get('pengguna_id');
 			$pengguna->pengguna_nama = $req->get('pengguna_nama');
+			$pengguna->pengguna_nip = $req->get('pengguna_nip');
 			$pengguna->pengguna_hp = $req->get('pengguna_hp');
 			$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
 			$pengguna->jabatan_nama = $req->get('jabatan_nama');
             $pengguna->pengguna_pangkat = $req->get('pengguna_pangkat');
 			$pengguna->gambar_nama = $req->get('gambar_nama');
+			$pengguna->bidang_nama = $req->get('bidang_nama');
             $pengguna->token = Hash::make($req->get('pengguna_id'));
 			$pengguna->save();
 			$pengguna->assignRole($req->get('pengguna_level'));
@@ -157,6 +161,7 @@ class PenggunaController extends Controller
                 'jabatan' => Jabatan::all(),
                 'data' => Pengguna::findOrFail($id),
                 'gambar' => Gambar::all(),
+                'bidang' => Bidang::all(),
                 'level' => (in_array($id, config('admin.nip'))? Role::where('name', 'super-admin')->get(): Role::all()),
                 'back' => Str::contains(url()->previous(), 'datapengguna/edit')? '/datapengguna': url()->previous(),
                 'aksi' => 'Edit',
@@ -195,11 +200,13 @@ class PenggunaController extends Controller
             $pengguna = Pengguna::findOrFail($req->get('ID'));
 			$pengguna->pengguna_nama = $req->get('pengguna_nama');
 			$pengguna->pengguna_hp = $req->get('pengguna_hp');
+			$pengguna->pengguna_nip = $req->get('pengguna_nip');
 			if ($req->get('pengguna_sandi')) {
 				$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
 			}
 			$pengguna->jabatan_nama = $req->get('jabatan_nama');
 			$pengguna->pengguna_pangkat = $req->get('pengguna_pangkat');
+			$pengguna->bidang_nama = $req->get('bidang_nama');
 			$pengguna->gambar_nama = $req->get('gambar_nama');
 			$pengguna->save();
             $pengguna->syncPermissions();

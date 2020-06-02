@@ -18,7 +18,7 @@ class KopsuratController extends Controller
     public function index(Request $req)
 	{
         $data = KopSurat::get()->first();
-        return view('pages.setup.kopsurat.form', [
+        return view('pages.template.kopsurat.form', [
             'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,
             'cari' => $req->cari
@@ -47,7 +47,7 @@ class KopsuratController extends Controller
 			$data->operator = Auth::user()->pengguna_nama;
             $data->save();
 
-            toast('Berhasil mengedit kopsurat ', 'success')->autoClose(2000);
+            toast('Berhasil menyimpan kopsurat ', 'success')->autoClose(2000);
 			return redirect(route('kopsurat'));
         }catch(\Exception $e){
             alert()->error('Edit Data', $e->getMessage());

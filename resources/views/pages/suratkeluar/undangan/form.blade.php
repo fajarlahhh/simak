@@ -101,13 +101,4 @@
 
 @push('scripts')
 	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
-	<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-	<script>
-		$('.datepicker').datepicker({
-			todayHighlight: true,
-			format: 'dd MM yyyy',
-			orientation: "bottom",
-			autoclose: true
-		});
-    </script>
 @endpush

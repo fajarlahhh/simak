@@ -43,6 +43,20 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
+    Route::group(['middleware' => ['role_or_permission:super-admin|databidang']], function () {
+        Route::prefix('databidang')->group(function () {
+            Route::get('/', 'BidangController@index')->name('databidang');
+            Route::get('/edit', 'BidangController@edit')->middleware(['role:super-admin|user|supervisor']);
+            Route::put('/edit', 'BidangController@do_edit')->middleware(['role:super-admin|user|supervisor'])->name('databidang.edit');
+            Route::get('/tambah', 'BidangController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('databidang.tambah');
+            Route::get('/tambah', 'BidangController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('databidang.tambah');
+            Route::post('/tambah', 'BidangController@do_tambah')->middleware(['role:super-admin|user|supervisor'])->name('databidang.tambah');
+            Route::delete('/hapus', 'BidangController@hapus')->middleware(['role:super-admin|user|supervisor']);
+            Route::patch('/restore', 'BidangController@restore')->middleware(['role:super-admin|supervisor']);
+            Route::get('/detail', 'BidangController@detail')->name('databidang.detail');
+        });
+    });
+
     Route::group(['middleware' => ['role_or_permission:super-admin|suratmasuk']], function () {
         Route::prefix('suratmasuk')->group(function () {
             Route::get('/', 'SuratmasukController@index')->name('suratmasuk');
@@ -62,10 +76,11 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/edit', 'EdaranController@edit')->middleware(['role:super-admin|user|supervisor']);
             Route::put('/edit', 'EdaranController@do_edit')->middleware(['role:super-admin|user|supervisor'])->name('edaran.edit');
             Route::get('/tambah', 'EdaranController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('edaran.tambah');
-            Route::post('/tambah', 'EdaranController@do_tambah')->middleware(['role:super-admin|user|supervisor'])->name('edaran.tambah');
+            Route::post('/tambah', 'EdaranController@do_tambah')->middleware(['role:super-admin|user'])->name('edaran.tambah');
             Route::delete('/hapus', 'EdaranController@hapus')->middleware(['role:super-admin|user|supervisor']);
             Route::patch('/restore', 'EdaranController@restore')->middleware(['role:super-admin|supervisor']);
             Route::get('/detail', 'EdaranController@detail')->name('edaran.detail');
+            Route::get('/cetak', 'EdaranController@cetak')->middleware(['role:super-admin|user'])->name('edaran.cetak');
         });
     });
 
@@ -89,6 +104,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::prefix('salam')->group(function () {
             Route::get('/', 'SalamController@index')->name('salam');
             Route::post('/simpan', 'SalamController@simpan')->middleware(['role:super-admin|user|supervisor'])->name('salam.simpan');
+        });
+    });
+
+    Route::group(['middleware' => ['role_or_permission:super-admin|penomoran']], function () {
+        Route::prefix('penomoran')->group(function () {
+            Route::get('/', 'PenomoranController@index')->name('penomoran');
+            Route::post('/simpan', 'PenomoranController@simpan')->middleware(['role:super-admin|user|supervisor'])->name('penomoran.simpan');
         });
     });
 });

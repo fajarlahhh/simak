@@ -1,4 +1,4 @@
-@extends('pages.setup.main')
+@extends('pages.template.main')
 
 @section('title', ' | Salam')
 

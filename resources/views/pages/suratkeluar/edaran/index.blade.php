@@ -71,9 +71,9 @@
                             </td>
 					        <td>{{ \Carbon\Carbon::parse($row->edaran_tanggal)->isoFormat('LL') }}</td>
 					        <td>{{ $row->edaran_sifat }}</td>
-					        <td>{{ $row->surat_masuk_edaran_perihal }}</td>
+					        <td>{{ $row->edaran_perihal }}</td>
 					        <td class="text-right">
-	                            <a href="{{ $row->file }}" target="_blank" class='btn btn-success btn-xs m-r-3'><i class='fas fa-file-pdf'></i></a>
+	                            <a href="/edaran/cetak?no={{ $row->edaran_nomor }}" target="_blank" class='btn btn-success btn-xs m-r-3'><i class='fas fa-file-pdf'></i></a>
 					        	@role('user|super-admin|supervisor')
                                 @if (!$row->trashed())
                                 <a href="{{ route('edaran.edit', array('no' => $row->edaran_nomor)) }}" class="btn btn-secondary btn-xs m-r-3"><i class='fas fa-edit'></i></a>

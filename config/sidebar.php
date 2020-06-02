@@ -25,6 +25,10 @@ return [
 		'id' => 'datamaster',
 		'caret' => true,
 		'sub_menu' => [[
+			'url' => '/databidang',
+			'id' => '/databidang',
+			'title' => 'Data Bidang'
+        ],[
 			'url' => '/datajabatan',
 			'id' => '/datajabatan',
 			'title' => 'Data Jabatan'
@@ -43,14 +47,6 @@ return [
 			'url' => '/datapengguna',
 			'id' => '/datapengguna',
 			'title' => 'Data Pengguna'
-        ],[
-			'url' => '/kopsurat',
-			'id' => '/kopsurat',
-			'title' => 'Kop Surat'
-        ],[
-			'url' => '/salam',
-			'id' => '/salam',
-			'title' => 'Salam'
         ]]
 	],[
 		'icon' => 'fas fa-paper-plane',
@@ -84,5 +80,24 @@ return [
 		'title' => 'Surat Masuk',
 		'id' => 'suratmasuk',
 		'url' => '/suratmasuk'
+	],[
+		'icon' => 'fas fa-palette',
+		'title' => 'Template',
+		'url' => 'javascript:;',
+		'id' => 'template',
+		'caret' => true,
+		'sub_menu' => [[
+			'url' => '/kopsurat',
+			'id' => '/kopsurat',
+			'title' => 'Kop Surat'
+        ],[
+			'url' => '/penomoran',
+			'id' => '/penomoran',
+			'title' => 'Penomoran'
+        ],[
+			'url' => '/salam',
+			'id' => '/salam',
+			'title' => 'Salam'
+        ]]
 	]]
 ];
