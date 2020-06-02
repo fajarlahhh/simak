@@ -29,7 +29,7 @@ class CreateEdaranTables extends Migration
             $table->text('salam_pembuka');
             $table->text('salam_penutup');
             $table->text('kop_isi');
-
+            
             $table->tinyInteger('fix')->default(0);
             $table->integer('urutan');
             $table->string('operator');

@@ -120,3 +120,7 @@ Route::post('/login', 'Auth\LoginController@login');
 
 Route::get('/logout', 'Auth\LoginController@logout');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+
+Route::prefix('cetak')->group(function () {
+    Route::get('/edaran', 'EdaranController@cetak');
+});

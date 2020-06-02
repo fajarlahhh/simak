@@ -55,7 +55,7 @@
         <td class="v-top">
             {{ $data->jabatan_nama }}<br>
             {{ env('APP_DESKRIPSI') }}<br>
-            {!! $data->edaran_ttd == 1? QrCode::size(150)->generate('/edaran/cetak?no='.$data->edaran_nomor): "<img src='/".$data->edaran_ttd."' height='150'>" !!}<br>
+            {!! $data->edaran_ttd == 1? QrCode::size(150)->generate(URL::to('/cetak/edaran?no='.$data->edaran_nomor)): "<img src='/".$data->edaran_ttd."' height='150'>" !!}<br>
             {!! $data->edaran_pejabat !!}<br>
         </td>
     </tr>
@@ -63,6 +63,5 @@
 <br>
 <br>
 @if ($data->edaran_tembusan)
-    <strong>Tembusan disampaikan kepada Yth. :</strong>
     {!! $data->edaran_tembusan !!}
 @endif

@@ -58,6 +58,7 @@
                     <div class="form-group input-group-sm">
                         <label class="control-label">Bidang</label>
                         <select class="form-control selectpicker" name="bidang_nama" data-live-search="true" data-style="btn-info" data-width="100%">
+                            <option value="" {{ ($aksi == 'Edit' && $data->bidang_nama == null? 'selected': (old('bidang_nama') == null? 'selected': '')) }}>Tidak Ada</option>
                             @foreach($bidang as $row)
                             <option value="{{ $row->bidang_nama }}" {{ ($aksi == 'Edit' && $data->bidang_nama == $row->bidang_nama? 'selected': (old('bidang_nama') == $row->bidang_nama? 'selected': '')) }}>{{ $row->bidang_nama }}</option>
                             @endforeach

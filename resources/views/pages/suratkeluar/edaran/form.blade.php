@@ -20,14 +20,6 @@
 @endsection
 
 @section('subcontent')
-<div class="panel panel-inverse" data-sortable-id="form-stuff-1">
-    <!-- begin panel-heading -->
-    <div class="panel-heading">
-        <div class="panel-heading-btn">
-            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
-        </div>
-        <h4 class="panel-title"><i class="far fa-file-alt"></i> Form</h4>
-    </div>
 <form action="{{ route('edaran.'.strtolower($aksi)) }}" name="form-wizard" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
     @csrf
     @method(strtolower($aksi) == 'tambah'? 'POST': 'PUT')
