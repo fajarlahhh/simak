@@ -52,6 +52,7 @@ class EdaranController extends Controller
 	{
         return view('pages.suratkeluar.edaran.form', [
             'aksi' => 'Tambah',
+            'data' => null,
             'pengguna' => Pengguna::whereHas('jabatan', function ($q){
                 $q->where('jabatan_struktural', 1);
             })->get(),
