@@ -12,13 +12,6 @@ class SuratMasuk extends Model
     use SoftDeletes;
     use LogsActivity;
 
-
-    protected $dispatchesEvents = [
-
-        'created' => SuratMasukEvent::class,
-        
-    ];
-
     protected $table = 'surat_masuk';
     protected $primaryKey = 'surat_masuk_nomor';
     public $incrementing = false;

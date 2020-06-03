@@ -7,7 +7,6 @@ use App\SuratMasuk;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\SuratMasukEvent;
-use App\Events\SuratMasukTerinput;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -79,6 +78,7 @@ class SuratmasukController extends Controller
         }
 
         try{
+
             $file = $req->file('file');
 
             $ext = $file->getClientOriginalExtension();
@@ -92,9 +92,14 @@ class SuratmasukController extends Controller
 			$data->surat_masuk_perihal = $req->get('surat_masuk_perihal');
 			$data->surat_masuk_asal = $req->get('surat_masuk_asal');
 			$data->surat_masuk_keterangan = $req->get('surat_masuk_keterangan');
-            $data->file = 'uploads/suratmasuk/'.$nama_file;
+            $data->file = '/uploads/suratmasuk/'.$nama_file;
 			$data->operator = Auth::user()->pengguna_nama;
             $data->save();
+            
+            $data = [
+                'nomor' => $req->get('surat_masuk_nomor')
+            ];
+            event(new SuratMasukEvent($data));
 
             toast('Berhasil menambah surat masuk '.$req->get('surat_masuk_nomor'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('suratmasuk'));
@@ -108,7 +113,7 @@ class SuratmasukController extends Controller
 	{
         return view('pages.suratmasuk.form', [
             'aksi' => 'Edit',
-            'data' => SuratMasuk::findOrFail($req->no),
+            'data' => SuratMasuk::findOrFail($req->get('no')),
             'back' => Str::contains(url()->previous(), ['suratmasuk/tambah', 'suratmasuk/edit'])? '/suratmasuk': url()->previous(),
         ]);
 	}
@@ -147,7 +152,7 @@ class SuratmasukController extends Controller
                 $ext = $file->getClientOriginalExtension();
                 $nama_file = time().Str::random().".".$ext;
                 $file->move(public_path('uploads/suratmasuk'), $nama_file);
-                $data->file = 'uploads/suratmasuk/'.$nama_file;
+                $data->file = '/uploads/suratmasuk/'.$nama_file;
             }
 
 			$data->surat_masuk_nomor = $req->get('surat_masuk_nomor');
@@ -185,5 +190,19 @@ class SuratmasukController extends Controller
 		}catch(\Exception $e){
             alert()->error('Restore Data', $e->getMessage());
 		}
-	}
+    }
+    
+	public function tracking(Request $req)
+	{
+        return view('pages.trackingdisposisi.index');
+    }
+    
+	public function do_tracking(Request $req)
+	{
+        $data = SuratMasuk::where(function($q) use ($req){
+            $q->where('surat_masuk_asal', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_keterangan', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_nomor', 'like', '%'.$req->cari.'%');
+        })->orderBy('surat_masuk_tanggal_masuk', 'desc')->get();
+
+		return $data;
+    }
 }

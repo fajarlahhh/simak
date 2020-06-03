@@ -14,6 +14,7 @@ class CreateSuratMasukTables extends Migration
     public function up()
     {
         Schema::create('surat_masuk', function (Blueprint $table) {
+            $table->bigIncrements('surat_masuk_id');
             $table->string('surat_masuk_nomor');
             $table->date('surat_masuk_tanggal_masuk');
             $table->date('surat_masuk_tanggal_surat');
@@ -21,11 +22,10 @@ class CreateSuratMasukTables extends Migration
             $table->string('surat_masuk_asal');
             $table->longText('surat_masuk_keterangan');
             $table->string('file');
-            $table->tinyInteger('kirim')->default(1);
+            $table->tinyInteger('disposisi')->default(0);
             $table->string('operator');
             $table->timestamps();
             $table->softDeletes();
-            $table->primary('surat_masuk_nomor');
         });
     }
 

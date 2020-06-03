@@ -14,16 +14,16 @@ class SuratMasukEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $nomor;
+    public $surat_masuk;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($nomor)
+    public function __construct($surat_masuk)
     {
         //
-        $this->nomor = $nomor;
+        $this->surat_masuk = $surat_masuk;
     }
 
     /**
@@ -33,6 +33,6 @@ class SuratMasukEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chat'); 
+        return new PrivateChannel('surat-masuk'); 
     }
 }

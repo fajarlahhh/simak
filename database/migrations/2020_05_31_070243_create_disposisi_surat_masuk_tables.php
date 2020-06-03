@@ -15,20 +15,20 @@ class CreateDisposisiSuratMasukTables extends Migration
     {
         Schema::create('disposisi_surat_masuk', function (Blueprint $table) {
             $table->bigIncrements('disposisi_surat_masuk_id');
-            $table->string('surat_masuk_nomor');
+            $table->bigInteger('surat_masuk_id')->unsigned();
             $table->string('disposisi_surat_masuk_sifat');
             $table->text('disposisi_surat_masuk_catatan');
             $table->string('disposisi_surat_masuk_proses');
             $table->string('disposisi_surat_masuk_hasil');
             $table->string('operator');
             $table->timestamps();
-            $table->foreign('surat_masuk_nomor')->references('surat_masuk_nomor')->on('surat_masuk')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('surat_masuk_id')->references('surat_masuk_id')->on('surat_masuk')->onDelete('restrict')->onUpdate('cascade');
         });
 
         Schema::create('disposisi_surat_masuk_detail', function (Blueprint $table) {
             $table->bigInteger('disposisi_surat_masuk_id')->unsigned();
-            $table->tinyInteger('disposisi_surat_masuk_detail_proses');
-            $table->string('jabatan_nama');
+            $table->tinyInteger('disposisi_surat_masuk_detail_proses')->default(0);
+            $table->string('pengguna_id');
             $table->foreign('disposisi_surat_masuk_id')->references('disposisi_surat_masuk_id')->on('disposisi_surat_masuk')->onDelete('cascade')->onUpdate('cascade');
         });
     }

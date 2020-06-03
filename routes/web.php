@@ -70,6 +70,13 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
+    Route::group(['middleware' => ['role_or_permission:super-admin|trackingdisposisi']], function () {
+        Route::prefix('trackingdisposisi')->group(function () {
+            Route::get('/', 'SuratmasukController@tracking')->name('suratmasuk');
+            Route::get('/cari', 'SuratmasukController@do_tracking')->middleware(['role:super-admin|user|supervisor']);
+        });
+    });
+
     Route::group(['middleware' => ['role_or_permission:super-admin|edaran']], function () {
         Route::prefix('edaran')->group(function () {
             Route::get('/', 'EdaranController@index')->name('edaran');

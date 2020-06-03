@@ -8,7 +8,7 @@
 <script src="{{ '/assets/pdf/js/pdf.js' }}"></script>
 <script src="{{ '/assets/pdf/js/viewer.js' }}"></script>
 
-    <div id="outerContainer" style="height: 420px; background-image: url(/assets/pdf/images/texture.png);" >
+    <div id="outerContainer" style="height: 600px; background-image: url(/assets/pdf/images/texture.png);" >
 
     <div id="sidebarContainer" class="hidden">
     <div id="toolbarSidebar">

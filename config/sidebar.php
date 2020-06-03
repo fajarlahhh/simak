@@ -99,5 +99,10 @@ return [
 			'id' => '/salam',
 			'title' => 'Salam'
         ]]
+	],[
+		'icon' => 'fas fa-search',
+		'title' => 'Tracking Disposisi',
+		'id' => 'trackingdisposisi',
+		'url' => '/trackingdisposisi'
 	]]
 ];
