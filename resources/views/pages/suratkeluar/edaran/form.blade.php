@@ -96,7 +96,7 @@
                                     <label class="control-label">Upload Lampiran</label>
                                     <input type="file" class="form-control" accept="image/*" name="lampiran[]" multiple />
                                 </div>
-                                @if ($data && $data->lampiran)
+                                @if ($aksi == 'Edit' && $data->lampiran)
                                 <div class="row">
                                     @foreach ($data->lampiran as $lampiran)
                                     <div class="col-md-4 text-center">

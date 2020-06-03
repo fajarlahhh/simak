@@ -75,20 +75,20 @@ class LoginController extends Controller
 
         if (Auth::attempt(['pengguna_id' => $req->uid, 'password' => $req->password], $remember)) {
 
-            $new_session_id = Session::getId();
-            $pengguna = Pengguna::find($req->uid);
+            // $new_session_id = Session::getId();
+            // $pengguna = Pengguna::find($req->uid);
 
-            if($pengguna->session_id != '') {
-                $last_session = Session::getHandler()->read($pengguna->session_id);
-                if ($last_session) {
-                    if (Session::getHandler()->destroy($pengguna->session_id)) {
+            // if($pengguna->session_id != '') {
+            //     $last_session = Session::getHandler()->read($pengguna->session_id);
+            //     if ($last_session) {
+            //         if (Session::getHandler()->destroy($pengguna->session_id)) {
 
-                    }
-                }
-            }
+            //         }
+            //     }
+            // }
 
-            $pengguna->session_id = $new_session_id;
-            $pengguna->save();
+            // $pengguna->session_id = $new_session_id;
+            // $pengguna->save();
 
             return redirect()->intended('dashboard')
             ->with([
