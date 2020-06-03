@@ -122,10 +122,6 @@ class PenggunaController extends Controller
             return redirect()->back()->withInput()->with('error', $validator->messages()->all());
         }
 		try{
-            if (Pengguna::where('jabatan_nama', $req->get('jabatan_nama'))->get()->count() > 0) {
-                alert()->error('Tambah Data', 'Pengguna dengan jabatan')->toHtml()->autoClose(5000);
-                return redirect()->back()->withInput()->with('error', $validator->messages()->all());
-            }
 			$pengguna = new Pengguna();
 			$pengguna->pengguna_id = $req->get('pengguna_id');
 			$pengguna->pengguna_nama = $req->get('pengguna_nama');

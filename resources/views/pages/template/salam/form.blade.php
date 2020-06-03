@@ -74,7 +74,11 @@
 	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
     <script src="/assets/plugins/ckeditor4/ckeditor.js"></script>
     <script>
-        CKEDITOR.replace( 'editor1' );
-        CKEDITOR.replace( 'editor2' );
+        CKEDITOR.replace( 'editor1', {
+            height: '150px',
+        } );
+        CKEDITOR.replace( 'editor2', {
+            height: '150px',
+        } );
     </script>
 @endpush

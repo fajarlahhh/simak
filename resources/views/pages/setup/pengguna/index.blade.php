@@ -81,6 +81,7 @@
                             <td>{{ $row->jabatan->jabatan_struktural == 1? "YA": "" }}</td>
                             <td>{{ $row->jabatan->jabatan_pimpinan == 1? "YA": "" }}</td>
 					        <td class="text-right">
+                                @if (!$row->trashed())
                                 @if ($row->gambar_nama)
                                 <a href="/{{ $row->gambar->gambar_lokasi }}" target="_blank" class='btn btn-warning btn-xs m-r-3'><i class='fas fa-signature'></i></a>
                                 @endif
@@ -90,6 +91,9 @@
 	                            <a href="javascript:;" onclick="hapus('{{ $row->pengguna_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
                                 @endif
 	                    		@endrole
+                                @else
+                                <a href="javascript:;" onclick="restore('{{ $row->pengguna_id }}', '{{ $row->jumlah_total }}')" class="btn btn-info btn-xs m-r-3" id='btn-restore' data-toggle="tooltip" title="Restore Data"><i class='fas fa-undo'></i></a>
+                                @endif
 					        </td>
 				      	</tr>
 					    @endforeach
@@ -110,48 +114,86 @@
 @endsection
 
 @push('scripts')
-    <script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-	<script>
-		$(".cari").change(function() {
-		     $("#frm-cari").submit();
-		});
+<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script>
+    $(".cari").change(function() {
+            $("#frm-cari").submit();
+    });
 
-        function hapus(id) {
-            Swal.fire({
-                title: 'Hapus Data',
-                text: 'Anda akan menghapus pengguna ' + id + '',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya',
-                cancelButtonText: 'Tidak'
-            }).then((result) => {
-                if (result.value == true) {
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.ajax({
-                        url: "/datapengguna/hapus/" + id,
-                        type: "POST",
-                        data: {
-                            "_method": 'DELETE'
-                        },
-                        success: function(data){
-                            location.reload(true);
-                        },
-                        error: function (xhr, ajaxOptions, thrownError) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Hapus data',
-                                text: xhr.status
-                            })
-                        }
-                    });
-                }
-            });
-        }
-	</script>
+    function restore(id) {
+        Swal.fire({
+            title: 'Restore Data',
+            text: 'Anda akan mengembalikan pengguna ' + id + '',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.value == true) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: "/datapengguna/restore/" + id,
+                    type: "POST",
+                    data: {
+                        "_method": 'PATCH'
+                    },
+                    success: function(data){
+                        location.reload(true);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Restore data',
+                            text: xhr.status
+                        })
+                    }
+                });
+            }
+        });
+    }
+
+    function hapus(id) {
+        Swal.fire({
+            title: 'Hapus Data',
+            text: 'Anda akan menghapus pengguna ' + id + '',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.value == true) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: "/datapengguna/hapus/" + id,
+                    type: "POST",
+                    data: {
+                        "_method": 'DELETE'
+                    },
+                    success: function(data){
+                        location.reload(true);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hapus data',
+                            text: xhr.status
+                        })
+                    }
+                });
+            }
+        });
+    }
+</script>
 @endpush

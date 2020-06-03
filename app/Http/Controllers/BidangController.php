@@ -37,9 +37,11 @@ class BidangController extends Controller
 	{
         $validator = Validator::make($req->all(),
             [
-                'bidang_nama' => 'required'
+                'bidang_nama' => 'required',
+                'bidang_alias' => 'required'
             ],[
-                'bidang_nama.required'  => 'Nama Bidang tidak boleh kosong'
+                'bidang_nama.required'  => 'Nama Bidang tidak boleh kosong',
+                'bidang_alias.required'  => 'Alias Bidang tidak boleh kosong'
             ]
         );
 
@@ -51,6 +53,7 @@ class BidangController extends Controller
         try{
 			$data = new Bidang();
 			$data->bidang_nama = $req->get('bidang_nama');
+			$data->bidang_alias = $req->get('bidang_alias');
             $data->save();
             toast('Berhasil menambah bidang '.$req->get('bidang_nama'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('databidang'));
@@ -73,12 +76,13 @@ class BidangController extends Controller
 	{
         $validator = Validator::make($req->all(),
             [
-                'bidang_nama' => 'required'
+                'bidang_nama' => 'required',
+                'bidang_alias' => 'required'
             ],[
-                'bidang_nama.required'  => 'Nama Bidang tidak boleh kosong'
+                'bidang_nama.required'  => 'Nama Bidang tidak boleh kosong',
+                'bidang_alias.required'  => 'Alias Bidang tidak boleh kosong'
             ]
         );
-
 
         if ($validator->fails()) {
             alert()->error('Validasi Gagal', implode('<br>', $validator->messages()->all()))->toHtml()->autoClose(5000);
@@ -88,6 +92,7 @@ class BidangController extends Controller
         try{
 			$data = Bidang::findOrFail($req->get('id'));
 			$data->bidang_nama = $req->get('bidang_nama');
+			$data->bidang_alias = $req->get('bidang_alias');
             $data->save();
 
             toast('Berhasil mengedit bidang '.$req->get('bidang_nama'), 'success')->autoClose(2000);

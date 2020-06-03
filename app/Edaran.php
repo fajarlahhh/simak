@@ -16,4 +16,9 @@ class Edaran extends Model
     protected $primaryKey = 'edaran_nomor';
     public $incrementing = false;
     protected $keyType = 'string';
+
+	public function lampiran()
+	{
+		return $this->hasMany('App\EdaranLampiran', 'edaran_nomor', 'edaran_nomor');
+	}
 }

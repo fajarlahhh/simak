@@ -55,6 +55,8 @@
 	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
     <script src="/assets/plugins/ckeditor4/ckeditor.js"></script>
     <script>
-        CKEDITOR.replace( 'editor1' );
+        CKEDITOR.replace( 'editor1', {
+            height: '300px',
+        } );
     </script>
 @endpush

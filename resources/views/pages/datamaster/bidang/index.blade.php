@@ -48,6 +48,7 @@
                     <tr>
                         <th>No.</th>
                         <th>Nama Bidang</th>
+                        <th>Alias</th>
                         <th class="width-90"></th>
                     </tr>
                 </thead>
@@ -56,6 +57,7 @@
                     <tr>
                         <td>{{ ++$i }}</td>
                         <td class="align-middle">{{ $row->bidang_nama }}</td>
+                        <td class="align-middle">{{ $row->bidang_alias }}</td>
                         <td class="text-center">
                             @role('user|super-admin|supervisor')
                             <a href="/databidang/edit?nama={{ $row->bidang_nama }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>

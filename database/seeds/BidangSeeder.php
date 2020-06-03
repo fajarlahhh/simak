@@ -14,6 +14,7 @@ class BidangSeeder extends Seeder
     {
         DB::table('bidang')->insert([
             'bidang_nama' => "-",
+            'bidang_alias' => "-",
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);

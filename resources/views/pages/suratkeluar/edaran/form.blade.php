@@ -20,7 +20,7 @@
 @endsection
 
 @section('subcontent')
-<form action="{{ route('edaran.'.strtolower($aksi)) }}" name="form-wizard" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
+<form action="{{ route('edaran.'.strtolower($aksi)) }}" name="form-wizard" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="" enctype="multipart/form-data">
     @csrf
     @method(strtolower($aksi) == 'tambah'? 'POST': 'PUT')
     <div id="wizard">
@@ -30,7 +30,7 @@
                     <span class="number">1</span>
                     <span class="info text-ellipsis">
                         Header
-                        <small class="text-ellipsis">Tanggal, Sifat, Perihal</small>
+                        <small class="text-ellipsis">Tanggal, Sifat, Lampiran, Perihal</small>
                     </span>
                 </a>
             </li>
@@ -38,8 +38,8 @@
                 <a href="#step-2">
                     <span class="number">2</span>
                     <span class="info text-ellipsis">
-                        Lampiran & Tujuan
-                        <small class="text-ellipsis">Lampiran, Tujuan</small>
+                        Tujuan
+                        <small class="text-ellipsis">Tujuan</small>
                     </span>
                 </a>
             </li>
@@ -47,8 +47,8 @@
                 <a href="#step-3">
                     <span class="number">3</span>
                     <span class="info text-ellipsis">
-                        Isi Surat
-                        <small class="text-ellipsis">Isi</small>
+                        Isi
+                        <small class="text-ellipsis">Isi Surat</small>
                     </span>
                 </a>
             </li>
@@ -66,23 +66,49 @@
             <div id="step-1">
                 <!-- begin fieldset -->
                 <fieldset>
-                    @if ($aksi == 'Edit')
-                    <div class="form-group">
-                        <label class="control-label">Nomor</label>
-                        <input class="form-control" type="text" name="edaran_nomor" value="{{ $aksi == 'Edit'? $data->edaran_nomor: old('edaran_nomor') }}" readonly/>
-                    </div>
-                    @endif
-                    <div class="form-group">
-                        <label class="control-label">Tanggal Surat</label>
-                        <input type="text" readonly class="form-control datepicker" name="edaran_tanggal" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->edaran_tanggal:(old('edaran_tanggal')? old('edaran_tanggal'): now()))) }}" data-parsley-group="step-1"/>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Sifat</label>
-                        <input class="form-control"  type="text" name="edaran_sifat" value="{{ $aksi == 'Edit'? $data->edaran_sifat: old('edaran_sifat') }}" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Perihal</label>
-                        <textarea class="form-control" rows="3" data-parsley-group="step-1" data-parsley-required="true" data-parsley-errors-messages-disabled="" required name="edaran_perihal">{{ $aksi == 'Edit'? $data->edaran_perihal: old('edaran_perihal') }}</textarea>
+                    <div class="row">
+                        <div class="col-md-4">@if ($aksi == 'Edit')
+                            <div class="form-group">
+                                <label class="control-label">Nomor</label>
+                                <input class="form-control" type="text" name="edaran_nomor" value="{{ $aksi == 'Edit'? $data->edaran_nomor: old('edaran_nomor') }}" readonly/>
+                            </div>
+                            @endif
+                            <div class="form-group">
+                                <label class="control-label">Tanggal Surat</label>
+                                <input type="text" readonly class="form-control datepicker" name="edaran_tanggal" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->edaran_tanggal:(old('edaran_tanggal')? old('edaran_tanggal'): now()))) }}" data-parsley-group="step-1"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Sifat</label>
+                                <input class="form-control"  type="text" name="edaran_sifat" value="{{ $aksi == 'Edit'? $data->edaran_sifat: old('edaran_sifat') }}" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Lampiran</label>
+                                <input class="form-control"  type="text" name="edaran_lampiran" value="{{ $aksi == 'Edit'? $data->edaran_lampiran: old('edaran_lampiran') }}" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Perihal</label>
+                                <textarea class="form-control" rows="3" data-parsley-group="step-1" data-parsley-required="true" data-parsley-errors-messages-disabled="" required name="edaran_perihal">{{ $aksi == 'Edit'? $data->edaran_perihal: old('edaran_perihal') }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="note note-success">
+                                <div class="form-group">
+                                    <label class="control-label">Upload Lampiran</label>
+                                    <input type="file" class="form-control" accept="image/*" name="lampiran[]" multiple />
+                                </div>
+                                @if ($data->lampiran)
+                                <div class="row">
+                                    @foreach ($data->lampiran as $lampiran)
+                                    <div class="col-md-4 text-center">
+                                        <img src="{{ $lampiran->file }}" alt="" class="width-full">
+                                        <br>
+                                        <button class="btn btn-danger btn-xs">Hapus</button>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
                 <!-- end fieldset -->
@@ -91,11 +117,6 @@
                 <!-- begin fieldset -->
                 <fieldset>
                     <div class="form-group">
-                        <label class="control-label">Lampiran</label>
-                        <textarea class="form-control" id="editor0" rows="3" name="edaran_lampiran" >{{ $aksi == 'Edit'? $data->edaran_lampiran: old('edaran_lampiran') }}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Kepada</label>
                         <textarea class="form-control" id="editor1" rows="3" name="edaran_kepada" >{{ $aksi == 'Edit'? $data->edaran_kepada: old('edaran_kepada') }}</textarea>
                     </div>
                 </fieldset>
@@ -150,11 +171,8 @@
     <script src="/assets/plugins/ckeditor4/ckeditor.js"></script>
 	<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <script>
-        CKEDITOR.replace( 'editor0' , {
-            height: '150px',
-        });
         CKEDITOR.replace( 'editor1' , {
-            height: '150px',
+            height: '200px',
         });
         CKEDITOR.replace( 'editor2' );
         CKEDITOR.replace( 'editor3' , {

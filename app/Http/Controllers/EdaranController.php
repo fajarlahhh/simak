@@ -9,6 +9,7 @@ use App\KopSurat;
 use App\Pengguna;
 use App\Penomoran;
 use Carbon\Carbon;
+use App\EdaranLampiran;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,14 +65,12 @@ class EdaranController extends Controller
             [
                 'edaran_tanggal' => 'required',
                 'edaran_perihal' => 'required',
-                'edaran_lampiran' => 'required',
                 'edaran_isi' => 'required',
                 'edaran_kepada' => 'required',
                 'edaran_jenis_ttd' => 'required',
                 'edaran_pejabat' => 'required'
             ],[
                 'edaran_tanggal.required'  => 'Tanggal Surat tidak boleh kosong',
-                'edaran_lampiran.required'  => 'Lampiran tidak boleh kosong',
                 'edaran_perihal.required'  => 'Perihal tidak boleh kosong',
                 'edaran_isi.required'  => 'Isi tidak boleh kosong',
                 'edaran_kepada.required'  => 'Tujuan tidak boleh kosong',
@@ -119,6 +118,19 @@ class EdaranController extends Controller
 			$data->operator = Auth::user()->pengguna_nama;
             $data->save();
 
+            if($req->hasFile('lampiran'))
+            {
+                foreach ($req->file('lampiran') as $file) {
+                    $ext = $file->getClientOriginalExtension();
+                    $nama_file = time().Str::random().".".$ext;
+                    $file->move(public_path('uploads/edaran/gambar'), $nama_file);
+                    EdaranLampiran::create([
+                        'edaran_nomor' => $nomor,
+                        'file' => '/uploads/edaran/gambar/'.$nama_file
+                        ]);
+                }
+            }
+
             toast('Berhasil menambah edaran '.$req->get('edaran_nomor'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('edaran'));
         }catch(\Exception $e){
@@ -131,7 +143,7 @@ class EdaranController extends Controller
 	{
         return view('pages.suratkeluar.edaran.form', [
             'aksi' => 'Edit',
-            'data' => Edaran::findOrFail($req->no),
+            'data' => Edaran::with('lampiran')->findOrFail($req->no),
             'pengguna' => Pengguna::whereHas('jabatan', function ($q) use ($req){
                 $q->where('jabatan_struktural', 1);
             })->get(),
@@ -146,7 +158,6 @@ class EdaranController extends Controller
                 'edaran_nomor' => 'required',
                 'edaran_tanggal' => 'required',
                 'edaran_perihal' => 'required',
-                'edaran_lampiran' => 'required',
                 'edaran_isi' => 'required',
                 'edaran_kepada' => 'required',
                 'edaran_jenis_ttd' => 'required',
@@ -154,7 +165,6 @@ class EdaranController extends Controller
             ],[
                 'edaran_nomor.required'  => 'Nomor tidak boleh kosong',
                 'edaran_tanggal.required'  => 'Tanggal Surat tidak boleh kosong',
-                'edaran_lampiran.required'  => 'Lampiran tidak boleh kosong',
                 'edaran_perihal.required'  => 'Perihal tidak boleh kosong',
                 'edaran_isi.required'  => 'Isi tidak boleh kosong',
                 'edaran_kepada.required'  => 'Tujuan tidak boleh kosong',
@@ -189,6 +199,19 @@ class EdaranController extends Controller
             $data->kop_isi = $kop;
             $data->operator = Auth::user()->pengguna_nama;
             $data->save();
+
+            if($req->hasFile('lampiran'))
+            {
+                foreach ($req->file('lampiran') as $file) {
+                    $ext = $file->getClientOriginalExtension();
+                    $nama_file = time().Str::random().".".$ext;
+                    $file->move(public_path('uploads/edaran/gambar'), $nama_file);
+                    EdaranLampiran::create([
+                        'edaran_nomor' => $nomor,
+                        'file' => '/uploads/edaran/gambar/'.$nama_file
+                        ]);
+                }
+            }
 
             toast('Berhasil mengedit edaran '.$req->get('edaran_nomor'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('edaran'));

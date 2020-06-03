@@ -34,8 +34,7 @@
             </table>
         </td>
         <td class="v-top">
-            Kepada <br>
-            Yth. {!! $data->edaran_kepada !!}
+            {!! $data->edaran_kepada !!}
         </td>
     </tr>
 </table>

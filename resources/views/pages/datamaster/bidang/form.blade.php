@@ -36,6 +36,10 @@
                     <label class="control-label">Nama Bidang</label>
                     <input class="form-control" type="text" name="bidang_nama" value="{{ $aksi == 'Edit'? $data->bidang_nama: old('bidang_nama') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
                 </div>
+                <div class="form-group">
+                    <label class="control-label">Alias <small>(Yang akan tampil di nomor surat)</small></label>
+                    <input class="form-control" type="text" name="bidang_alias" value="{{ $aksi == 'Edit'? $data->bidang_alias: old('bidang_alias') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
+                </div>
 			</div>
 			<div class="panel-footer">
                 @role('user|super-admin|supervisor')

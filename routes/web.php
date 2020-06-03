@@ -25,7 +25,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/tambah', 'PenggunaController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('datapengguna.tambah');
             Route::post('/tambah', 'PenggunaController@do_tambah')->middleware(['role:super-admin|user|supervisor'])->name('datapengguna.tambah');
             Route::delete('/hapus/{id}', 'PenggunaController@hapus')->middleware(['role:super-admin|user|supervisor']);
-            Route::patch('/restore', 'PenggunaController@restore')->middleware(['role:super-admin|supervisor']);
+            Route::patch('/restore/{id}', 'PenggunaController@restore')->middleware(['role:super-admin|supervisor']);
             Route::get('/detail', 'PenggunaController@detail')->name('datapengguna.detail');
         });
     });

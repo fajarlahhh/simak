@@ -18,7 +18,7 @@ class CreateEdaranTables extends Migration
             $table->date('edaran_tanggal');
             $table->string('edaran_sifat')->nullable();
             $table->text('edaran_perihal');
-            $table->text('edaran_lampiran');
+            $table->text('edaran_lampiran')->nullable();
             $table->text('edaran_kepada');
             $table->longText('edaran_isi');
             $table->string('edaran_ttd');
@@ -29,13 +29,19 @@ class CreateEdaranTables extends Migration
             $table->text('salam_pembuka');
             $table->text('salam_penutup');
             $table->text('kop_isi');
-            
+
             $table->tinyInteger('fix')->default(0);
             $table->integer('urutan');
             $table->string('operator');
             $table->timestamps();
             $table->softDeletes();
             $table->primary('edaran_nomor');
+        });
+
+        Schema::create('edaran_lampiran', function (Blueprint $table) {
+            $table->string('edaran_nomor');
+            $table->string('file');
+            $table->foreign('edaran_nomor')->references('edaran_nomor')->on('edaran')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -46,6 +52,7 @@ class CreateEdaranTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('edaran_tables');
+        Schema::dropIfExists('edaran');
+        Schema::dropIfExists('edaran_lampiran');
     }
 }

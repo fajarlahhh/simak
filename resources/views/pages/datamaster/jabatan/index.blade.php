@@ -51,6 +51,7 @@
                         <th>Atasan</th>
                         <th>Pimpinan</th>
                         <th>Struktural</th>
+                        <th>Verifikator</th>
                         <th class="width-90"></th>
                     </tr>
                 </thead>
@@ -62,6 +63,7 @@
                         <td class="align-middle">{{ $row->jabatan_parent }}</td>
                         <td class="align-middle">{{ $row->jabatan_pimpinan == 0? "": "Ya" }}</td>
                         <td class="align-middle">{{ $row->jabatan_struktural == 0? "": "Ya" }}</td>
+                        <td class="align-middle">{{ $row->jabatan_verifikator == 0? "": "Ya" }}</td>
                         <td class="text-center">
                             @role('user|super-admin|supervisor')
                             <a href="/datajabatan/edit/{{ $row->jabatan_nama }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
@@ -106,7 +108,6 @@
     $(".cari").change(function() {
          $("#frm-cari").submit();
     });
-
 
     function hapus(id) {
         Swal.fire({

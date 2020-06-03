@@ -138,12 +138,6 @@ class SuratmasukController extends Controller
 
         try{
 			$data = SuratMasuk::findOrFail($req->get('ID'));
-			$data->surat_masuk_nomor = $req->get('surat_masuk_nomor');
-			$data->surat_masuk_tanggal_masuk = Carbon::parse($req->get('surat_masuk_tanggal_masuk'))->format('Y-m-d');
-			$data->surat_masuk_tanggal_surat = Carbon::parse($req->get('surat_masuk_tanggal_surat'))->format('Y-m-d');
-			$data->surat_masuk_perihal = $req->get('surat_masuk_perihal');
-			$data->surat_masuk_asal = $req->get('surat_masuk_asal');
-			$data->surat_masuk_keterangan = $req->get('surat_masuk_keterangan');
             if($req->file('file')){
                 if($req->get('file_old')){
                     File::delete(public_path($req->get('file_old')));
@@ -155,6 +149,13 @@ class SuratmasukController extends Controller
                 $file->move(public_path('uploads/suratmasuk'), $nama_file);
                 $data->file = 'uploads/suratmasuk/'.$nama_file;
             }
+
+			$data->surat_masuk_nomor = $req->get('surat_masuk_nomor');
+			$data->surat_masuk_tanggal_masuk = Carbon::parse($req->get('surat_masuk_tanggal_masuk'))->format('Y-m-d');
+			$data->surat_masuk_tanggal_surat = Carbon::parse($req->get('surat_masuk_tanggal_surat'))->format('Y-m-d');
+			$data->surat_masuk_perihal = $req->get('surat_masuk_perihal');
+			$data->surat_masuk_asal = $req->get('surat_masuk_asal');
+			$data->surat_masuk_keterangan = $req->get('surat_masuk_keterangan');
 			$data->operator = Auth::user()->pengguna_nama;
             $data->save();
 
