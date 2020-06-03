@@ -88,7 +88,7 @@ class EdaranController extends Controller
         try{
             $format = Penomoran::where('penomoran_jenis', 'edaran')->first()->penomoran_format;
             $urutan = env('EDARAN');
-            $data = Edaran::whereRaw('year(edaran_tanggal)='.date('Y'))->orderBy('urutan', 'desc')->get();
+            $data = Edaran::witnTrashed()->whereRaw('year(edaran_tanggal)='.date('Y'))->orderBy('urutan', 'desc')->get();
             if($data->count() > 0){
                 $urutan = $data->first()->urutan;
             }
