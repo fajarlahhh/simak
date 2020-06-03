@@ -28,7 +28,7 @@
 		<div class="login-content">
 			<form action="{{ route('login') }}" method="POST" class="margin-bottom-0" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
 				<div class="form-group m-b-20">
-					<input type="text" class="form-control form-control-lg" autocomplete="off" name="uid" placeholder="NIK" value="{{ old('uid') }}" required />
+					<input type="text" class="form-control form-control-lg" autocomplete="off" name="uid" placeholder="ID Pengguna" value="{{ old('uid') }}" required />
 				</div>
 				<div class="form-group m-b-20">
 					<input type="password" class="form-control form-control-lg" name="password" placeholder="Kata Sandi" value="{{ old('password') }}" required />
