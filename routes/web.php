@@ -109,6 +109,15 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
+    Route::group(['middleware' => ['role_or_permission:super-admin|review']], function () {
+        Route::prefix('review')->group(function () {
+            Route::get('/', 'ReviewController@index');
+            Route::get('/cek', 'ReviewController@review')->middleware(['role:super-admin|user|supervisor'])->name('review');
+            Route::put('/cek', 'ReviewController@do_review')->middleware(['role:super-admin|user|supervisor'])->name('review.simpan');
+            Route::put('/selesai', 'ReviewController@selesai')->middleware(['role:super-admin|user|supervisor'])->name('review.selesai');
+        });
+    });
+
     Route::group(['middleware' => ['role_or_permission:super-admin|gambar']], function () {
         Route::prefix('gambar')->group(function () {
             Route::get('/', 'GambarController@index')->name('gambar');
@@ -122,6 +131,13 @@ Route::group(['middleware' => ['auth']], function () {
         Route::prefix('kopsurat')->group(function () {
             Route::get('/', 'KopsuratController@index')->name('kopsurat');
             Route::post('/simpan', 'KopsuratController@simpan')->middleware(['role:super-admin|user|supervisor'])->name('kopsurat.simpan');
+        });
+    });
+
+    Route::group(['middleware' => ['role_or_permission:super-admin|tembusan']], function () {
+        Route::prefix('tembusan')->group(function () {
+            Route::get('/', 'TembusanController@index')->name('tembusan');
+            Route::post('/simpan', 'TembusanController@simpan')->middleware(['role:super-admin|user|supervisor'])->name('tembusan.simpan');
         });
     });
 

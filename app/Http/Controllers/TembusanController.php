@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Salam;
+use App\Tembusan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class SalamController extends Controller
+class TembusanController extends Controller
 {
     //
     public function __construct()
@@ -17,8 +17,8 @@ class SalamController extends Controller
 
     public function index(Request $req)
 	{
-        $data = Salam::all()->first();
-        return view('pages.template.salam.form', [
+        $data = Tembusan::get()->first();
+        return view('pages.template.tembusan.form', [
             'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,
             'cari' => $req->cari
@@ -28,11 +28,9 @@ class SalamController extends Controller
 	{
         $validator = Validator::make($req->all(),
             [
-                'salam_pembuka' => 'required',
-                'salam_penutup' => 'required'
+                'tembusan_isi' => 'required'
             ],[
-                'salam_pembuka.required'  => 'Salam Pembuka tidak boleh kosong',
-                'salam_penutup.required'  => 'Salam Penutup tidak boleh kosong'
+                'tembusan_isi.required'  => 'Tembusan tidak boleh kosong'
             ]
         );
 
@@ -43,15 +41,14 @@ class SalamController extends Controller
         }
 
         try{
-            $data = new Salam();
+            $data = new Tembusan();
             $data->truncate();
-			$data->salam_pembuka = $req->get('salam_pembuka');
-			$data->salam_penutup = $req->get('salam_penutup');
+			$data->tembusan_isi = $req->get('tembusan_isi');
 			$data->operator = Auth::user()->pengguna_nama;
             $data->save();
 
-            toast('Berhasil menyimpan salam ', 'success')->autoClose(2000);
-			return redirect(route('salam'));
+            toast('Berhasil menyimpan tembusan ', 'success')->autoClose(2000);
+			return redirect(route('tembusan'));
         }catch(\Exception $e){
             alert()->error('Simpan Data', $e->getMessage());
             return redirect()->back()->withInput();

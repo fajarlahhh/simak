@@ -26,21 +26,26 @@ return [
 		'caret' => true,
 		'sub_menu' => [[
 			'url' => '/databidang',
-			'id' => '/databidang',
+			'id' => 'databidang',
 			'title' => 'Data Bidang'
         ],[
 			'url' => '/datajabatan',
-			'id' => '/datajabatan',
+			'id' => 'datajabatan',
 			'title' => 'Data Jabatan'
         ],[
 			'url' => '/datarekanan',
-			'id' => '/datarekanan',
+			'id' => 'datarekanan',
 			'title' => 'Data Rekanan'
         ],[
 			'url' => '/gambar',
-			'id' => '/gambar',
+			'id' => 'gambar',
 			'title' => 'Gambar'
         ]]
+	],[
+		'icon' => 'fas fa-check-double',
+		'title' => 'Review',
+		'id' => 'review',
+		'url' => '/review'
 	],[
 		'icon' => 'fas fa-cog',
 		'title' => 'Setup',
@@ -49,7 +54,7 @@ return [
 		'caret' => true,
 		'sub_menu' => [[
 			'url' => '/datapengguna',
-			'id' => '/datapengguna',
+			'id' => 'datapengguna',
 			'title' => 'Data Pengguna'
         ]]
 	],[
@@ -92,16 +97,20 @@ return [
 		'caret' => true,
 		'sub_menu' => [[
 			'url' => '/kopsurat',
-			'id' => '/kopsurat',
+			'id' => 'kopsurat',
 			'title' => 'Kop Surat'
         ],[
 			'url' => '/penomoran',
-			'id' => '/penomoran',
+			'id' => 'penomoran',
 			'title' => 'Penomoran'
         ],[
 			'url' => '/salam',
-			'id' => '/salam',
+			'id' => 'salam',
 			'title' => 'Salam'
+        ],[
+			'url' => '/tembusan',
+			'id' => 'tembusan',
+			'title' => 'Tembusan'
         ]]
 	],[
 		'icon' => 'fas fa-search',

@@ -20,5 +20,10 @@ class Edaran extends Model
 	public function lampiran()
 	{
 		return $this->hasMany('App\EdaranLampiran', 'edaran_nomor', 'edaran_nomor');
-	}
+    }
+    
+    public function belum_review()
+    {
+		return $this->hasOne('App\Review', 'review_nomor_surat', 'edaran_nomor')->whereNull('fix');
+    }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRekananTables extends Migration
+class CreateTembusanTables extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateRekananTables extends Migration
      */
     public function up()
     {
-        Schema::create('rekanan', function (Blueprint $table) {
-            $table->string('rekanan_nama');
-            $table->string('rekanan_lokasi');
+        Schema::create('tembusan', function (Blueprint $table) {
+            $table->text('tembusan_isi');
+            $table->string('operator');
             $table->timestamps();
-            $table->primary('rekanan_nama');
         });
     }
 
@@ -28,6 +27,6 @@ class CreateRekananTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rekanan_nama');
+        Schema::dropIfExists('tembusan');
     }
 }

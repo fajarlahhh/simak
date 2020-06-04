@@ -1,18 +1,17 @@
-@extends('pages.suratkeluar.main')
+@extends('pages.main')
 
-@section('title', ' | Edaran')
+@section('title', ' | Review')
 
 @section('page')
-	<li class="breadcrumb-item active">Edaran</li>
+	<li class="breadcrumb-item active">Review</li>
 @endsection
 
 @push('css')
 	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
-	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
 @endpush
 
 @section('header')
-	<h1 class="page-header">Edaran</h1>
+	<h1 class="page-header">Review</h1>
 @endsection
 
 @section('subcontent')
@@ -20,25 +19,11 @@
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
 			<div class="row">
-                <div class="col-md-4 col-lg-5 col-xl-3 col-xs-12">
-                	@role('user|super-admin|supervisor')
-                    <div class="form-inline">
-                        <a href="{{ route('edaran.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
-                    </div>
-                    @endrole
-                </div>
-                <div class="col-md-8 col-lg-7 col-xl-9 col-xs-12">
-                	<form action="{{ route('edaran') }}" method="GET" id="frm-cari">
+                <div class="col-md-12">
+                	<form action="/review" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
-							<div class="form-group">
-								<select class="form-control selectpicker cari" name="tipe" data-live-search="true" data-style="btn-warning" data-width="100%">
-									<option value="0" {{ $tipe == '0'? 'selected': '' }}>Exist</option>
-									<option value="1" {{ $tipe == '1'? 'selected': '' }}>Deleted</option>
-									<option value="2" {{ $tipe == '2'? 'selected': '' }}>All</option>
-								</select>
-							</div>&nbsp;
 		                	<div class="input-group">
-								<input type="text" class="form-control cari" name="cari" placeholder="Cari Nomor/Sifat/Perihal" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
+								<input type="text" class="form-control cari" name="cari" placeholder="Cari Nomor/Perihal/Jenis" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
 								<div class="input-group-append">
 									 <span class="input-group-text" id="basic-addon2"><i class="fa fa-search"></i></span>
 								</div>
@@ -57,10 +42,9 @@
 							<th>No.</th>
 							<th>Nomor</th>
 							<th>Tanggal Surat</th>
-							<th>Sifat</th>
-							<th>Perihal</th>
-							<th>Tanda Tangan</th>
-							<th class="width-10"></th>
+                            <th>Perihal</th>
+							<th>Jenis Surat</th>
+							<th class="width-110"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -68,40 +52,46 @@
 					    <tr>
 					        <td>{{ ++$i }}</td>
 					        <td>
-                                <label data-toggle="tooltip" data-container="#sm{{ $i }}" id="sm{{ $i }}" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->updated_at)->isoFormat('LLL') }}">{{ $row->edaran_nomor }}</label>
+                                <label data-toggle="tooltip" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->created_at)->isoFormat('LLL') }}">{{ $row->review_nomor_surat }}</label>
                             </td>
-					        <td>{{ \Carbon\Carbon::parse($row->edaran_tanggal)->isoFormat('LL') }}</td>
-					        <td>{{ $row->edaran_sifat }}</td>
-                            <td>{{ $row->edaran_perihal }}</td>
-                            <td>{!! $row->jabatan_nama." - ".$row->edaran_pejabat !!}</td>
-                            <td class="with-btn-group align-middle" nowrap>
-                                <div class="btn-group">
-                                    <a href="/edaran/cetak?no={{ $row->edaran_nomor }}" target="_blank"" class="btn btn-default btn-sm">Preview</a>
-                                    <a href="#" class="btn btn-default btn-sm dropdown-toggle width-30 no-caret" data-toggle="dropdown">
-                                        <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        @role('user|super-admin|supervisor')
-                                        @if (!$row->trashed())
-                                        @if ($row->fix == 0)
-                                        <li>
-                                            <a href="/edaran/edit?no={{ $row->edaran_nomor }}" class="m-2"> Edit Keseluruhan</a>
-                                        </li>
-                                        <li>
-                                            <a href="/edaran/edit/isi?no={{ $row->edaran_nomor }}" class="m-2"> Edit Isi</a>
-                                        </li>
-                                        @endif
-                                        <li>
-                                            <a href="javascript:;" onclick="hapus('{{ $row->edaran_nomor }}')" class="m-2" id='btn-del'> Hapus</a>
-                                        </li>
-                                        @else
-                                        <li>
-                                            <a href="javascript:;" onclick="restore('{{ $row->edaran_nomor }}')" class="m-2" id='btn-del'> Restore</a>
-                                        </li>
-                                        @endif
-                                        @endrole
-                                    </ul>
-                                </div>
+					        <td>
+                                @switch($row->review_jenis_surat)
+                                    @case('Edaran')
+                                        {{ \Carbon\Carbon::parse($row->edaran_tanggal)->isoFormat('LL') }}
+                                        @break
+                                    @case(2)
+                                        
+                                        @break
+                                @endswitch
+                            </td>
+					        <td>
+                                @switch($row->review_jenis_surat)
+                                    @case('Edaran')
+                                        {{ $row->edaran->edaran_perihal }}
+                                        @break
+                                    @case(2)
+                                        
+                                        @break
+                                @endswitch
+                            </td>
+					        <td>{{ $row->review_jenis_surat }}</td>
+					        <td class="text-right">
+					        	@role('user|super-admin|supervisor')
+                                @if (Auth::user()->jabatan->jabatan_struktural == 1)
+                                <a href="{{ route('review', array('no' => $row->review_nomor_surat, 'tipe' => $row->review_jenis_surat)) }}" class="btn btn-success btn-xs m-r-3"><i class='fas fa-check'></i></a>
+                                @else
+                                @switch($row->review_jenis_surat)
+                                    @case('Edaran')
+                                        <a href="/edaran/edit?no={{ $row->review_nomor_surat }}" class="btn btn-default btn-xs m-r-3"><i class='fas fa-edit'></i></a>
+                                        @break
+                                    @case(2)
+                                        
+                                        @break
+                                    @default
+                                        
+                                @endswitch
+                                @endif
+                                @endrole
                             </td>
 				      	</tr>
 					    @endforeach
@@ -125,10 +115,6 @@
 <script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 <script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script>
-    $('.table-responsive').on('show.bs.dropdown', function () {
-        $('.table-responsive').css( "overflow", "inherit" );
-    });
-
     $(".cari").change(function() {
             $("#frm-cari").submit();
     });
@@ -143,10 +129,10 @@
         });
     });
 
-    function restore(id) {
+    function restore(id, ket) {
         Swal.fire({
             title: 'Restore Data',
-            text: 'Anda akan mengembalikan edaran ' + id + '',
+            text: 'Anda akan mengembalikan surat masuk ' + ket + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -161,7 +147,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/edaran/restore?no=" + id,
+                    url: "/suratmasuk/restore?no=" + id,
                     type: "POST",
                     data: {
                         "_method": 'PATCH'
@@ -181,10 +167,10 @@
         });
     }
 
-    function hapus(id) {
+    function hapus(id, ket) {
         Swal.fire({
             title: 'Hapus Data',
-            text: 'Anda akan menghapus edaran ' + id + '',
+            text: 'Anda akan menghapus surat masuk ' + ket + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -199,7 +185,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/edaran/hapus?no=" + id,
+                    url: "/suratmasuk/hapus?no=" + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'

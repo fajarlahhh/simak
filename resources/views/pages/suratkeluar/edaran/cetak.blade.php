@@ -70,8 +70,11 @@
     {!! $data->edaran_tembusan !!}
 @endif
 @if ($data->lampiran)
+<pagebreak></pagebreak>
+<br><br><br><br><br><br>
+<center><h1>Lampiran</h1></center>
 @foreach ($data->lampiran as $row)
 <pagebreak></pagebreak>
-<img src='{{ $row->file }}'>
+<img src='{{ $row->file }}' class="width-full">
 @endforeach
 @endif

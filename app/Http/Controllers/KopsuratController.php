@@ -50,7 +50,7 @@ class KopsuratController extends Controller
             toast('Berhasil menyimpan kopsurat ', 'success')->autoClose(2000);
 			return redirect(route('kopsurat'));
         }catch(\Exception $e){
-            alert()->error('Edit Data', $e->getMessage());
+            alert()->error('Simpan Data', $e->getMessage());
             return redirect()->back()->withInput();
         }
 	}

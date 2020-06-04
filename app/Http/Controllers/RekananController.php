@@ -37,9 +37,11 @@ class RekananController extends Controller
 	{
         $validator = Validator::make($req->all(),
             [
-                'rekanan_nama' => 'required'
+                'rekanan_nama' => 'required',
+                'rekanan_lokasi' => 'required'
             ],[
-                'rekanan_nama.required'  => 'Nama Rekanan tidak boleh kosong'
+                'rekanan_nama.required'  => 'Nama Rekanan tidak boleh kosong',
+                'rekanan_lokasi.required'  => 'Lokasi tidak boleh kosong'
             ]
         );
 
@@ -51,6 +53,7 @@ class RekananController extends Controller
         try{
 			$data = new Rekanan();
 			$data->rekanan_nama = $req->get('rekanan_nama');
+			$data->rekanan_lokasi = $req->get('rekanan_lokasi');
             $data->save();
             toast('Berhasil menambah rekanan '.$req->get('rekanan_nama'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('datarekanan'));
@@ -73,9 +76,11 @@ class RekananController extends Controller
 	{
         $validator = Validator::make($req->all(),
             [
-                'rekanan_nama' => 'required'
+                'rekanan_nama' => 'required',
+                'rekanan_lokasi' => 'required'
             ],[
-                'rekanan_nama.required'  => 'Nama Rekanan tidak boleh kosong'
+                'rekanan_nama.required'  => 'Nama Rekanan tidak boleh kosong',
+                'rekanan_lokasi.required'  => 'Lokasi tidak boleh kosong'
             ]
         );
 
@@ -87,6 +92,7 @@ class RekananController extends Controller
         try{
 			$data = Rekanan::findOrFail($req->get('id'));
 			$data->rekanan_nama = $req->get('rekanan_nama');
+			$data->rekanan_lokasi = $req->get('rekanan_lokasi');
             $data->save();
 
             toast('Berhasil mengedit rekanan '.$req->get('rekanan_nama'), 'success')->autoClose(2000);

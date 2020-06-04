@@ -15,4 +15,9 @@ class Jabatan extends Model
 	{
 		return $this->belongsTo('App\Jabatan', 'jabatan_nama', 'jabatan_nama');
 	}
+
+	public function atasan()
+	{
+		return $this->belongsTo('App\Jabatan', 'jabatan_parent', 'jabatan_nama');
+	}
 }

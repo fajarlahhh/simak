@@ -36,6 +36,10 @@
                     <label class="control-label">Nama Rekanan</label>
                     <input class="form-control" type="text" name="rekanan_nama" value="{{ $aksi == 'Edit'? $data->rekanan_nama: old('rekanan_nama') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
                 </div>
+                <div class="form-group">
+                    <label class="control-label">Lokasi</label>
+                    <input class="form-control" type="text" name="rekanan_lokasi" value="{{ $aksi == 'Edit'? $data->rekanan_lokasi: old('rekanan_lokasi') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
+                </div>
 			</div>
 			<div class="panel-footer">
                 @role('user|super-admin|supervisor')
