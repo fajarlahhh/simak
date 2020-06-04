@@ -33,7 +33,7 @@ class JabatanController extends Controller
 	{
         return view('pages.datamaster.jabatan.form', [
             'aksi' => 'Tambah',
-            'jabatan' => Jabatan::all(),
+            'jabatan' => Jabatan::where('jabatan_struktural', 1)->get(),
             'back' => Str::contains(url()->previous(), ['datajabatan/tambah', 'datajabatan/edit'])? '/datajabatan': url()->previous(),
         ]);
     }
@@ -80,7 +80,7 @@ class JabatanController extends Controller
 	{
         return view('pages.datamaster.jabatan.form', [
             'aksi' => 'Edit',
-            'jabatan' => Jabatan::all(),
+            'jabatan' => Jabatan::where('jabatan_struktural', 1)->get(),
             'data' => Jabatan::findOrFail($id),
             'back' => Str::contains(url()->previous(), ['datajabatan/tambah', 'datajabatan/edit'])? '/datajabatan': url()->previous(),
         ]);

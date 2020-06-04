@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use PDF;
 use App\Salam;
 use App\Edaran;
+use App\Revisi;
 use App\KopSurat;
 use App\Pengguna;
 use App\Penomoran;
@@ -12,6 +13,7 @@ use Carbon\Carbon;
 use App\EdaranLampiran;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Events\SuratKeluarEvent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -55,7 +57,9 @@ class EdaranController extends Controller
             'aksi' => 'Tambah',
             'edit' => 1,
             'data' => null,
-            'kepada' => null,
+            'awal' => null,
+            'tujuan' => null,
+            'akhir' => null,
             'pengguna' => Pengguna::whereHas('jabatan', function ($q){
                 $q->where('jabatan_pimpinan', 1);
             })->get(),
@@ -80,8 +84,10 @@ class EdaranController extends Controller
 
         try{
             $kepada = $req->get('edaran_kepada_awal')."<ol>";
-            foreach ($req->get('edaran_kepada_tujuan') as $key => $value) {
-                $kepada .= "<li>".$value."</li>";
+            if($req->get('edaran_kepada_tujuan')){
+                foreach ($req->get('edaran_kepada_tujuan') as $key => $value) {
+                    $kepada .= "<li>".$value."</li>";
+                }
             }
             $kepada .= "</ol>".$req->get('edaran_kepada_akhir');
 
@@ -133,6 +139,24 @@ class EdaranController extends Controller
                         'file' => '/uploads/edaran/gambar/'.$nama_file
                         ]);
                 }
+            }
+
+            $atasan = Pengguna::where('jabatan_nama', Auth::user()->jabatan->jabatan_parent)->first();
+            if($atasan){
+                $revisi = new Revisi();
+                $revisi->nomor_surat = $nomor;
+                $revisi->revisi_nomor = 1;
+                $revisi->revisi_jenis_surat = "Edaran";
+                $revisi->revisi_editor = Auth::id();
+                $revisi->operator = Auth::user()->pengguna_nama;
+                $revisi->save();
+
+                $broadcast = [
+                    'pengguna_id' => $atasan->pengguna_id,
+                    'surat_nomor' => $nomor,
+                    'surat_jenis' => 'Edaran',
+                ];
+                event(new SuratKeluarEvent($broadcast));
             }
 
             toast('Berhasil menambah edaran '.$req->get('edaran_nomor'), 'success')->autoClose(2000);
@@ -201,8 +225,10 @@ class EdaranController extends Controller
             }
 
             $kepada = $req->get('edaran_kepada_awal')."<ol>";
-            foreach ($req->get('edaran_kepada_tujuan') as $key => $value) {
-                $kepada .= "<li>".$value."</li>";
+            if($req->get('edaran_kepada_tujuan')){
+                foreach ($req->get('edaran_kepada_tujuan') as $key => $value) {
+                    $kepada .= "<li>".$value."</li>";
+                }
             }
             $kepada .= "</ol>".$req->get('edaran_kepada_akhir');
 
