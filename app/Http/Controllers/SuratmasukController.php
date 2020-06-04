@@ -95,7 +95,7 @@ class SuratmasukController extends Controller
             $data->file = '/uploads/suratmasuk/'.$nama_file;
 			$data->operator = Auth::user()->pengguna_nama;
             $data->save();
-            
+
             $data = [
                 'nomor' => $req->get('surat_masuk_nomor')
             ];
@@ -191,18 +191,27 @@ class SuratmasukController extends Controller
             alert()->error('Restore Data', $e->getMessage());
 		}
     }
-    
+
 	public function tracking(Request $req)
 	{
         return view('pages.trackingdisposisi.index');
     }
-    
-	public function do_tracking(Request $req)
+
+	public function cari(Request $req)
 	{
         $data = SuratMasuk::where(function($q) use ($req){
             $q->where('surat_masuk_asal', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_perihal', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_keterangan', 'like', '%'.$req->cari.'%')->orWhere('surat_masuk_nomor', 'like', '%'.$req->cari.'%');
         })->orderBy('surat_masuk_tanggal_masuk', 'desc')->get();
 
 		return $data;
+    }
+
+    public function do_tracking($id)
+    {
+        $data = SuratMasuk::findOrFail($id);
+        return view('pages.trackingdisposisi.form',[
+            'data' => $data
+        ]);
+        return $data;
     }
 }

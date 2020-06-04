@@ -8,7 +8,10 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Bidang' => $baseDir . '/app/Bidang.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
+    'App\\DisposisiSuratMasuk' => $baseDir . '/app/DisposisiSuratMasuk.php',
+    'App\\DisposisiSuratMasukDetail' => $baseDir . '/app/DisposisiSuratMasukDetail.php',
     'App\\Edaran' => $baseDir . '/app/Edaran.php',
+    'App\\EdaranLampiran' => $baseDir . '/app/EdaranLampiran.php',
     'App\\Events\\SuratMasukEvent' => $baseDir . '/app/Events/SuratMasukEvent.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Gambar' => $baseDir . '/app/Gambar.php',

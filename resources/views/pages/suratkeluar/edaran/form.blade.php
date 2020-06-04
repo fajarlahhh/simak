@@ -8,6 +8,7 @@
 	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
 	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
 	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+	<link href="/assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
 
 @section('page')
@@ -25,6 +26,7 @@
     @method(strtolower($aksi) == 'tambah'? 'POST': 'PUT')
     <div id="wizard">
         <ul>
+            @if ($edit == 1)
             <li class="col-md-3 col-sm-4 col-6">
                 <a href="#step-1">
                     <span class="number">1</span>
@@ -43,6 +45,7 @@
                     </span>
                 </a>
             </li>
+            @endif
             <li class="col-md-3 col-sm-4 col-6">
                 <a href="#step-3">
                     <span class="number">3</span>
@@ -52,6 +55,7 @@
                     </span>
                 </a>
             </li>
+            @if ($edit == 1)
             <li class="col-md-3 col-sm-4 col-6">
                 <a href="#step-4">
                     <span class="number">4</span>
@@ -61,13 +65,16 @@
                     </span>
                 </a>
             </li>
+            @endif
         </ul>
         <div>
+            @if ($edit == 1)
             <div id="step-1">
                 <!-- begin fieldset -->
                 <fieldset>
                     <div class="row">
-                        <div class="col-md-4">@if ($aksi == 'Edit')
+                        <div class="col-md-4">
+                            @if ($aksi == 'Edit')
                             <div class="form-group">
                                 <label class="control-label">Nomor</label>
                                 <input class="form-control" type="text" name="edaran_nomor" value="{{ $aksi == 'Edit'? $data->edaran_nomor: old('edaran_nomor') }}" readonly/>
@@ -87,7 +94,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Perihal</label>
-                                <textarea class="form-control" rows="3" data-parsley-group="step-1" data-parsley-required="true" data-parsley-errors-messages-disabled="" required name="edaran_perihal">{{ $aksi == 'Edit'? $data->edaran_perihal: old('edaran_perihal') }}</textarea>
+                                <textarea class="form-control" rows="3" name="edaran_perihal">{{ $aksi == 'Edit'? $data->edaran_perihal: old('edaran_perihal') }}</textarea>
                             </div>
                         </div>
                         <div class="col-md-8">
@@ -99,10 +106,11 @@
                                 @if ($aksi == 'Edit' && $data->lampiran)
                                 <div class="row">
                                     @foreach ($data->lampiran as $lampiran)
-                                    <div class="col-md-4 text-center">
+                                    <div id="filelampiran{{ $i }}" class="col-md-4 text-center m-t-5">
+                                        {{ ++$i }}
                                         <img src="{{ $lampiran->file }}" alt="" class="width-full">
                                         <br>
-                                        <button class="btn btn-danger btn-xs">Hapus</button>
+                                        <a href="javascript:;" class="btn btn-danger btn-xs m-t-5" onclick="hapus('{{ $lampiran->file }}', '{{ $i-1 }}')">Hapus</a>
                                     </div>
                                     @endforeach
                                 </div>
@@ -117,16 +125,50 @@
                 <!-- begin fieldset -->
                 <fieldset>
                     <div class="form-group">
-                        <textarea class="form-control" id="editor1" rows="3" name="edaran_kepada" >{{ $aksi == 'Edit'? $data->edaran_kepada: old('edaran_kepada') }}</textarea>
+                        <label class="control-label">Kepada</label>
+                        <input class="form-control" type="text" name="edaran_kepada_awal" value="{{ $awal? $awal: (old('edaran_kepada_awal')? old('edaran_kepada_awal'): "Kepada Yth :") }}" />
                     </div>
+                    <div class="note note-default">
+                        <label class="control-label">Tujuan</label>
+                        <table class="table">
+                            <tbody id="tujuan">
+                               @if ($tujuan)
+                               @foreach ($tujuan as $tujuan)
+                               <tr>
+                                   <td>
+                                       <select class="form-control edaran_kepada_tujuan m-t-5" name="edaran_kepada_tujuan[]" style='width: 100%;'>
+                                           <option value="{{ $tujuan }}" selected>{{ $tujuan }}</option>
+                                       </select>
+                                   </td>
+                                   <td style='width: 5px'>
+                                       <a onclick='delRekanan(this)' href='javascript:;' class='m-t-5 btn btn-danger btn-xs'>
+                                           <i class='fa fa-times'></i>
+                                       </a>
+                                   </td>
+                               </tr>
+                               @endforeach
+                               @endif
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <a class="btn btn-warning btn-sm" href="javascript:;" style='cursor:pointer;' onclick="addRekanan()">Tambah Tujuan</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Di</label>
+                        <input class="form-control" type="text" name="edaran_kepada_akhir" value="{{ $akhir? $akhir: (old('edaran_kepada_akhir')? old('edaran_kepada_akhir'): "di Tempat") }}" />
+                    </div>
+
                 </fieldset>
                 <!-- end fieldset -->
             </div>
-            <div id="step-3">
-                <fieldset>
+            @endif
+            <div id="step-3" class="p-0">
+                <fieldset class="">
                     <textarea class="form-control" rows="3" id="editor2"  name="edaran_isi">{{ $aksi == 'Edit'? $data->edaran_isi: old('edaran_isi') }}</textarea>
                 </fieldset>
             </div>
+            @if ($edit == 1)
             <div id="step-4">
                 <fieldset>
                     <div class="form-group input-group-sm">
@@ -146,10 +188,11 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">Tembusan</label>
-                        <textarea class="form-control" id="editor3" rows="3" name="edaran_tembusan" required>{{ $aksi == 'Edit'? $data->edaran_tembusan: old('edaran_tembusan') }}</textarea>
+                        <textarea class="form-control" id="editor3" rows="3" name="edaran_tembusan" >{{ $aksi == 'Edit'? $data->edaran_tembusan: old('edaran_tembusan') }}</textarea>
                     </div>
                 </fieldset>
             </div>
+            @endif
         </div>
     </div>
 </form>
@@ -170,10 +213,27 @@
 	<script src="/assets/plugins/smartwizard/dist/js/jquery.smartWizard.js"></script>
     <script src="/assets/plugins/ckeditor4/ckeditor.js"></script>
 	<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
     <script>
-        CKEDITOR.replace( 'editor1' , {
-            height: '200px',
+        var id = 0;
+        $(document).ready(function(){
+            select2();
         });
+
+        function addRekanan(){
+            $("#tujuan").append("<tr>\
+                <td>\
+                    <select class='form-control edaran_kepada_tujuan m-t-5' name='edaran_kepada_tujuan[]' id='edaran_kepada_tujuan" + id + "' style='width: 100%;'></select>\
+                </td>\
+	            <td style='width: 5px'>\
+	                <a onclick='delRekanan(this)' href='javascript:;' class='m-t-5 btn btn-danger btn-xs'>\
+						<i class='fa fa-times'></i>\
+					</a>\
+	            </td>\</tr>");
+            select2("#edaran_kepada_tujuan" + id );
+            id++;
+        }
+
         CKEDITOR.replace( 'editor2' );
         CKEDITOR.replace( 'editor3' , {
             height: '150px',
@@ -185,6 +245,61 @@
 			orientation: "bottom",
 			autoclose: true
 		});
+
+        function delRekanan(id){
+            $(id).closest("tr").remove();
+        }
+
+        function hapus(id, ket) {
+            Swal.fire({
+                title: 'Hapus Data',
+                text: 'Anda akan menghapus lampiran ' + ket + '',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                if (result.value == true) {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: "/edaran/hapus/lampiran?file=" + id,
+                        type: "POST",
+                        data: {
+                            "_method": 'DELETE'
+                        },
+                        success: function(data){
+                            if(data == 1){
+                                $("#filelampiran" + ket).remove();
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: 'Hapus data',
+                                    text: 'Hapus Lampiran ' + ket + ' Berhasil'
+                                });
+                            }else{
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: 'Hapus data',
+                                    text: 'Hapus Lampiran ' + ket + ' Gagal'
+                                });
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hapus data',
+                                text: xhr.status
+                            })
+                        }
+                    });
+                }
+            });
+        }
 
         $('#wizard').smartWizard({
             selected: 0,
@@ -206,15 +321,35 @@
             }
         });
 
-        $('#wizard').on('leaveStep', function(e, anchorObject, stepNumber, stepDirection) {
-            var res = $('form[name="form-wizard"]').parsley().validate('step-' + (stepNumber + 1));
-            return res;
-        });
+	    function select2(elmt = '.edaran_kepada_tujuan'){
+            $(elmt).select2({
+                minimumInputLength: 1,
+                ajax:{
+                    url: '/datarekanan/cari',
+                    dataType: "json",
+                    delay: 250,
+                    type : 'GET',
+                    data: function(params){
+                        return{
+                            cari : params.term
+                        };
+                    },
+                    processResults: function(data){
+                        var results = [];
 
-        $('#wizard').keypress(function( event ) {
-            if (event.which == 13 ) {
-                $('#wizard').smartWizard('next');
-            }
-        });
+                        $.each(data, function(index, item){
+                            results.push({
+                                id: item.rekanan_nama,
+                                text: item.rekanan_nama
+                            });
+                        });
+                        return{
+                            results: results
+                        };
+                    },
+                    cache: true,
+                },
+            });
+	    }
     </script>
 @endpush

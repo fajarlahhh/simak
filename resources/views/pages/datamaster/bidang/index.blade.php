@@ -61,9 +61,7 @@
                         <td class="text-center">
                             @role('user|super-admin|supervisor')
                             <a href="/databidang/edit?nama={{ $row->bidang_nama }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
-                            @if (!in_array($row->bidang_nama, config('admin.nip')))
                             <a href="javascript:;" onclick="hapus('{{ $row->bidang_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
-                            @endif
                             @endrole
                         </td>
                     </tr>

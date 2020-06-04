@@ -13,7 +13,7 @@ class SuratMasuk extends Model
     use LogsActivity;
 
     protected $table = 'surat_masuk';
-    protected $primaryKey = 'surat_masuk_nomor';
+    protected $primaryKey = 'surat_masuk_id';
     public $incrementing = false;
     protected $keyType = 'string';
 }

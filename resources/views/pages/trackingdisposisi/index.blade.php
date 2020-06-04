@@ -25,51 +25,7 @@
             </div>
         </div>
 		<div class="panel-body" >
-            <div id="report-container" >
-                <table class="table">
-                    <tr>
-                        <td class="width-150">
-                            <label class="control-label">Nomor Surat</label>
-                        </td>
-                        <td class="width-10"> : </td>
-                        <td id="nomor"></td>
-                    </tr>
-                    <tr>
-                        <td >
-                            <label class="control-label">Tanggal Masuk</label>
-                        </td>
-                        <td> : </td>
-                        <td id="tgl_masuk"></td>
-                    </tr>
-                    <tr>
-                        <td >
-                            <label class="control-label">Tanggal Masuk</label>
-                        </td>
-                        <td> : </td>
-                        <td id="tgl_surat"></td>
-                    </tr>
-                    <tr>
-                        <td >
-                            <label class="control-label">Asal</label>
-                        </td>
-                        <td> : </td>
-                        <td id="asal"></td>
-                    </tr>
-                    <tr>
-                        <td >
-                            <label class="control-label">Perihal</label>
-                        </td>
-                        <td> : </td>
-                        <td id="perihal"></td>
-                    </tr>
-                    <tr>
-                        <td >
-                            <label class="control-label">Rangkuman Isi Surat</label>
-                        </td>
-                        <td> : </td>
-                        <td id="rangkuman"></td>
-                    </tr>
-                </table>
+            <div id="report-container">
             </div>
 		</div>
 	</div>
@@ -79,12 +35,8 @@
 <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
 <script>
     $("#select2").on("change", function(e) {
-		$("#nomor").text($(this).select2('data')[0]['nomor']);
-		$("#tgl_masuk").text($(this).select2('data')[0]['tgl_masuk']);
-		$("#tgl_surat").text($(this).select2('data')[0]['tgl_surat']);
-		$("#asal").text($(this).select2('data')[0]['asal']);
-		$("#perihal").text($(this).select2('data')[0]['perihal']);
-		$("#rangkuman").text($(this).select2('data')[0]['rangkuman']);
+        //$('#report-container').show();
+        $("#report-container").load("/trackingdisposisi/detail/" + $(this).select2('data')[0]['id']);
     });
 
     function format(data) {
@@ -106,12 +58,15 @@
                     cari : params.term
                 };
             },
+            beforeSend: function() {
+                //$('#report-container').hide();
+            },
             processResults: function(data){
                 var results = [];
 
                 $.each(data, function(index, item){
                     results.push({
-                        id: item.surat_masuk_nomor,
+                        id: item.surat_masuk_id,
                         nomor: item.surat_masuk_nomor,
                         tgl_masuk: item.surat_masuk_tanggal_masuk,
                         tgl_surat: item.surat_masuk_tanggal_surat,

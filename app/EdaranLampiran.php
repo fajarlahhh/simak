@@ -11,7 +11,7 @@ class EdaranLampiran extends Model
     use LogsActivity;
 
     protected $table = 'edaran_lampiran';
-    protected $primaryKey = null;
+    protected $primaryKey = 'file';
     public $incrementing = false;
     protected $keyType = 'string';
     public $timestamps = false;

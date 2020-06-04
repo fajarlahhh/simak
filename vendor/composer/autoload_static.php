@@ -502,7 +502,10 @@ class ComposerStaticInit8256c708703a0f9106fbc46c229ea4dd
     public static $classMap = array (
         'App\\Bidang' => __DIR__ . '/../..' . '/app/Bidang.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
+        'App\\DisposisiSuratMasuk' => __DIR__ . '/../..' . '/app/DisposisiSuratMasuk.php',
+        'App\\DisposisiSuratMasukDetail' => __DIR__ . '/../..' . '/app/DisposisiSuratMasukDetail.php',
         'App\\Edaran' => __DIR__ . '/../..' . '/app/Edaran.php',
+        'App\\EdaranLampiran' => __DIR__ . '/../..' . '/app/EdaranLampiran.php',
         'App\\Events\\SuratMasukEvent' => __DIR__ . '/../..' . '/app/Events/SuratMasukEvent.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Gambar' => __DIR__ . '/../..' . '/app/Gambar.php',

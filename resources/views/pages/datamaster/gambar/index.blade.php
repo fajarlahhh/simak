@@ -48,9 +48,9 @@
                 <strong>{{ $row->gambar_nama }}</strong><br>
                 <img src="/{{ $row->gambar_lokasi }}" alt="" style="width: 100%">
                 <div class="input-group">
-                    <input id="clipboard-default" type="text" class="form-control" value="/{{ $row->gambar_lokasi }}" readonly/>
+                    <input id="clipboard-default{{ $i }}" type="text" class="form-control" value="/{{ $row->gambar_lokasi }}" readonly/>
                     <span class="input-group-btn" >
-                    <button class="btn btn-inverse" type="button" data-clipboard-target="#clipboard-default"><i class="fa fa-clipboard"></i></button>
+                    <button class="btn btn-inverse clipboard" type="button" data-clipboard-target="#clipboard-default{{ $i }}"><i class="fa fa-clipboard"></i></button>
                     </span>
                 </div>
                 <br>
@@ -60,6 +60,7 @@
                     @endrole
                 </div>
             </div>
+            @php ++$i @endphp
             @endforeach
         </div>
     </div>
@@ -96,7 +97,7 @@
     });
 
 
-	var clipboard = new ClipboardJS('.btn');
+	var clipboard = new ClipboardJS('.clipboard');
 
 	clipboard.on('success', function(e) {
 		$(e.trigger).tooltip({

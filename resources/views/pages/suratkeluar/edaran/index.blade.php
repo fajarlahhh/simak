@@ -59,7 +59,8 @@
 							<th>Tanggal Surat</th>
 							<th>Sifat</th>
 							<th>Perihal</th>
-							<th class="width-110"></th>
+							<th>Tanda Tangan</th>
+							<th class="width-10"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -71,18 +72,35 @@
                             </td>
 					        <td>{{ \Carbon\Carbon::parse($row->edaran_tanggal)->isoFormat('LL') }}</td>
 					        <td>{{ $row->edaran_sifat }}</td>
-					        <td>{{ $row->edaran_perihal }}</td>
-					        <td class="text-right">
-	                            <a href="/edaran/cetak?no={{ $row->edaran_nomor }}" target="_blank" class='btn btn-success btn-xs m-r-3'><i class='fas fa-file-pdf'></i></a>
-					        	@role('user|super-admin|supervisor')
-                                @if (!$row->trashed())
-                                <a href="{{ route('edaran.edit', array('no' => $row->edaran_nomor)) }}" class="btn btn-secondary btn-xs m-r-3"><i class='fas fa-edit'></i></a>
-                                <a href="javascript:;" onclick="hapus('{{ $row->edaran_nomor }}', '{{ $row->jumlah_total }}')" class="btn btn-danger btn-xs m-r-3" id='btn-del' data-toggle="tooltip" title="Hapus Data"><i class='fas fa-trash'></i></a>
-                                @else
-                                <a href="javascript:;" onclick="restore('{{ $row->edaran_nomor }}', '{{ $row->jumlah_total }}')" class="btn btn-info btn-xs m-r-3" id='btn-restore' data-toggle="tooltip" title="Restore Data"><i class='fas fa-undo'></i></a>
-                                @endif
-                                @endrole
-					        </td>
+                            <td>{{ $row->edaran_perihal }}</td>
+                            <td>{{ $row->jabatan_nama." - ".$row->edaran_pejabat }}</td>
+                            <td class="with-btn-group align-middle" nowrap>
+                                <div class="btn-group">
+                                    <a href="/edaran/cetak?no={{ $row->edaran_nomor }}" target="_blank"" class="btn btn-default btn-sm">Preview</a>
+                                    <a href="#" class="btn btn-default btn-sm dropdown-toggle width-30 no-caret" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        @role('user|super-admin|supervisor')
+                                        @if (!$row->trashed())
+                                        <li>
+                                            <a href="/edaran/edit/isi?no={{ $row->edaran_nomor }}" class="m-2"> Edit Isi</a>
+                                        </li>
+                                        <li>
+                                            <a href="/edaran/edit?no={{ $row->edaran_nomor }}" class="m-2"> Edit Keseluruhan</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;" onclick="hapus('{{ $row->edaran_nomor }}', '{{ $row->jumlah_total }}')" class="m-2" id='btn-del'> Hapus</a>
+                                        </li>
+                                        @else
+                                        <li>
+                                            <a href="javascript:;" onclick="restore('{{ $row->edaran_nomor }}', '{{ $row->jumlah_total }}')" class="m-2" id='btn-del'> Restore</a>
+                                        </li>
+                                        @endif
+                                        @endrole
+                                    </ul>
+                                </div>
+                            </td>
 				      	</tr>
 					    @endforeach
 				    </tbody>
@@ -105,6 +123,10 @@
 <script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 <script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script>
+    $('.table-responsive').on('show.bs.dropdown', function () {
+        $('.table-responsive').css( "overflow", "inherit" );
+    });
+
     $(".cari").change(function() {
             $("#frm-cari").submit();
     });
@@ -119,10 +141,10 @@
         });
     });
 
-    function restore(id, ket) {
+    function restore(id) {
         Swal.fire({
             title: 'Restore Data',
-            text: 'Anda akan mengembalikan edaran ' + ket + '',
+            text: 'Anda akan mengembalikan edaran ' + id + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -157,10 +179,10 @@
         });
     }
 
-    function hapus(id, ket) {
+    function hapus(id) {
         Swal.fire({
             title: 'Hapus Data',
-            text: 'Anda akan menghapus edaran ' + ket + '',
+            text: 'Anda akan menghapus edaran ' + id + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

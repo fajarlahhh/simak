@@ -17,17 +17,17 @@ class CreateEdaranTables extends Migration
             $table->string('edaran_nomor');
             $table->date('edaran_tanggal');
             $table->string('edaran_sifat')->nullable();
-            $table->text('edaran_perihal');
+            $table->text('edaran_perihal')->nullable();
             $table->text('edaran_lampiran')->nullable();
-            $table->text('edaran_kepada');
-            $table->longText('edaran_isi');
-            $table->string('edaran_ttd');
+            $table->text('edaran_kepada')->nullable();
+            $table->longText('edaran_isi')->nullable();
+            $table->string('edaran_ttd')->nullable();
             $table->text('edaran_tembusan')->nullable();
 
-            $table->string('jabatan_nama');
-            $table->text('edaran_pejabat');
-            $table->text('salam_pembuka');
-            $table->text('salam_penutup');
+            $table->string('jabatan_nama')->nullable();
+            $table->text('edaran_pejabat')->nullable();
+            $table->text('salam_pembuka')->nullable();
+            $table->text('salam_penutup')->nullable();
             $table->text('kop_isi');
 
             $table->tinyInteger('fix')->default(0);
@@ -42,6 +42,7 @@ class CreateEdaranTables extends Migration
             $table->string('edaran_nomor');
             $table->string('file');
             $table->foreign('edaran_nomor')->references('edaran_nomor')->on('edaran')->onDelete('cascade')->onUpdate('cascade');
+            $table->primary('file');
         });
     }
 

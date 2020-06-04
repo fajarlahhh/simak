@@ -9,7 +9,7 @@
     <meta content="Andi Fajar Nugraha" name="author" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<style>
+<style type="text/css">
     p, table {
         margin-top: 0px;
         margin-bottom: 0px;
@@ -17,15 +17,28 @@
     hr {
         border: 1px solid;
     }
+
+    .v-top{
+        vertical-align: text-top;
+    }
 </style>
 <body class="bg-white" style="font-family: 'Times New Roman', Times, serif;">
+
     {!! $data->kop_isi !!}
     @include($halaman)
-    <script src="/assets/js/bundle.js"></script>
-    <script>
-        $(document).ready(function(){
-            window.print();
-        });
-    </script>
+
+    <htmlpagefooter name="page-footer">
+        <table width="100%" style="border: 0px">
+            <tr>
+                <td style="border: 0px">
+                    <small>
+                    {!! $judul !!}</small>
+                </td>
+                <td class="text-right" style="border: 0px">
+                    {PAGENO}
+                </td>
+            </tr>
+        </table>
+    </htmlpagefooter>
 </body>
 </html>

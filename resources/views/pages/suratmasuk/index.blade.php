@@ -55,10 +55,10 @@
 						<tr>
 							<th>No.</th>
 							<th>Nomor</th>
-							<th>Tanggal Masuk</th>
 							<th>Tanggal Surat</th>
 							<th>Asal</th>
 							<th>Perihal</th>
+							<th>Tanggal Masuk</th>
 							<th class="width-110"></th>
 						</tr>
 					</thead>
@@ -69,10 +69,10 @@
 					        <td>
                                 <label data-toggle="tooltip" data-container="#sm{{ $i }}" id="sm{{ $i }}" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->updated_at)->isoFormat('LLL') }}">{{ $row->surat_masuk_nomor }}</label>
                             </td>
-					        <td>{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal_masuk)->isoFormat('LL') }}</td>
 					        <td>{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal_surat)->isoFormat('LL') }}</td>
 					        <td>{{ $row->surat_masuk_asal }}</td>
 					        <td>{{ $row->surat_masuk_perihal }}</td>
+					        <td>{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal_masuk)->isoFormat('LL') }}</td>
 					        <td class="text-right">
 	                            <a href="{{ $row->file }}" target="_blank" class='btn btn-success btn-xs m-r-3'><i class='fas fa-file-pdf'></i></a>
 					        	@role('user|super-admin|supervisor')

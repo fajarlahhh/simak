@@ -40,10 +40,6 @@
                     <input class="form-control" type="text" name="surat_masuk_nomor" value="{{ $aksi == 'Edit'? $data->surat_masuk_nomor: old('surat_masuk_nomor') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
                 </div>
                 <div class="form-group">
-                    <label class="control-label">Tanggal Masuk</label>
-                    <input type="text" readonly class="form-control datepicker" name="surat_masuk_tanggal_masuk" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->surat_masuk_tanggal_masuk: (old('surat_masuk_tanggal_masuk')? old('surat_masuk_tanggal_masuk'): now()))) }}"/>
-                </div>
-                <div class="form-group">
                     <label class="control-label">Tanggal Surat</label>
                     <input type="text" readonly class="form-control datepicker" name="surat_masuk_tanggal_surat" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->surat_masuk_tanggal_surat: (old('surat_masuk_tanggal_surat')? old('surat_masuk_tanggal_surat'): now()))) }}"/>
                 </div>
@@ -54,6 +50,10 @@
                 <div class="form-group">
                     <label class="control-label">Perihal</label>
                     <textarea class="form-control" rows="3" name="surat_masuk_perihal">{{ $aksi == 'Edit'? $data->surat_masuk_perihal: old('surat_masuk_perihal') }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Tanggal Masuk</label>
+                    <input type="text" readonly class="form-control datepicker" name="surat_masuk_tanggal_masuk" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->surat_masuk_tanggal_masuk: (old('surat_masuk_tanggal_masuk')? old('surat_masuk_tanggal_masuk'): now()))) }}"/>
                 </div>
                 <div class="form-group">
                     <label class="control-label">Rangkuman Isi Surat</label>
@@ -99,7 +99,7 @@
     <script src="/assets/plugins/ckeditor4/ckeditor.js"></script>
     <script>
         CKEDITOR.replace( 'editor1' );
-        
+
 		$('.datepicker').datepicker({
 			todayHighlight: true,
 			format: 'dd MM yyyy',

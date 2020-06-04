@@ -1,9 +1,10 @@
+@section('title', ' | Cetak Edaran'.$data->edaran_nomor)
 <style>
     .v-top{
         vertical-align: text-top;
     }
 </style>
-<table style="vertical-align: text-top;">
+<table style="vertical-align: text-top; width:100%">
     <tr>
         <td class="v-top">&nbsp;</td>
         <td class="v-top" style="width: 300px">Mataram, {{ \Carbon\Carbon::parse($data->edaran_tanggal)->isoFormat('LL') }}</td>
@@ -37,17 +38,21 @@
             {!! $data->edaran_kepada !!}
         </td>
     </tr>
+    <tr>
+        <td colspan="2">
+            <br>
+            <br>
+            {!! $data->salam_pembuka !!}
+            <br>
+            {!! $data->edaran_isi !!}
+            <br>
+            {!! $data->salam_penutup !!}
+            <br>
+            <br>
+            <br>
+        </td>
+    </tr>
 </table>
-<br>
-<br>
-{!! $data->salam_pembuka !!}
-<br>
-{!! $data->edaran_isi !!}
-<br>
-{!! $data->salam_penutup !!}
-<br>
-<br>
-<br>
 <table style="vertical-align: text-top;">
     <tr>
         <td class="v-top" style="width: 400px">&nbsp;</td>
@@ -63,4 +68,10 @@
 <br>
 @if ($data->edaran_tembusan)
     {!! $data->edaran_tembusan !!}
+@endif
+@if ($data->lampiran)
+@foreach ($data->lampiran as $row)
+<pagebreak></pagebreak>
+<img src='{{ $row->file }}'>
+@endforeach
 @endif

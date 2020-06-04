@@ -33,6 +33,10 @@ return [
 			'id' => '/datajabatan',
 			'title' => 'Data Jabatan'
         ],[
+			'url' => '/datarekanan',
+			'id' => '/datarekanan',
+			'title' => 'Data Rekanan'
+        ],[
 			'url' => '/gambar',
 			'id' => '/gambar',
 			'title' => 'Gambar'
