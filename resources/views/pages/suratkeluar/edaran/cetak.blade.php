@@ -70,7 +70,10 @@
         <td class="v-top">
             {{ $data->jabatan_nama }}<br>
             {{ env('APP_DESKRIPSI') }}<br>
-            {!! $data->edaran_ttd == 1? QrCode::size(150)->generate(URL::to('/cetak/edaran?no='.$data->edaran_nomor)): "<img src='/".$data->edaran_ttd."' height='150'>" !!}<br>
+            @if ($data->fix == 1)
+            {!! $data->edaran_ttd == 1? QrCode::size(150)->generate(URL::to('/cetak/edaran?no='.$data->edaran_nomor)): "<img src='/".$data->edaran_ttd."' height='150'>" !!}
+            @endif
+            <br>
             {!! $data->edaran_pejabat !!}<br>
         </td>
     </tr>

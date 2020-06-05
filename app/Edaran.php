@@ -21,7 +21,12 @@ class Edaran extends Model
 	{
 		return $this->hasMany('App\EdaranLampiran', 'edaran_nomor', 'edaran_nomor');
     }
-    
+
+	public function harus_revisi()
+	{
+		return $this->hasOne('App\Review', 'review_nomor_surat', 'edaran_nomor')->where('fix', 1)->where('selesai', 0);
+    }
+
     public function belum_review()
     {
 		return $this->hasOne('App\Review', 'review_nomor_surat', 'edaran_nomor')->whereNull('fix');

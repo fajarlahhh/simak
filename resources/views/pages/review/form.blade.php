@@ -71,7 +71,7 @@
                                             {!! $history->review_catatan !!}
                                         </td>
                                         <td>
-                                            {!! $history->verifikator !!}
+                                            {!! $history->jabatan->jabatan_nama !!}
                                         </td>
                                         <td>
                                             {{ \Carbon\Carbon::parse($history->updated_at)->isoFormat('LL') }}

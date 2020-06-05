@@ -28,7 +28,7 @@ class EdaranController extends Controller
 	public function index(Request $req)
 	{
         $auth = Auth::user();
-        $data = Edaran::where(function($q) use ($req){
+        $data = Edaran::with('harus_revisi')->where(function($q) use ($req){
             $q->where('edaran_sifat', 'like', '%'.$req->cari.'%')->orWhere('edaran_perihal', 'like', '%'.$req->cari.'%')->orWhere('edaran_nomor', 'like', '%'.$req->cari.'%');
         })->orderBy('edaran_tanggal', 'desc');
 
@@ -138,7 +138,7 @@ class EdaranController extends Controller
                 $data->edaran_kepada = $kepada;
                 $data->edaran_isi = $req->get('edaran_isi');
                 if($req->get('edaran_pejabat')){
-                    $data->edaran_ttd = $req->get('edaran_jenis_ttd') == 2? $pengguna->gambar->gambar_lokasi: 1;
+                    $data->edaran_ttd = $req->get('edaran_jenis_ttd') == 2? ($pengguna->gambar_nama? $pengguna->gambar->gambar_lokasi: null): 1;
                     $data->edaran_pejabat = "<strong>".$pengguna->pengguna_nama."</strong><br>".$pengguna->pengguna_pangkat."<br>NIP. ".$pengguna->pengguna_nip;
                     $data->jabatan_nama = $pengguna->jabatan->jabatan_nama;
                 }
@@ -291,7 +291,7 @@ class EdaranController extends Controller
                 $data->edaran_kepada = $kepada;
                 $data->edaran_isi = $req->get('edaran_isi');
                 if($req->get('edaran_pejabat')){
-                    $data->edaran_ttd = $req->get('edaran_jenis_ttd') == 2? $pengguna->gambar->gambar_lokasi: 1;
+                    $data->edaran_ttd = $req->get('edaran_jenis_ttd') == 2? ($pengguna->gambar_nama? $pengguna->gambar->gambar_lokasi: null): 1;
                     $data->edaran_pejabat = "<strong>".$pengguna->pengguna_nama."</strong><br>".$pengguna->pengguna_pangkat."<br>NIP. ".$pengguna->pengguna_nip;
                     $data->jabatan_nama = $pengguna->jabatan->jabatan_nama;
                 }

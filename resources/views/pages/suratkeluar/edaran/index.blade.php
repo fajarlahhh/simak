@@ -66,7 +66,9 @@
 					<tbody>
 					    @foreach ($data as $index => $row)
 					    <tr>
-					        <td>{{ ++$i }}</td>
+                            <td>
+                                {{ ++$i }}
+                            </td>
 					        <td>
                                 <label data-toggle="tooltip" data-container="#sm{{ $i }}" id="sm{{ $i }}" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->updated_at)->isoFormat('LLL') }}">{{ $row->edaran_nomor }}</label>
                             </td>
@@ -85,7 +87,12 @@
                                         @if (!$row->trashed())
                                         @if ($row->fix == 0)
                                         <li>
-                                            <a href="/edaran/edit?no={{ $row->edaran_nomor }}" class="m-2"> Edit Keseluruhan</a>
+                                            <a href="/edaran/edit?no={{ $row->edaran_nomor }}" class="m-2">
+                                                Edit Keseluruhan
+                                                @if ($row->harus_revisi)
+                                                <i class="fas fa-exclamation-circle text-red m-t-3 m-l-2 fa-lg" ></i>
+                                                @endif
+                                            </a>
                                         </li>
                                         <li>
                                             <a href="/edaran/edit/isi?no={{ $row->edaran_nomor }}" class="m-2"> Edit Isi</a>
@@ -102,6 +109,9 @@
                                         @endrole
                                     </ul>
                                 </div>
+                                @if ($row->harus_revisi)
+                                <i class="fas fa-exclamation-circle text-red m-t-3 m-l-2 fa-lg" data-toggle="tooltip" title="Harus Revisi"></i>
+                                @endif
                             </td>
 				      	</tr>
 					    @endforeach
