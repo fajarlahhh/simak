@@ -3,56 +3,67 @@
     .v-top{
         vertical-align: text-top;
     }
+    .column-1 {
+        float: left;
+        width: 60%;
+    }
+    .column-2 {
+        float: left;
+        width: 40%;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 </style>
-<table style="vertical-align: text-top; width:100%">
-    <tr>
-        <td class="v-top">&nbsp;</td>
-        <td class="v-top" style="width: 300px">Mataram, {{ \Carbon\Carbon::parse($data->edaran_tanggal)->isoFormat('LL') }}</td>
-    </tr>
-    <tr>
-        <td class="v-top">
-            <table>
-                <tr>
-                    <td class="v-top">Nomor</td>
-                    <td class="v-top"> : </td>
-                    <td class="v-top">{!! $data->edaran_nomor !!}</td>
-                </tr>
-                <tr>
-                    <td class="v-top">Lampiran</td>
-                    <td class="v-top"> : </td>
-                    <td class="v-top">{!! $data->edaran_lampiran !!}</td>
-                </tr>
-                <tr>
-                    <td class="v-top">Sifat</td>
-                    <td class="v-top"> : </td>
-                    <td class="v-top">{!! $data->edaran_sifat !!}</td>
-                </tr>
-                <tr>
-                    <td class="v-top">Perihal</td>
-                    <td class="v-top"> : </td>
-                    <td class="v-top">{!! $data->edaran_perihal !!}</td>
-                </tr>
-            </table>
-        </td>
-        <td class="v-top">
-            {!! $data->edaran_kepada !!}
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <br>
-            <br>
-            {!! $data->salam_pembuka !!}
-            <br>
-            {!! $data->edaran_isi !!}
-            <br>
-            {!! $data->salam_penutup !!}
-            <br>
-            <br>
-            <br>
-        </td>
-    </tr>
-</table>
+<div class="row">
+    <div class="column-1">
+        <table style="vertical-align: text-top; width:80%; padding: 0px; margin-top:12px">
+            <tr>
+                <td class="v-top">
+                    <table>
+                        <tr>
+                            <td class="v-top">Nomor</td>
+                            <td class="v-top"> : </td>
+                            <td class="v-top">{!! $data->edaran_nomor !!}</td>
+                        </tr>
+                        <tr>
+                            <td class="v-top">Lampiran</td>
+                            <td class="v-top"> : </td>
+                            <td class="v-top">{!! $data->edaran_lampiran !!}</td>
+                        </tr>
+                        <tr>
+                            <td class="v-top">Sifat</td>
+                            <td class="v-top"> : </td>
+                            <td class="v-top">{!! $data->edaran_sifat !!}</td>
+                        </tr>
+                        <tr>
+                            <td class="v-top">Perihal</td>
+                            <td class="v-top"> : </td>
+                            <td class="v-top">{!! $data->edaran_perihal !!}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="column-2">
+        Mataram, {{ \Carbon\Carbon::parse($data->edaran_tanggal)->isoFormat('LL') }}<br>
+        {!! $data->edaran_kepada !!}
+    </div>
+</div>
+<br>
+{!! $data->salam_pembuka !!}
+<br>
+{!! $data->edaran_isi !!}
+<br>
+{!! $data->salam_penutup !!}
+<br>
+<br>
+<br>
 <table style="vertical-align: text-top;">
     <tr>
         <td class="v-top" style="width: 400px">&nbsp;</td>
@@ -69,7 +80,7 @@
 @if ($data->edaran_tembusan)
     {!! $data->edaran_tembusan !!}
 @endif
-@if ($data->lampiran)
+@if ($data->lampiran->count() > 0)
 <pagebreak></pagebreak>
 <br><br><br><br><br><br>
 <center><h1>Lampiran</h1></center>

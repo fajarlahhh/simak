@@ -13,8 +13,9 @@ class BidangSeeder extends Seeder
     public function run()
     {
         DB::table('bidang')->insert([
-            'bidang_nama' => "-",
-            'bidang_alias' => "-",
+            'bidang_nama' => "Umum",
+            'bidang_alias' => "UM",
+            'operator' => "Administrator",
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);

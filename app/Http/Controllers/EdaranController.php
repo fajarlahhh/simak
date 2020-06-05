@@ -6,6 +6,7 @@ use PDF;
 use App\Salam;
 use App\Edaran;
 use App\Review;
+use App\Rekanan;
 use App\KopSurat;
 use App\Pengguna;
 use App\Tembusan;
@@ -23,11 +24,17 @@ use Illuminate\Support\Facades\Validator;
 class EdaranController extends Controller
 {
     //
+
 	public function index(Request $req)
 	{
+        $auth = Auth::user();
         $data = Edaran::where(function($q) use ($req){
             $q->where('edaran_sifat', 'like', '%'.$req->cari.'%')->orWhere('edaran_perihal', 'like', '%'.$req->cari.'%')->orWhere('edaran_nomor', 'like', '%'.$req->cari.'%');
         })->orderBy('edaran_tanggal', 'desc');
+
+        if ($auth->getRoleNames()[0] != 'super-admin') {
+            $data = $data->where('bidang_id', $auth->jabatan->bidang->bidang_id);
+        }
 
         switch ($req->tipe) {
             case '1':
@@ -85,6 +92,7 @@ class EdaranController extends Controller
 
         try{
             DB::transaction(function() use ($req){
+                $auth = Auth::user();
                 $kepada = $req->get('edaran_kepada_awal')."<ol>";
                 if($req->get('edaran_kepada_tujuan')){
                     foreach ($req->get('edaran_kepada_tujuan') as $key => $value) {
@@ -92,7 +100,7 @@ class EdaranController extends Controller
                     }
                 }
                 $kepada .= "</ol>".$req->get('edaran_kepada_akhir');
-    
+
                 $format = Penomoran::where('penomoran_jenis', 'edaran')->first()->penomoran_format;
                 $urutan = env('EDARAN');
                 $data = Edaran::withTrashed()->whereRaw('year(edaran_tanggal)='.date('Y'))->orderBy('urutan', 'desc')->get();
@@ -100,15 +108,27 @@ class EdaranController extends Controller
                     $urutan = $data->first()->urutan;
                 }
                 $cari  = array('$urut$','$bidang$','$tahun$');
-                $ganti = array($urutan + 1, Auth::user()->bidang_nama, date('Y'));
+                $ganti = array($urutan + 1, $auth->jabatan->bidang->bidang_alias, date('Y'));
                 $nomor = str_replace($cari, $ganti, $format);
-    
+
                 $salam = Salam::all()->first();
                 $kop = KopSurat::all()->first()->kop_isi;
                 if($req->get('edaran_pejabat')){
                     $pengguna = Pengguna::findOrFail($req->get('edaran_pejabat'));
                 }
-    
+
+                $tembusan = null;
+                if($req->get('tembusan')){
+                    $tembusan = Tembusan::all()->first()->tembusan_isi."<ol>";
+                    if($req->get('tembusan')){
+                        foreach ($req->get('tembusan') as $key => $value) {
+                            $rekanan = Rekanan::findOrFail($value);
+                            $tembusan .= "<li>".$rekanan->rekanan_nama." di ".$rekanan->rekanan_lokasi."</li>";
+                        }
+                    }
+                    $tembusan .= "</ol>";
+                }
+
                 $data = new Edaran();
                 $data->edaran_nomor = $nomor;
                 $data->edaran_tanggal = Carbon::parse($req->get('edaran_tanggal'))->format('Y-m-d');
@@ -120,16 +140,17 @@ class EdaranController extends Controller
                 if($req->get('edaran_pejabat')){
                     $data->edaran_ttd = $req->get('edaran_jenis_ttd') == 2? $pengguna->gambar->gambar_lokasi: 1;
                     $data->edaran_pejabat = "<strong>".$pengguna->pengguna_nama."</strong><br>".$pengguna->pengguna_pangkat."<br>NIP. ".$pengguna->pengguna_nip;
-                    $data->jabatan_nama = $pengguna->jabatan_nama;
+                    $data->jabatan_nama = $pengguna->jabatan->jabatan_nama;
                 }
-                $data->edaran_tembusan = $req->get('edaran_tembusan');
+                $data->edaran_tembusan = $tembusan;
                 $data->salam_pembuka = $salam->salam_pembuka;
                 $data->salam_penutup = $salam->salam_penutup;
                 $data->kop_isi = $kop;
                 $data->urutan = $urutan + 1;
-                $data->operator = Auth::user()->pengguna_nama;
+                $data->operator = $auth->pengguna_nama;
+                $data->bidang_id = $auth->jabatan->bidang->bidang_id;
                 $data->save();
-    
+
                 if($req->hasFile('lampiran'))
                 {
                     foreach ($req->file('lampiran') as $file) {
@@ -142,16 +163,16 @@ class EdaranController extends Controller
                             ]);
                     }
                 }
-                $atasan = Pengguna::where('jabatan_nama', Auth::user()->jabatan->jabatan_parent)->get();
-    
+                $atasan = Pengguna::where('jabatan_id', $auth->jabatan->jabatan_parent)->get();
+
                 $review = new Review();
                 $review->review_nomor_surat = $nomor;
                 $review->review_nomor = 1;
                 $review->review_jenis_surat = "Edaran";
-                $review->verifikator = Auth::user()->jabatan->jabatan_parent;
-                $review->operator = Auth::id();
+                $review->jabatan_id = $auth->jabatan->jabatan_parent;
+                $review->operator = $auth->pengguna_id;
                 $review->save();
-    
+
                 foreach ($atasan as $atasan) {
                     $broadcast = [
                         'pengguna_id' => $atasan->pengguna_id,
@@ -232,12 +253,13 @@ class EdaranController extends Controller
 
         try{
             DB::transaction(function() use ($req){
+                $auth = Auth::user();
                 $salam = Salam::all()->first();
                 $kop = KopSurat::all()->first()->kop_isi;
                 if($req->get('edaran_pejabat')){
                     $pengguna = Pengguna::findOrFail($req->get('edaran_pejabat'));
                 }
-    
+
                 $kepada = null;
                 if($req->get('tujuan')){
                     $kepada = $req->get('edaran_kepada_awal')."<ol>";
@@ -248,18 +270,19 @@ class EdaranController extends Controller
                     }
                     $kepada .= "</ol>".$req->get('edaran_kepada_akhir');
                 }
-                
+
                 $tembusan = null;
                 if($req->get('tembusan')){
                     $tembusan = Tembusan::all()->first()->tembusan_isi."<ol>";
                     if($req->get('tembusan')){
                         foreach ($req->get('tembusan') as $key => $value) {
-                            $tembusan .= "<li>".$value."</li>";
+                            $rekanan = Rekanan::findOrFail($value);
+                            $tembusan .= "<li>".$rekanan->rekanan_nama." di ".$rekanan->rekanan_lokasi."</li>";
                         }
                     }
                     $tembusan .= "</ol>";
                 }
-    
+
                 $data = Edaran::findOrFail($req->get('edaran_nomor'));
                 $data->edaran_tanggal = Carbon::parse($req->get('edaran_tanggal'))->format('Y-m-d');
                 $data->edaran_sifat = $req->get('edaran_sifat');
@@ -270,15 +293,16 @@ class EdaranController extends Controller
                 if($req->get('edaran_pejabat')){
                     $data->edaran_ttd = $req->get('edaran_jenis_ttd') == 2? $pengguna->gambar->gambar_lokasi: 1;
                     $data->edaran_pejabat = "<strong>".$pengguna->pengguna_nama."</strong><br>".$pengguna->pengguna_pangkat."<br>NIP. ".$pengguna->pengguna_nip;
-                    $data->jabatan_nama = $pengguna->jabatan_nama;
+                    $data->jabatan_nama = $pengguna->jabatan->jabatan_nama;
                 }
                 $data->edaran_tembusan = $tembusan;
                 $data->salam_pembuka = $salam->salam_pembuka;
                 $data->salam_penutup = $salam->salam_penutup;
                 $data->kop_isi = $kop;
-                $data->operator = Auth::user()->pengguna_nama;
+                $data->bidang_id = $auth->jabatan->bidang->bidang_id;
+                $data->operator = $auth->pengguna_nama;
                 $data->save();
-    
+
                 if($req->hasFile('lampiran'))
                 {
                     foreach ($req->file('lampiran') as $file) {
@@ -292,22 +316,22 @@ class EdaranController extends Controller
                     }
                 }
                 $belum_selesai_review = Review::where('review_nomor_surat', $req->get('edaran_nomor'))->where('fix', 1)->where('selesai', 0)->first();
-                if ($belum_selesai_review) {                    
+                if ($belum_selesai_review) {
                     Review::where('review_nomor_surat', $req->get('edaran_nomor'))->where('selesai', 0)->where('fix', 1)
                     ->update([
-                        'selesai' => 1, 
+                        'selesai' => 1,
                     ]);
 
-                    $atasan = Pengguna::where('jabatan_nama', Auth::user()->jabatan->jabatan_parent)->get();
-        
+                    $atasan = Pengguna::where('jabatan_id', $auth->jabatan->jabatan_parent)->get();
+
                     $review = new Review();
                     $review->review_nomor_surat = $req->get('edaran_nomor');
                     $review->review_nomor = $belum_selesai_review->review_nomor + 1;
                     $review->review_jenis_surat = "Edaran";
-                    $review->verifikator = Auth::user()->jabatan->jabatan_parent;
-                    $review->operator = Auth::id();
+                    $review->jabatan_id = $auth->jabatan->jabatan_parent;
+                    $review->operator = $auth->pengguna_id;
                     $review->save();
-        
+
                     foreach ($atasan as $atasan) {
                         $broadcast = [
                             'pengguna_id' => $atasan->pengguna_id,

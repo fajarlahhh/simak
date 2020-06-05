@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\KopSurat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -41,11 +42,13 @@ class KopsuratController extends Controller
         }
 
         try{
-            $data = new KopSurat();
-            $data->truncate();
-			$data->kop_isi = $req->get('kop_isi');
-			$data->operator = Auth::user()->pengguna_nama;
-            $data->save();
+            DB::transaction(function() use ($req){
+                KopSurat::truncate();
+                $data = new KopSurat();
+                $data->kop_isi = $req->get('kop_isi');
+                $data->operator = Auth::user()->pengguna_nama;
+                $data->save();
+            });
 
             toast('Berhasil menyimpan kopsurat ', 'success')->autoClose(2000);
 			return redirect(route('kopsurat'));

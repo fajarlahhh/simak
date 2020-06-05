@@ -32,18 +32,26 @@
 			<div class="panel-body">
 				<input type="hidden" name="redirect" value="{{ $back }}">
                 @if($aksi == 'Edit')
-                <input type="hidden" name="id" value="{{ $data->jabatan_nama }}">
+                <input type="hidden" name="id" value="{{ $data->jabatan_id }}">
                 @endif
                 <div class="form-group">
                     <label class="control-label">Nama Jabatan</label>
                     <input class="form-control" type="text" name="jabatan_nama" value="{{ $aksi == 'Edit'? $data->jabatan_nama: old('jabatan_nama') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
                 </div>
                 <div class="form-group input-group-sm">
+                    <label class="control-label">Bidang</label>
+                    <select class="form-control selectpicker" name="bidang_id" data-live-search="true" data-style="btn-info" data-width="100%">
+                        @foreach($bidang as $row)
+                        <option value="{{ $row->bidang_id }}" {{ ($aksi == 'Edit' && $data->bidang_id == $row->bidang_id? 'selected': (old('bidang_id') == $row->bidang_id? 'selected': '')) }}>{{ $row->bidang_nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group input-group-sm">
                     <label class="control-label">Atasan</label>
                     <select class="form-control selectpicker" name="jabatan_parent" data-live-search="true" data-style="btn-info" data-width="100%">
                         <option value="">Tidak Ada</option>
                         @foreach($jabatan as $row)
-                        <option value="{{ $row->jabatan_nama }}" {{ ($aksi == 'Edit' && $data->jabatan_parent == $row->jabatan_nama? 'selected': (old('jabatan_parent') == $row->jabatan_nama? 'selected': '')) }}>{{ $row->jabatan_nama }}</option>
+                        <option value="{{ $row->jabatan_id }}" {{ ($aksi == 'Edit' && $data->jabatan_parent == $row->jabatan_id? 'selected': (old('jabatan_parent') == $row->jabatan_id? 'selected': '')) }}>{{ $row->jabatan_nama }}</option>
                         @endforeach
                     </select>
                 </div>

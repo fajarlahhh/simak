@@ -70,6 +70,20 @@ return [
 
     'ignored_solution_providers' => [
         //
+        Facade\Ignition\SolutionProviders\IncorrectValetDbCredentialsSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\MissingAppKeySolutionProvider::class,
+        Facade\Ignition\SolutionProviders\DefaultDbNameSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\BadMethodCallSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\TableNotFoundSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\MissingImportSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\MissingPackageSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\InvalidRouteActionSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\ViewNotFoundSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\UndefinedVariableSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\MergeConflictSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\RunningLaravelDuskInProductionProvider::class,
+        Facade\Ignition\SolutionProviders\MissingColumnSolutionProvider::class,
+        Facade\Ignition\SolutionProviders\UnknownValidationSolutionProvider::class,
     ],
 
     /*

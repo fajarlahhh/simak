@@ -46,18 +46,13 @@
             @foreach ($data as $index => $row)
             <div class="col-md-3">
                 <strong>{{ $row->gambar_nama }}</strong><br>
-                <img src="/{{ $row->gambar_lokasi }}" alt="" style="width: 100%">
+                <img src="{{ $row->gambar_lokasi }}" alt="" style="width: 100%">
                 <div class="input-group">
-                    <input id="clipboard-default{{ $i }}" type="text" class="form-control" value="/{{ $row->gambar_lokasi }}" readonly/>
-                    <span class="input-group-btn" >
-                    <button class="btn btn-inverse clipboard" type="button" data-clipboard-target="#clipboard-default{{ $i }}"><i class="fa fa-clipboard"></i></button>
-                    </span>
-                </div>
-                <br>
-                <div class="text-center">
-                    @role('user|super-admin|supervisor')
-                    <a href="javascript:;" onclick="hapus('{{ $row->gambar_nama }}')" id='btn-del' class='btn btn-danger btn-xs'>Hapus</a>
-                    @endrole
+                    <input id="clipboard-default{{ $i }}" type="text" class="form-control" value="{{ $row->gambar_lokasi }}" readonly/>
+                    <div class="input-group-append">
+                        <button class="btn btn-warning clipboard" type="button" data-clipboard-target="#clipboard-default{{ $i }}">Copy</button>
+                        <button onclick="hapus('{{ $row->gambar_nama }}')" type="button"  id='btn-del' class='btn btn-danger btn-xs'>Hapus</button>
+                    </div>
                 </div>
             </div>
             @php ++$i @endphp

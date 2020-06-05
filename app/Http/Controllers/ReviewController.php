@@ -18,13 +18,14 @@ class ReviewController extends Controller
     //
 	public function index(Request $req)
 	{
+        $auth = Auth::user();
         $data = Review::where(function($q) use ($req){
             $q->where('review_nomor_surat', 'like', '%'.$req->cari.'%');
         })->orderBy('created_at', 'asc');
-        if(Auth::user()->jabatan->jabatan_struktural == 0){
-            $data = $data->where('operator', Auth::id())->where('fix', 1)->where('selesai', 0);
+        if($auth->jabatan->jabatan_struktural == 0){
+            $data = $data->where('operator', $auth->pengguna_id)->where('fix', 1)->where('selesai', 0);
         }else{
-            $data = $data->where('verifikator', Auth::user()->jabatan_nama)->whereNull('fix');
+            $data = $data->where('jabatan_id', $auth->jabatan_id)->whereNull('fix');
         }
         $data = $data->paginate(10);
 
@@ -76,8 +77,8 @@ class ReviewController extends Controller
             DB::transaction(function() use ($req, $data){
                 Review::where('review_nomor', $req->get('review_nomor'))->where('review_nomor_surat', $req->get('review_nomor_surat'))->whereNull('fix')
                 ->update([
-                    'review_catatan' => $req->get('review_catatan'), 
-                    'fix' => $req->get('fix'), 
+                    'review_catatan' => $req->get('review_catatan'),
+                    'fix' => $req->get('fix'),
                 ]);
                 if ($req->get('fix') == 1) {
                     $broadcast = [
@@ -86,7 +87,7 @@ class ReviewController extends Controller
                         'surat_jenis' => 'Edaran',
                     ];
                     event(new SuratKeluarEvent($broadcast));
-                }else{    
+                }else{
                     $review = new Review();
                     $review->review_nomor_surat = $nomor;
                     $review->review_nomor = 1;
@@ -96,7 +97,7 @@ class ReviewController extends Controller
                     $review->save();
 
                     $atasan = Pengguna::where('jabatan_nama', Auth::user()->jabatan->jabatan_parent)->get();
-    
+
                     foreach ($atasan as $atasan) {
                         $broadcast = [
                             'pengguna_id' => $atasan->pengguna_id,

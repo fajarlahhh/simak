@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Salam;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -43,12 +44,14 @@ class SalamController extends Controller
         }
 
         try{
-            $data = new Salam();
-            $data->truncate();
-			$data->salam_pembuka = $req->get('salam_pembuka');
-			$data->salam_penutup = $req->get('salam_penutup');
-			$data->operator = Auth::user()->pengguna_nama;
-            $data->save();
+            DB::transaction(function() use ($req){
+                Salam::truncate();
+                $data = new Salam();
+                $data->salam_pembuka = $req->get('salam_pembuka');
+                $data->salam_penutup = $req->get('salam_penutup');
+                $data->operator = Auth::user()->pengguna_nama;
+                $data->save();
+            });
 
             toast('Berhasil menyimpan salam ', 'success')->autoClose(2000);
 			return redirect(route('salam'));

@@ -168,7 +168,7 @@
                             <label class="control-label">Tanda Tangan</label>
                             <select class="form-control selectpicker" name="edaran_pejabat" data-live-search="true" data-style="btn-info" data-width="100%">
                                 @foreach($pengguna as $row)
-                                <option value="{{ $row->pengguna_id }}" {{ ($aksi == 'Edit' && $data->pengguna_nama == $row->pengguna_nama? 'selected': (old('gambar_nama') == $row->gambar_nama? 'selected': '')) }}>{{ $row->jabatan_nama }} - {{ $row->pengguna_nama }}</option>
+                                <option value="{{ $row->pengguna_id }}" {{ ($aksi == 'Edit' && $data->pengguna_nama == $row->pengguna_nama? 'selected': (old('gambar_nama') == $row->gambar_nama? 'selected': '')) }}>{{ $row->jabatan->jabatan_nama }} - {{ $row->pengguna_nama }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -185,10 +185,13 @@
                                 <tbody id="tembusan">
                                    @if ($tembusan)
                                    @foreach ($tembusan[1] as $tembusan)
+                                   @php
+                                       $rekanan = explode(" di ", $tembusan);
+                                   @endphp
                                    <tr>
                                        <td>
                                            <select class="form-control rekanan m-t-5" name="tembusan[]" style='width: 100%;'>
-                                               <option value="{{ $tembusan }}" selected>{{ $tembusan }}</option>
+                                               <option value="{{ $rekanan[0] }}" selected>{{ $rekanan[0] }}</option>
                                            </select>
                                        </td>
                                        <td style='width: 5px'>
@@ -243,7 +246,7 @@
         $(document).ready(function(){
             select2();
         });
-        
+
         function addRekanan(element){
             $("#" + element).append("<tr>\
                 <td>\

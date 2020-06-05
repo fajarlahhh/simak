@@ -40,7 +40,7 @@ class Pengguna extends Authenticatable
 
 	public function jabatan()
 	{
-		return $this->hasOne('App\Jabatan', 'jabatan_nama', 'jabatan_nama');
+		return $this->belongsTo('App\Jabatan', 'jabatan_id', 'jabatan_id');
 	}
 
 	public function gambar()

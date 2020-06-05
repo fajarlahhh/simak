@@ -47,12 +47,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['role_or_permission:super-admin|databidang']], function () {
         Route::prefix('databidang')->group(function () {
             Route::get('/', 'BidangController@index')->name('databidang');
-            Route::get('/edit', 'BidangController@edit')->middleware(['role:super-admin|user|supervisor']);
+            Route::get('/edit/{id}', 'BidangController@edit')->middleware(['role:super-admin|user|supervisor']);
             Route::put('/edit', 'BidangController@do_edit')->middleware(['role:super-admin|user|supervisor'])->name('databidang.edit');
             Route::get('/tambah', 'BidangController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('databidang.tambah');
             Route::get('/tambah', 'BidangController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('databidang.tambah');
             Route::post('/tambah', 'BidangController@do_tambah')->middleware(['role:super-admin|user|supervisor'])->name('databidang.tambah');
-            Route::delete('/hapus', 'BidangController@hapus')->middleware(['role:super-admin|user|supervisor']);
+            Route::delete('/hapus/{id}', 'BidangController@hapus')->middleware(['role:super-admin|user|supervisor']);
             Route::patch('/restore', 'BidangController@restore')->middleware(['role:super-admin|supervisor']);
             Route::get('/detail', 'BidangController@detail')->name('databidang.detail');
         });

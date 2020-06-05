@@ -8,7 +8,10 @@ class Bidang extends Model
 {
     //
     protected $table = 'bidang';
-    protected $primaryKey = 'bidang_nama';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $primaryKey = 'bidang_id';
+
+	public function jabatan()
+	{
+		return $this->hasMany('App\Jabatan', 'bidang_id', 'bidang_id');
+	}
 }

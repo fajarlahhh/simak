@@ -16,6 +16,7 @@ class CreateRekananTables extends Migration
         Schema::create('rekanan', function (Blueprint $table) {
             $table->string('rekanan_nama');
             $table->string('rekanan_lokasi');
+            $table->string('operator');
             $table->timestamps();
             $table->primary('rekanan_nama');
         });

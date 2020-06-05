@@ -9,14 +9,10 @@ use App\Pegawai;
 use App\Pengguna;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redis;
 use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PenggunaController extends Controller
@@ -39,10 +35,6 @@ class PenggunaController extends Controller
                 break;
             case '2':
                 $data = $data->withTrashed();
-                break;
-
-            default:
-                # code...
                 break;
         }
 
@@ -90,7 +82,6 @@ class PenggunaController extends Controller
             'jabatan' => Jabatan::all(),
             'level' => Role::all(),
             'gambar' => Gambar::all(),
-            'bidang' => Bidang::all(),
             'back' => Str::contains(url()->previous(), ['datapengguna/tambah', 'datapengguna/edit'])? '/datapengguna': url()->previous(),
             'menu' => $this->menu(),
             'aksi' => 'Tambah',
@@ -106,14 +97,14 @@ class PenggunaController extends Controller
                 'pengguna_sandi' => 'required|min:5',
                 'pengguna_level' => 'required',
                 'pengguna_nama' => 'required',
-                'pengguna_hp' => 'required'
+                'jabatan_id' => 'required'
             ],[
                 'pengguna_id.required' => 'Pegawai tidak boleh kosong',
                 'pengguna_sandi.min' => 'Kata Sandi minimal 5 karakter',
                 'pengguna_sandi.required'  => 'Kata Sandi tidak boleh kosong',
                 'pengguna_level.required'  => 'Level tidak boleh kosong',
                 'pengguna_nama.required'  => 'Nama tidak boleh kosong',
-                'pengguna_hp.required'  => 'No. Hp tidak boleh kosong'
+                'jabatan_id.required'  => 'Jabatan tidak boleh kosong'
             ]
         );
 
@@ -128,10 +119,9 @@ class PenggunaController extends Controller
 			$pengguna->pengguna_nip = $req->get('pengguna_nip');
 			$pengguna->pengguna_hp = $req->get('pengguna_hp');
 			$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
-			$pengguna->jabatan_nama = $req->get('jabatan_nama');
+			$pengguna->jabatan_id = $req->get('jabatan_id');
             $pengguna->pengguna_pangkat = $req->get('pengguna_pangkat');
 			$pengguna->gambar_nama = $req->get('gambar_nama');
-			$pengguna->bidang_nama = $req->get('bidang_nama');
             $pengguna->token = Hash::make($req->get('pengguna_id'));
 			$pengguna->save();
 			$pengguna->assignRole($req->get('pengguna_level'));
@@ -175,17 +165,17 @@ class PenggunaController extends Controller
 	public function do_edit(Request $req)
 	{
         $validator = Validator::make($req->all(),
-        [
-            'pengguna_id' => 'required',
-            'pengguna_level' => 'required',
-            'pengguna_nama' => 'required',
-            'pengguna_hp' => 'required'
-        ],[
-            'pengguna_id.required' => 'Pegawai tidak boleh kosong',
-            'pengguna_level.required'  => 'Level tidak boleh kosong',
-            'pengguna_nama.required'  => 'Nama tidak boleh kosong',
-            'pengguna_hp.required'  => 'No. Hp tidak boleh kosong'
-        ]
+            [
+                'pengguna_id' => 'required',
+                'pengguna_level' => 'required',
+                'pengguna_nama' => 'required',
+                'jabatan_id' => 'required'
+            ],[
+                'pengguna_id.required' => 'Pegawai tidak boleh kosong',
+                'pengguna_level.required'  => 'Level tidak boleh kosong',
+                'pengguna_nama.required'  => 'Nama tidak boleh kosong',
+                'jabatan_id.required'  => 'Jabatan tidak boleh kosong'
+            ]
         );
 
         if ($validator->fails()) {
@@ -200,9 +190,8 @@ class PenggunaController extends Controller
 			if ($req->get('pengguna_sandi')) {
 				$pengguna->pengguna_sandi = Hash::make($req->get('pengguna_sandi'));
 			}
-			$pengguna->jabatan_nama = $req->get('jabatan_nama');
+			$pengguna->jabatan_id = $req->get('jabatan_id');
 			$pengguna->pengguna_pangkat = $req->get('pengguna_pangkat');
-			$pengguna->bidang_nama = $req->get('bidang_nama');
 			$pengguna->gambar_nama = $req->get('gambar_nama');
 			$pengguna->save();
             $pengguna->syncPermissions();

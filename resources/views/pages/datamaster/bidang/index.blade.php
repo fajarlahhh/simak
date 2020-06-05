@@ -60,8 +60,8 @@
                         <td class="align-middle">{{ $row->bidang_alias }}</td>
                         <td class="text-center">
                             @role('user|super-admin|supervisor')
-                            <a href="/databidang/edit?nama={{ $row->bidang_nama }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
-                            <a href="javascript:;" onclick="hapus('{{ $row->bidang_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
+                            <a href="/databidang/edit/{{ $row->bidang_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
+                            <a href="javascript:;" onclick="hapus('{{ $row->bidang_id }}', '{{ $row->bidang_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
                             @endrole
                         </td>
                     </tr>
@@ -102,10 +102,10 @@
     });
 
 
-    function hapus(id) {
+    function hapus(id, ket) {
         Swal.fire({
             title: 'Hapus Data',
-            text: 'Anda akan menghapus bidang ' + id + '',
+            text: 'Anda akan menghapus bidang ' + ket + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -120,7 +120,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/databidang/hapus?nama=" + id,
+                    url: "/databidang/hapus/" + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'

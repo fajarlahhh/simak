@@ -16,6 +16,7 @@ class CreateGambarTables extends Migration
         Schema::create('gambar', function (Blueprint $table) {
             $table->string('gambar_nama');
             $table->text('gambar_lokasi');
+            $table->string('operator');
             $table->timestamps();
             $table->primary('gambar_nama');
         });

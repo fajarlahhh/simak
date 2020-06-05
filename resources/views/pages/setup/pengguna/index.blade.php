@@ -58,10 +58,9 @@
 							<th>ID</th>
 							<th>Nama</th>
 							<th>NIP</th>
-							<th>No. Hp</th>
 							<th>Pangkat</th>
-							<th>Bidang</th>
 							<th>Jabatan</th>
+							<th>Bidang</th>
 							<th>Struktural</th>
 							<th>Pimpinan</th>
 							<th class="width-120"></th>
@@ -74,10 +73,9 @@
                             <td>{{ $row->pengguna_id }}</td>
                             <td>{{ $row->pengguna_nama }}</td>
                             <td>{{ $row->pengguna_nip }}</td>
-                            <td>{{ $row->pengguna_hp }}</td>
                             <td>{{ $row->pengguna_pangkat }}</td>
-                            <td>{{ $row->bidang_nama }}</td>
                             <td>{{ $row->jabatan->jabatan_nama }}</td>
+                            <td>{{ $row->jabatan->bidang_nama }}</td>
                             <td>{{ $row->jabatan->jabatan_struktural == 1? "YA": "" }}</td>
                             <td>{{ $row->jabatan->jabatan_pimpinan == 1? "YA": "" }}</td>
 					        <td class="text-right">

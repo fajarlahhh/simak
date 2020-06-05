@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Penomoran;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class PenomoranController extends Controller
@@ -47,32 +50,48 @@ class PenomoranController extends Controller
         }
 
         try{
-            Penomoran::truncate();
-
-            $data = new Penomoran();
-			$data->penomoran_jenis = 'edaran';
-			$data->penomoran_format = $req->get('edaran');
-            $data->save();
-
-            $data = new Penomoran();
-			$data->penomoran_jenis = 'sk';
-			$data->penomoran_format = $req->get('sk');
-            $data->save();
-
-            $data = new Penomoran();
-			$data->penomoran_jenis = 'pengantar';
-			$data->penomoran_format = $req->get('pengantar');
-            $data->save();
-
-            $data = new Penomoran();
-			$data->penomoran_jenis = 'tugas';
-			$data->penomoran_format = $req->get('tugas');
-            $data->save();
-
-            $data = new Penomoran();
-			$data->penomoran_jenis = 'undangan';
-			$data->penomoran_format = $req->get('undangan');
-            $data->save();
+            DB::transaction(function() use ($req){
+                Penomoran::truncate();
+                Penomoran::insert(
+                    [
+                        [
+                            'penomoran_jenis' => 'edaran',
+                            'penomoran_format' => $req->get('edaran'),
+                            'operator' => Auth::user()->pengguna_nama,
+                            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+                        ],
+                        [
+                            'penomoran_jenis' => 'sk',
+                            'penomoran_format' => $req->get('sk'),
+                            'operator' => Auth::user()->pengguna_nama,
+                            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+                        ],
+                        [
+                            'penomoran_jenis' => 'pengantar',
+                            'penomoran_format' => $req->get('pengantar'),
+                            'operator' => Auth::user()->pengguna_nama,
+                            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+                        ],
+                        [
+                            'penomoran_jenis' => 'tugas',
+                            'penomoran_format' => $req->get('tugas'),
+                            'operator' => Auth::user()->pengguna_nama,
+                            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+                        ],
+                        [
+                            'penomoran_jenis' => 'undangan',
+                            'penomoran_format' => $req->get('undangan'),
+                            'operator' => Auth::user()->pengguna_nama,
+                            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+                        ]
+                    ]
+                );
+            });
 
             toast('Berhasil menyimpan penomoran ', 'success')->autoClose(2000);
 			return redirect(route('penomoran'));

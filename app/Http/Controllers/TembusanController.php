@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Tembusan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -41,11 +42,13 @@ class TembusanController extends Controller
         }
 
         try{
-            $data = new Tembusan();
-            $data->truncate();
-			$data->tembusan_isi = $req->get('tembusan_isi');
-			$data->operator = Auth::user()->pengguna_nama;
-            $data->save();
+            DB::transaction(function() use ($req){
+                Tembusan::truncate();
+                $data = new Tembusan();
+                $data->tembusan_isi = $req->get('tembusan_isi');
+                $data->operator = Auth::user()->pengguna_nama;
+                $data->save();
+            });
 
             toast('Berhasil menyimpan tembusan ', 'success')->autoClose(2000);
 			return redirect(route('tembusan'));

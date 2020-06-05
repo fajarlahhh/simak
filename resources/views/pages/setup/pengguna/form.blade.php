@@ -49,26 +49,17 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">No. Hp</label>
-                        <input  class="form-control" type="text" name="pengguna_hp" value="{{ $aksi == 'Edit'? $data->pengguna_hp: old('pengguna_hp') }}" required />
+                        <input  class="form-control" type="text" name="pengguna_hp" value="{{ $aksi == 'Edit'? $data->pengguna_hp: old('pengguna_hp') }}"  />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Pangkat</label>
                         <input  class="form-control" type="text" name="pengguna_pangkat" value="{{ $aksi == 'Edit'? $data->pengguna_pangkat: old('pengguna_pangkat') }}" required />
                     </div>
                     <div class="form-group input-group-sm">
-                        <label class="control-label">Bidang</label>
-                        <select class="form-control selectpicker" name="bidang_nama" data-live-search="true" data-style="btn-info" data-width="100%">
-                            <option value="" {{ ($aksi == 'Edit' && $data->bidang_nama == null? 'selected': (old('bidang_nama') == null? 'selected': '')) }}>Tidak Ada</option>
-                            @foreach($bidang as $row)
-                            <option value="{{ $row->bidang_nama }}" {{ ($aksi == 'Edit' && $data->bidang_nama == $row->bidang_nama? 'selected': (old('bidang_nama') == $row->bidang_nama? 'selected': '')) }}>{{ $row->bidang_nama }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group input-group-sm">
                         <label class="control-label">Jabatan</label>
-                        <select class="form-control selectpicker" name="jabatan_nama" data-live-search="true" data-style="btn-info" data-width="100%">
+                        <select class="form-control selectpicker" name="jabatan_id" data-live-search="true" data-style="btn-info" data-width="100%">
                             @foreach($jabatan as $row)
-                            <option value="{{ $row->jabatan_nama }}" {{ ($aksi == 'Edit' && $data->jabatan_nama == $row->jabatan_nama? 'selected': (old('jabatan_nama') == $row->jabatan_nama? 'selected': '')) }}>{{ $row->jabatan_nama }}</option>
+                            <option value="{{ $row->jabatan_id }}" {{ ($aksi == 'Edit' && $data->jabatan_id == $row->jabatan_id? 'selected': (old('jabatan_id') == $row->jabatan_id? 'selected': '')) }}>{{ $row->jabatan_nama }}, {{ $row->bidang->bidang_nama }}</option>
                             @endforeach
                         </select>
                     </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Rekanan;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class RekananController extends Controller
@@ -54,6 +55,7 @@ class RekananController extends Controller
 			$data = new Rekanan();
 			$data->rekanan_nama = $req->get('rekanan_nama');
 			$data->rekanan_lokasi = $req->get('rekanan_lokasi');
+            $data->operator = Auth::user()->pengguna_nama;
             $data->save();
             toast('Berhasil menambah rekanan '.$req->get('rekanan_nama'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('datarekanan'));
@@ -93,6 +95,7 @@ class RekananController extends Controller
 			$data = Rekanan::findOrFail($req->get('id'));
 			$data->rekanan_nama = $req->get('rekanan_nama');
 			$data->rekanan_lokasi = $req->get('rekanan_lokasi');
+            $data->operator = Auth::user()->pengguna_nama;
             $data->save();
 
             toast('Berhasil mengedit rekanan '.$req->get('rekanan_nama'), 'success')->autoClose(2000);

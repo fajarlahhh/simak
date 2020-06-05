@@ -20,10 +20,11 @@ class CreateReviewTables extends Migration
             $table->text('review_jenis_surat');
             $table->tinyInteger('fix')->nullable();
             $table->tinyInteger('selesai')->default(0);
-            $table->string('verifikator');
+            $table->bigInteger('jabatan_id')->unsigned();
             $table->string('operator');
             $table->timestamps();
             $table->primary(['review_nomor_surat', 'review_nomor']);
+            $table->foreign('jabatan_id')->references('jabatan_id')->on('jabatan')->onDelete('restrict')->onUpdate('cascade');
         });
     }
 

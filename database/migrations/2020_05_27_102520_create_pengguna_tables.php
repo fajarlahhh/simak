@@ -22,16 +22,14 @@ class CreatePenggunaTables extends Migration
             $table->string('pengguna_pangkat')->nullable();
             $table->string('gambar_nama')->nullable();
             $table->string('session_id')->nullable();
-            $table->string('jabatan_nama');
-            $table->string('bidang_nama')->nullable();
+            $table->bigInteger('jabatan_id')->unsigned();
             $table->string('token');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
             $table->primary('pengguna_id');
-            $table->foreign('jabatan_nama')->references('jabatan_nama')->on('jabatan')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('jabatan_id')->references('jabatan_id')->on('jabatan')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('gambar_nama')->references('gambar_nama')->on('gambar')->onDelete('restrict')->onUpdate('cascade');
-            $table->foreign('bidang_nama')->references('bidang_nama')->on('bidang')->onDelete('restrict')->onUpdate('cascade');
         });
     }
 

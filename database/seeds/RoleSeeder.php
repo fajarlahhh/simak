@@ -15,7 +15,7 @@ class RoleSeeder extends Seeder
         $level = array('super-admin', 'supervisor', 'user', 'guest');
         $i = 1;
         foreach ($level as $lvl) {
-            if(DB::table('roles')->where('name', $lvl)->count() == 0)
+            if(Role::where('name', $lvl)->count() == 0)
                 Role::create(['name' => $lvl]);
             $i++;
         }

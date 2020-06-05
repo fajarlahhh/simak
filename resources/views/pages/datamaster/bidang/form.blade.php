@@ -30,7 +30,7 @@
 			<div class="panel-body">
 				<input type="hidden" name="redirect" value="{{ $back }}">
                 @if($aksi == 'Edit')
-                <input type="hidden" name="id" value="{{ $data->bidang_nama }}">
+                <input type="hidden" name="id" value="{{ $data->bidang_id }}">
                 @endif
                 <div class="form-group">
                     <label class="control-label">Nama Bidang</label>

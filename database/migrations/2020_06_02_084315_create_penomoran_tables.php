@@ -16,6 +16,7 @@ class CreatePenomoranTables extends Migration
         Schema::create('penomoran', function (Blueprint $table) {
             $table->string('penomoran_jenis');
             $table->string('penomoran_format');
+            $table->string('operator');
             $table->timestamps();
             $table->primary('penomoran_jenis');
         });

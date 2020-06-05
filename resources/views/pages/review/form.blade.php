@@ -43,12 +43,12 @@
                                 hr {
                                     border: 1px solid;
                                 }
-                            
+
                                 .v-top{
                                     vertical-align: text-top;
                                 }
                             </style>
-                            <div class="bg-white p-5" style="font-family: 'Times New Roman', Times, serif;">
+                            <div class="bg-white p-20" style="font-family: 'Times New Roman', Times, serif;">
                                 {!! $data->kop_isi !!}
                                 @include($halaman)
                             </div>
@@ -126,7 +126,7 @@
 	<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
     <script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
     <script src="/assets/plugins/ckeditor4/ckeditor.js"></script>
-    <script>        
+    <script>
         CKEDITOR.replace( 'editor1',{
             height: 200
         } );

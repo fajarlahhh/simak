@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUndanganTables extends Migration
+class CreateBidangTables extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateUndanganTables extends Migration
      */
     public function up()
     {
-        Schema::create('undangan', function (Blueprint $table) {
-            $table->string('undangan_nomor');
-            $table->date('undangan_tanggal');
-            $table->tinyInteger('kirim')->default(0);
+        Schema::create('bidang', function (Blueprint $table) {
+            $table->bigIncrements('bidang_id');
+            $table->string('bidang_nama')->unique();
+            $table->string('bidang_alias');
             $table->string('operator');
             $table->timestamps();
-            $table->softDeletes();
-            $table->primary('undangan_nomor');
         });
     }
 
@@ -31,6 +29,6 @@ class CreateUndanganTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('undangan');
+        Schema::dropIfExists('bidang');
     }
 }

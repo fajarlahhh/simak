@@ -15,11 +15,13 @@ class JabatanSeeder extends Seeder
     {
         Jabatan::insert([
             'jabatan_nama' => "Staff",
-            'jabatan_parent' => "Staff",
+            'jabatan_parent' => null,
             'jabatan_silsilah' => null,
             'jabatan_pimpinan' => 0,
-            'jabatan_struktural' => 1,
+            'jabatan_struktural' => 0,
             'jabatan_verifikator' => 0,
+            'bidang_id' => 1,
+            'operator' => "Administrator",
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);

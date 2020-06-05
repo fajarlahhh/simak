@@ -5,16 +5,13 @@ namespace App\Http\Controllers;
 use App\Gambar;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class GambarController extends Controller
 {
     //
-    public function __construct()
-	{
-		$this->middleware('auth');
-    }
 
     public function index(Request $req)
 	{
@@ -64,7 +61,8 @@ class GambarController extends Controller
 
 			$data = new Gambar();
 			$data->gambar_nama = $req->get('gambar_nama');
-			$data->gambar_lokasi = 'uploads/gambar/'.$nama_gambar;
+			$data->gambar_lokasi = '/uploads/gambar/'.$nama_gambar;
+            $data->operator = Auth::user()->pengguna_nama;
             $data->save();
             toast('Berhasil menambah gambar '.$req->get('gambar_nama'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('gambar'));

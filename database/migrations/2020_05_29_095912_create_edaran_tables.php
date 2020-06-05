@@ -29,6 +29,7 @@ class CreateEdaranTables extends Migration
             $table->text('salam_pembuka')->nullable();
             $table->text('salam_penutup')->nullable();
             $table->text('kop_isi');
+            $table->bigInteger('bidang_id')->unsigned();
 
             $table->tinyInteger('fix')->default(0);
             $table->integer('urutan');
@@ -36,6 +37,7 @@ class CreateEdaranTables extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->primary('edaran_nomor');
+            $table->foreign('bidang_id')->references('bidang_id')->on('bidang')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::create('edaran_lampiran', function (Blueprint $table) {

@@ -24,6 +24,7 @@ class VerifyCsrfToken extends Middleware
         '/logout',
         '/login'
     ];
+
     // protected function tokensMatch($request)
     // {
     //     $token = $request->input('_token') ?: $request->header('X-CSRF-TOKEN');

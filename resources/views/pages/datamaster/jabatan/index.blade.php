@@ -48,6 +48,7 @@
                     <tr>
                         <th>No.</th>
                         <th>Nama Jabatan</th>
+                        <th>Bidang</th>
                         <th>Atasan</th>
                         <th>Pimpinan</th>
                         <th>Struktural</th>
@@ -60,14 +61,15 @@
                     <tr>
                         <td>{{ ++$i }}</td>
                         <td class="align-middle">{{ $row->jabatan_nama }}</td>
-                        <td class="align-middle">{{ $row->jabatan_parent }}</td>
+                        <td class="align-middle">{{ $row->bidang->bidang_nama }}</td>
+                        <td class="align-middle">{{ $row->jabatan_parent? $row->atasan->jabatan_nama: "" }}</td>
                         <td class="align-middle">{{ $row->jabatan_pimpinan == 0? "": "Ya" }}</td>
                         <td class="align-middle">{{ $row->jabatan_struktural == 0? "": "Ya" }}</td>
                         <td class="align-middle">{{ $row->jabatan_verifikator == 0? "": "Ya" }}</td>
                         <td class="text-center">
                             @role('user|super-admin|supervisor')
-                            <a href="/datajabatan/edit/{{ $row->jabatan_nama }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
-                            <a href="javascript:;" onclick="hapus('{{ $row->jabatan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
+                            <a href="/datajabatan/edit/{{ $row->jabatan_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
+                            <a href="javascript:;" onclick="hapus('{{ $row->jabatan_id }}', '{{ $row->jabatan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
                             @endrole
                         </td>
                     </tr>
@@ -107,10 +109,10 @@
          $("#frm-cari").submit();
     });
 
-    function hapus(id) {
+    function hapus(id, ket) {
         Swal.fire({
             title: 'Hapus Data',
-            text: 'Anda akan menghapus jabatan ' + id + '',
+            text: 'Anda akan menghapus jabatan ' + ket + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

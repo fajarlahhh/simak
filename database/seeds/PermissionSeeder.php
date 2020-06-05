@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 
 class PermissionSeeder extends Seeder
@@ -16,14 +15,14 @@ class PermissionSeeder extends Seeder
         //
         foreach (config('sidebar.menu') as $key => $menu) {
             if (!empty($menu['sub_menu'])) {
-                if(DB::table('permissions')->where('name', strtolower($menu['id']))->count() == 0)
+                if(Permission::where('name', strtolower($menu['id']))->count() == 0)
                     Permission::create(['name' => strtolower($menu['id'])]);
                 foreach ($menu['sub_menu'] as $key => $sub) {
-                    if(DB::table('permissions')->where('name', $sub['id'])->count() == 0)
+                    if(Permission::where('name', $sub['id'])->count() == 0)
                         Permission::create(['name' => $sub['id']]);
                 }
             }else{
-                if(DB::table('permissions')->where('name', $menu['id'])->count() == 0)
+                if(Permission::where('name', $menu['id'])->count() == 0)
                     Permission::create(['name' => $menu['id']]);
             }
         }
