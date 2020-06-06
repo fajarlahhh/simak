@@ -59,8 +59,14 @@
                                     @case('Edaran')
                                         {{ \Carbon\Carbon::parse($row->edaran_tanggal)->isoFormat('LL') }}
                                         @break
-                                    @case(2)
-                                        
+                                    @case('Pengantar')
+                                        {{ \Carbon\Carbon::parse($row->pengantar_tanggal)->isoFormat('LL') }}
+                                        @break
+                                    @case('Tugas')
+                                        {{ \Carbon\Carbon::parse($row->tugas_tanggal)->isoFormat('LL') }}
+                                        @break
+                                    @case('Undangan')
+                                        {{ \Carbon\Carbon::parse($row->undangan_tanggal)->isoFormat('LL') }}
                                         @break
                                 @endswitch
                             </td>
@@ -69,8 +75,14 @@
                                     @case('Edaran')
                                         {{ $row->edaran->edaran_perihal }}
                                         @break
-                                    @case(2)
-                                        
+                                    @case('Pengantar')
+                                        {{ $row->pengantar->pengantar_perihal }}
+                                        @break
+                                    @case('Tugas')
+                                        {{ $row->tugas->tugas_perihal }}
+                                        @break
+                                    @case('Undangan')
+                                        {{ $row->undangan->eundangan_perihal }}
                                         @break
                                 @endswitch
                             </td>
@@ -80,16 +92,7 @@
                                 @if (Auth::user()->jabatan->jabatan_struktural == 1)
                                 <a href="{{ route('review', array('no' => $row->review_nomor_surat, 'tipe' => $row->review_jenis_surat)) }}" class="btn btn-success btn-xs m-r-3"><i class='fas fa-check'></i></a>
                                 @else
-                                @switch($row->review_jenis_surat)
-                                    @case('Edaran')
-                                        <a href="/edaran/edit?no={{ $row->review_nomor_surat }}" class="btn btn-default btn-xs m-r-3"><i class='fas fa-edit'></i></a>
-                                        @break
-                                    @case(2)
-                                        
-                                        @break
-                                    @default
-                                        
-                                @endswitch
+                                <a href="/{{ strtolower($row->review_jenis_surat) }}/edit?no={{ $row->review_nomor_surat }}" class="btn btn-default btn-xs m-r-3"><i class='fas fa-edit'></i></a>
                                 @endif
                                 @endrole
                             </td>

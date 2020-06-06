@@ -1,9 +1,9 @@
-@extends('pages.main')
+@extends('pages.suratkeluar.main')
 
-@section('title', ' | Surat Masuk')
+@section('title', ' | Undangan')
 
 @section('page')
-	<li class="breadcrumb-item active">Surat Masuk</li>
+	<li class="breadcrumb-item active">Undangan</li>
 @endsection
 
 @push('css')
@@ -12,7 +12,7 @@
 @endpush
 
 @section('header')
-	<h1 class="page-header">Surat Masuk</h1>
+	<h1 class="page-header">Undangan</h1>
 @endsection
 
 @section('subcontent')
@@ -23,13 +23,26 @@
                 <div class="col-md-4 col-lg-5 col-xl-3 col-xs-12">
                 	@role('user|super-admin|supervisor')
                     <div class="form-inline">
-                        <a href="{{ route('suratmasuk.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
+                        <a href="{{ route('undangan.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
                     </div>
                     @endrole
                 </div>
                 <div class="col-md-8 col-lg-7 col-xl-9 col-xs-12">
-                	<form action="{{ route('suratmasuk') }}" method="GET" id="frm-cari">
+                	<form action="{{ route('undangan') }}" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
+							<div class="form-group">
+								<select class="form-control selectpicker cari" name="tahun" data-live-search="true" data-style="btn-danger" data-width="100%">
+                                    @for ($thn = 2020; $thn <= date('Y'); $thn++)
+									<option value="{{ $thn }}" {{ $tahun == $thn? 'selected': '' }}>{{ $thn }}</option>
+                                    @endfor
+								</select>
+							</div>&nbsp;
+							<div class="form-group">
+								<select class="form-control selectpicker cari" name="terbit" data-live-search="true" data-style="btn-success" data-width="100%">
+									<option value="0" {{ $terbit == '0'? 'selected': '' }}>Belum Disetujui</option>
+									<option value="1" {{ $terbit == '1'? 'selected': '' }}>Sudah Disetujui & Diterbitkan</option>
+								</select>
+							</div>&nbsp;
 							<div class="form-group">
 								<select class="form-control selectpicker cari" name="tipe" data-live-search="true" data-style="btn-warning" data-width="100%">
 									<option value="0" {{ $tipe == '0'? 'selected': '' }}>Exist</option>
@@ -38,7 +51,7 @@
 								</select>
 							</div>&nbsp;
 		                	<div class="input-group">
-								<input type="text" class="form-control cari" name="cari" placeholder="Cari Nomor/Perihal/Asal/Keterangan" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
+								<input type="text" class="form-control cari" name="cari" placeholder="Cari Nomor/Sifat/Perihal" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
 								<div class="input-group-append">
 									 <span class="input-group-text" id="basic-addon2"><i class="fa fa-search"></i></span>
 								</div>
@@ -56,37 +69,63 @@
 						<tr>
 							<th>No.</th>
 							<th>Nomor</th>
-							<th>Tanggal Masuk</th>
 							<th>Tanggal Surat</th>
-							<th>Asal</th>
+							<th>Sifat</th>
 							<th>Perihal</th>
-							<th>Keterangan</th>
-							<th class="width-110"></th>
+							<th>Tanda Tangan</th>
+							<th class="width-10"></th>
 						</tr>
 					</thead>
 					<tbody>
 					    @foreach ($data as $index => $row)
 					    <tr>
-					        <td>{{ ++$i }}</td>
-					        <td>
-                                <label data-toggle="tooltip" data-container="#sm{{ $i }}" id="sm{{ $i }}" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->updated_at)->isoFormat('LLL') }}">{{ $row->surat_masuk_nomor }}</label>
+                            <td>
+                                {{ ++$i }}
                             </td>
-					        <td>{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal_masuk)->isoFormat('LL') }}</td>
-					        <td>{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal_surat)->isoFormat('LL') }}</td>
-					        <td>{{ $row->surat_masuk_asal }}</td>
-					        <td>{{ $row->surat_masuk_perihal }}</td>
-					        <td>{{ $row->surat_masuk_keterangan }}</td>
-					        <td class="text-right">
-	                            <a href="{{ $row->file }}" target="_blank" class='btn btn-success btn-xs m-r-3'><i class='fas fa-file-pdf'></i></a>
-					        	@role('user|super-admin|supervisor')
-                                @if (!$row->trashed())
-                                <a href="{{ route('suratmasuk.edit', array('no' => $row->surat_masuk_nomor)) }}" class="btn btn-secondary btn-xs m-r-3"><i class='fas fa-edit'></i></a>
-                                <a href="javascript:;" onclick="hapus('{{ $row->surat_masuk_nomor }}', '{{ $row->jumlah_total }}')" class="btn btn-danger btn-xs m-r-3" id='btn-del' data-toggle="tooltip" title="Hapus Data"><i class='fas fa-trash'></i></a>
-                                @else
-                                <a href="javascript:;" onclick="restore('{{ $row->surat_masuk_nomor }}', '{{ $row->jumlah_total }}')" class="btn btn-info btn-xs m-r-3" id='btn-restore' data-toggle="tooltip" title="Restore Data"><i class='fas fa-undo'></i></a>
+					        <td>
+                                <label data-toggle="tooltip" data-container="#sm{{ $i }}" id="sm{{ $i }}" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->updated_at)->isoFormat('LLL') }}">{{ $row->undangan_nomor }}</label>
+                            </td>
+					        <td>{{ \Carbon\Carbon::parse($row->undangan_tanggal)->isoFormat('LL') }}</td>
+					        <td>{{ $row->undangan_sifat }}</td>
+                            <td>{{ $row->undangan_perihal }}</td>
+                            <td>{!! $row->jabatan_nama." - ".$row->undangan_pejabat !!}</td>
+                            <td class="with-btn-group align-middle" nowrap>
+                                <div class="btn-group">
+                                    <a href="/undangan/cetak?no={{ $row->undangan_nomor }}" target="_blank"" class="btn btn-default btn-sm">Preview</a>
+                                    <a href="#" class="btn btn-default btn-sm dropdown-toggle width-30 no-caret" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        @role('user|super-admin|supervisor')
+                                        @if (!$row->trashed())
+                                        @if ($row->fix == 0)
+                                        <li>
+                                            <a href="/undangan/edit?no={{ $row->undangan_nomor }}" class="m-2">
+                                                Edit Keseluruhan
+                                                @if ($row->harus_revisi)
+                                                <i class="fas fa-exclamation-circle text-red m-t-3 m-l-2 fa-lg" ></i>
+                                                @endif
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/undangan/edit/isi?no={{ $row->undangan_nomor }}" class="m-2"> Edit Isi</a>
+                                        </li>
+                                        @endif
+                                        <li>
+                                            <a href="javascript:;" onclick="hapus('{{ $row->undangan_nomor }}')" class="m-2" id='btn-del'> Hapus</a>
+                                        </li>
+                                        @else
+                                        <li>
+                                            <a href="javascript:;" onclick="restore('{{ $row->undangan_nomor }}')" class="m-2" id='btn-del'> Restore</a>
+                                        </li>
+                                        @endif
+                                        @endrole
+                                    </ul>
+                                </div>
+                                @if ($row->harus_revisi)
+                                <i class="fas fa-exclamation-circle text-red m-t-3 m-l-2 fa-lg" data-toggle="tooltip" title="Harus Revisi"></i>
                                 @endif
-                                @endrole
-					        </td>
+                            </td>
 				      	</tr>
 					    @endforeach
 				    </tbody>
@@ -109,6 +148,10 @@
 <script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 <script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script>
+    $('.table-responsive').on('show.bs.dropdown', function () {
+        $('.table-responsive').css( "overflow", "inherit" );
+    });
+
     $(".cari").change(function() {
             $("#frm-cari").submit();
     });
@@ -123,10 +166,10 @@
         });
     });
 
-    function restore(id, ket) {
+    function restore(id) {
         Swal.fire({
             title: 'Restore Data',
-            text: 'Anda akan mengembalikan surat masuk ' + ket + '',
+            text: 'Anda akan mengembalikan undangan ' + id + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -141,7 +184,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/suratmasuk/restore?no=" + id,
+                    url: "/undangan/restore?no=" + id,
                     type: "POST",
                     data: {
                         "_method": 'PATCH'
@@ -161,10 +204,10 @@
         });
     }
 
-    function hapus(id, ket) {
+    function hapus(id) {
         Swal.fire({
             title: 'Hapus Data',
-            text: 'Anda akan menghapus surat masuk ' + ket + '',
+            text: 'Anda akan menghapus undangan ' + id + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -179,7 +222,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/suratmasuk/hapus?no=" + id,
+                    url: "/undangan/hapus?no=" + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'

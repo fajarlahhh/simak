@@ -67,17 +67,17 @@ return [
 			'url' => '/edaran',
 			'id' => 'edaran',
 			'title' => 'Edaran'
-		],[
+		],/*[
 			'url' => '/sk',
 			'id' => 'sk',
 			'title' => 'Surat Keputusan'
-		],[
-			'url' => '/suratpengantar',
-			'id' => 'suratpengantar',
+		],*/[
+			'url' => '/pengantar',
+			'id' => 'pengantar',
 			'title' => 'Surat Pengantar'
 		],[
-			'url' => '/surattugas',
-			'id' => 'surattugas',
+			'url' => '/tugas',
+			'id' => 'tugas',
 			'title' => 'Surat Tugas'
 		],[
 			'url' => '/undangan',
@@ -114,8 +114,18 @@ return [
         ]]
 	],[
 		'icon' => 'fas fa-search',
-		'title' => 'Tracking Disposisi',
-		'id' => 'trackingdisposisi',
-		'url' => '/trackingdisposisi'
+		'title' => 'Tracking',
+		'url' => 'javascript:;',
+		'id' => 'tracking',
+		'caret' => true,
+		'sub_menu' => [[
+			'url' => '/trackingsuratkeluar',
+			'id' => 'trackingsuratkeluar',
+			'title' => 'Surat Keluar'
+        ],[
+			'url' => '/trackingsuratmasuk',
+			'id' => 'trackingsuratmasuk',
+			'title' => 'Surat Masuk'
+        ]]
 	]]
 ];

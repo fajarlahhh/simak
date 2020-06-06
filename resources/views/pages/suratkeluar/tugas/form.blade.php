@@ -1,6 +1,6 @@
 @extends('pages.suratkeluar.main')
 
-@section('title', ' | '.$aksi.' Undangan')
+@section('title', ' | '.$aksi.' Surat Tugas')
 
 @push('css')
 	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
@@ -11,16 +11,16 @@
 @endpush
 
 @section('page')
-	<li class="breadcrumb-item">Undangan</li>
+	<li class="breadcrumb-item">Surat Tugas</li>
 	<li class="breadcrumb-item active">{{ $aksi }} Data</li>
 @endsection
 
 @section('header')
-	<h1 class="page-header">Undangan <small>{{ $aksi }} Data</small></h1>
+	<h1 class="page-header">Surat Tugas <small>{{ $aksi }} Data</small></h1>
 @endsection
 
 @section('subcontent')
-<form action="{{ route('undangan.'.strtolower($aksi)) }}" name="form-wizard" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="" enctype="multipart/form-data">
+<form action="{{ route('tugas.'.strtolower($aksi)) }}" name="form-wizard" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="" enctype="multipart/form-data">
     @csrf
     @method(strtolower($aksi) == 'tambah'? 'POST': 'PUT')
 	<div class="panel panel-inverse" data-sortable-id="form-stuff-1">
@@ -32,7 +32,7 @@
 		</div>
 		<div class="panel-body p-5">
             @if ($aksi == 'Edit')
-            <input type="hidden" name="undangan_nomor" value="{{ $aksi == 'Edit'? $data->undangan_nomor: old('undangan_nomor') }}" readonly/>
+            <input type="hidden" name="tugas_nomor" value="{{ $aksi == 'Edit'? $data->tugas_nomor: old('tugas_nomor') }}" readonly/>
             @if ($catatan)
             <div class="alert alert-danger">
                 <h4>Catatan Hasil Review </h4>
@@ -80,19 +80,19 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="control-label">Tanggal Surat</label>
-                                    <input type="text" readonly class="form-control datepicker" name="undangan_tanggal" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->undangan_tanggal:(old('undangan_tanggal')? old('undangan_tanggal'): now()))) }}" data-parsley-group="step-1"/>
+                                    <input type="text" readonly class="form-control datepicker" name="tugas_tanggal" required value="{{ date('d F Y', strtotime($aksi == 'Edit'? $data->tugas_tanggal:(old('tugas_tanggal')? old('tugas_tanggal'): now()))) }}" data-parsley-group="step-1"/>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Sifat</label>
-                                    <input class="form-control"  type="text" name="undangan_sifat" value="{{ $aksi == 'Edit'? $data->undangan_sifat: old('undangan_sifat') }}" />
+                                    <input class="form-control"  type="text" name="tugas_sifat" value="{{ $aksi == 'Edit'? $data->tugas_sifat: old('tugas_sifat') }}" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Lampiran</label>
-                                    <input class="form-control"  type="text" name="undangan_lampiran" value="{{ $aksi == 'Edit'? $data->undangan_lampiran: old('undangan_lampiran') }}" />
+                                    <input class="form-control"  type="text" name="tugas_lampiran" value="{{ $aksi == 'Edit'? $data->tugas_lampiran: old('tugas_lampiran') }}" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Perihal</label>
-                                    <textarea class="form-control" rows="3" name="undangan_perihal">{{ $aksi == 'Edit'? $data->undangan_perihal: old('undangan_perihal') }}</textarea>
+                                    <textarea class="form-control" rows="3" name="tugas_perihal">{{ $aksi == 'Edit'? $data->tugas_perihal: old('tugas_perihal') }}</textarea>
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -122,7 +122,7 @@
                     <fieldset>
                         <div class="form-group">
                             <label class="control-label">Kepada</label>
-                            <input class="form-control" type="text" name="undangan_kepada_awal" value="{{ $kepada? $kepada[0]: (old('undangan_kepada_awal')? old('undangan_kepada_awal'): "Kepada Yth :") }}" />
+                            <input class="form-control" type="text" name="tugas_kepada_awal" value="{{ $kepada? $kepada[0]: (old('tugas_kepada_awal')? old('tugas_kepada_awal'): "Kepada Yth :") }}" />
                         </div>
                         <div class="note note-default">
                             <label class="control-label">Tujuan</label>
@@ -152,14 +152,14 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Di</label>
-                            <input class="form-control" type="text" name="undangan_kepada_akhir" value="{{ $kepada? $kepada[2]: (old('undangan_kepada_akhir')? old('undangan_kepada_akhir'): "di Tempat") }}" />
+                            <input class="form-control" type="text" name="tugas_kepada_akhir" value="{{ $kepada? $kepada[2]: (old('tugas_kepada_akhir')? old('tugas_kepada_akhir'): "di Tempat") }}" />
                         </div>
                     </fieldset>
                 </div>
                 @endif
                 <div class="tab-pane fade {{ $edit == 2? "active show": "" }}" id="default-tab-3">
                     <fieldset>
-                        <textarea class="form-control" rows="3" id="editor2"  name="undangan_isi">{{ $aksi == 'Edit'? $data->undangan_isi: old('undangan_isi') }}</textarea>
+                        <textarea class="form-control" rows="3" id="editor2"  name="tugas_isi">{{ $aksi == 'Edit'? $data->tugas_isi: old('tugas_isi') }}</textarea>
                     </fieldset>
                 </div>
                 @if ($edit == 1)
@@ -167,7 +167,7 @@
                     <fieldset>
                         <div class="form-group input-group-sm">
                             <label class="control-label">Tanda Tangan</label>
-                            <select class="form-control selectpicker" name="undangan_pejabat" data-live-search="true" data-style="btn-info" data-width="100%">
+                            <select class="form-control selectpicker" name="tugas_pejabat" data-live-search="true" data-style="btn-info" data-width="100%">
                                 @foreach($pengguna as $row)
                                 <option value="{{ $row->pengguna_id }}" {{ ($aksi == 'Edit' && $data->pengguna_nama == $row->pengguna_nama? 'selected': (old('gambar_nama') == $row->gambar_nama? 'selected': '')) }}>{{ $row->jabatan->jabatan_nama }} - {{ $row->pengguna_nama }}</option>
                                 @endforeach
@@ -175,9 +175,9 @@
                         </div>
                         <div class="form-group input-group-sm">
                             <label class="control-label">Jenis Tanda Tangan</label>
-                            <select class="form-control selectpicker" name="undangan_jenis_ttd" data-live-search="true" data-style="btn-info" data-width="100%">
-                                <option value="1" {{ ($aksi == 'Edit' && $data->undangan_ttd == 1? 'selected': (old('undangan_jenis_ttd') == 1? 'selected': '')) }}>QR Code</option>
-                                <option value="2" {{ ($aksi == 'Edit' && $data->undangan_ttd != 1? 'selected': (old('undangan_jenis_ttd') == 1? 'selected': '')) }}>Gambar</option>
+                            <select class="form-control selectpicker" name="tugas_jenis_ttd" data-live-search="true" data-style="btn-info" data-width="100%">
+                                <option value="1" {{ ($aksi == 'Edit' && $data->tugas_ttd == 1? 'selected': (old('tugas_jenis_ttd') == 1? 'selected': '')) }}>QR Code</option>
+                                <option value="2" {{ ($aksi == 'Edit' && $data->tugas_ttd != 1? 'selected': (old('tugas_jenis_ttd') == 1? 'selected': '')) }}>Gambar</option>
                             </select>
                         </div>
                         <div class="note note-default">
@@ -293,7 +293,7 @@
                         }
                     });
                     $.ajax({
-                        url: "/undangan/hapus/lampiran?file=" + id,
+                        url: "/tugas/hapus/lampiran?file=" + id,
                         type: "POST",
                         data: {
                             "_method": 'DELETE'

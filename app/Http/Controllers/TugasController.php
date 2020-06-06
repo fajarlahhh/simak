@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use PDF;
 use App\Salam;
-use App\Edaran;
+use App\Tugas;
 use App\Review;
 use App\Jabatan;
 use App\Rekanan;
@@ -13,7 +13,7 @@ use App\Pengguna;
 use App\Tembusan;
 use App\Penomoran;
 use Carbon\Carbon;
-use App\EdaranLampiran;
+use App\TugasLampiran;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\SuratKeluarEvent;
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
-class EdaranController extends Controller
+class TugasController extends Controller
 {
     //
 
@@ -30,9 +30,9 @@ class EdaranController extends Controller
 	{
         $auth = Auth::user();
         $tahun = $req->tahun? $req->tahun: date('Y');
-        $data = Edaran::with('harus_revisi')->where(function($q) use ($req){
-            $q->where('edaran_sifat', 'like', '%'.$req->cari.'%')->orWhere('edaran_perihal', 'like', '%'.$req->cari.'%')->orWhere('edaran_nomor', 'like', '%'.$req->cari.'%');
-        })->whereYear('edaran_tanggal', '=', $tahun)->orderBy('edaran_tanggal', 'desc');
+        $data = Tugas::with('harus_revisi')->where(function($q) use ($req){
+            $q->where('tugas_sifat', 'like', '%'.$req->cari.'%')->orWhere('tugas_perihal', 'like', '%'.$req->cari.'%')->orWhere('tugas_nomor', 'like', '%'.$req->cari.'%');
+        })->whereYear('tugas_tanggal', '=', $tahun)->orderBy('tugas_tanggal', 'desc');
         
         if ($auth->getRoleNames()[0] != 'super-admin') {
             $data = $data->where('bidang_id', $auth->jabatan->bidang->bidang_id);
@@ -60,7 +60,7 @@ class EdaranController extends Controller
         $data = $data->paginate(10);
 
         $data->appends(['cari' => $req->cari, 'tipe' => $req->tipe, 'terbit' => $req->terbit, 'tahun' => $tahun]);
-        return view('pages.suratkeluar.edaran.index', [
+        return view('pages.suratkeluar.tugas.index', [
             'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,
             'tipe' => $req->tipe,
@@ -70,9 +70,19 @@ class EdaranController extends Controller
         ]);
     }
 
+    public function detail(Request $req)
+    {
+        $data = Tugas::with('lampiran')->with('review')->findOrFail($req->no);
+        return view('pages.tracking.suratkeluar.form',[
+            'data' => $data,
+            'halaman' => 'pages.suratkeluar.tugas.cetak',
+            'i' => 0
+        ]);
+    }
+
 	public function tambah()
 	{
-        return view('pages.suratkeluar.edaran.form', [
+        return view('pages.suratkeluar.tugas.form', [
             'aksi' => 'Tambah',
             'edit' => 1,
             'data' => null,
@@ -81,7 +91,7 @@ class EdaranController extends Controller
             'pengguna' => Pengguna::whereHas('jabatan', function ($q){
                 $q->where('jabatan_pimpinan', 1);
             })->get(),
-            'back' => Str::contains(url()->previous(), ['edaran/tambah', 'edaran/edit'])? '/edaran': url()->previous(),
+            'back' => Str::contains(url()->previous(), ['tugas/tambah', 'tugas/edit'])? '/tugas': url()->previous(),
         ]);
 	}
 
@@ -89,9 +99,9 @@ class EdaranController extends Controller
 	{
         $validator = Validator::make($req->all(),
             [
-                'edaran_tanggal' => 'required'
+                'tugas_tanggal' => 'required'
             ],[
-                'edaran_tanggal.required'  => 'Tanggal Surat tidak boleh kosong'
+                'tugas_tanggal.required'  => 'Tanggal Surat tidak boleh kosong'
             ]
         );
 
@@ -103,17 +113,17 @@ class EdaranController extends Controller
         try{
             DB::transaction(function() use ($req){
                 $auth = Auth::user();
-                $kepada = $req->get('edaran_kepada_awal')."<ol>";
-                if($req->get('edaran_kepada_tujuan')){
-                    foreach ($req->get('edaran_kepada_tujuan') as $key => $value) {
+                $kepada = $req->get('tugas_kepada_awal')."<ol>";
+                if($req->get('tugas_kepada_tujuan')){
+                    foreach ($req->get('tugas_kepada_tujuan') as $key => $value) {
                         $kepada .= "<li>".$value."</li>";
                     }
                 }
-                $kepada .= "</ol>".$req->get('edaran_kepada_akhir');
+                $kepada .= "</ol>".$req->get('tugas_kepada_akhir');
 
-                $format = Penomoran::where('penomoran_jenis', 'edaran')->first()->penomoran_format;
+                $format = Penomoran::where('penomoran_jenis', 'tugas')->first()->penomoran_format;
                 $urutan = env('EDARAN');
-                $data = Edaran::withTrashed()->whereRaw('year(edaran_tanggal)='.date('Y'))->orderBy('urutan', 'desc')->get();
+                $data = Tugas::withTrashed()->whereRaw('year(tugas_tanggal)='.date('Y'))->orderBy('urutan', 'desc')->get();
                 if($data->count() > 0){
                     $urutan = $data->first()->urutan;
                 }
@@ -123,8 +133,8 @@ class EdaranController extends Controller
 
                 $salam = Salam::all()->first();
                 $kop = KopSurat::all()->first()->kop_isi;
-                if($req->get('edaran_pejabat')){
-                    $pengguna = Pengguna::findOrFail($req->get('edaran_pejabat'));
+                if($req->get('tugas_pejabat')){
+                    $pengguna = Pengguna::findOrFail($req->get('tugas_pejabat'));
                 }
 
                 $tembusan = null;
@@ -139,20 +149,20 @@ class EdaranController extends Controller
                     $tembusan .= "</ol>";
                 }
 
-                $data = new Edaran();
-                $data->edaran_nomor = $nomor;
-                $data->edaran_tanggal = Carbon::parse($req->get('edaran_tanggal'))->format('Y-m-d');
-                $data->edaran_sifat = $req->get('edaran_sifat');
-                $data->edaran_perihal = $req->get('edaran_perihal');
-                $data->edaran_lampiran = $req->get('edaran_lampiran');
-                $data->edaran_kepada = $kepada;
-                $data->edaran_isi = $req->get('edaran_isi');
-                if($req->get('edaran_pejabat')){
-                    $data->edaran_ttd = $req->get('edaran_jenis_ttd') == 2? ($pengguna->gambar_nama? $pengguna->gambar->gambar_lokasi: null): 1;
-                    $data->edaran_pejabat = "<strong>".$pengguna->pengguna_nama."</strong><br>".$pengguna->pengguna_pangkat."<br>NIP. ".$pengguna->pengguna_nip;
+                $data = new Tugas();
+                $data->tugas_nomor = $nomor;
+                $data->tugas_tanggal = Carbon::parse($req->get('tugas_tanggal'))->format('Y-m-d');
+                $data->tugas_sifat = $req->get('tugas_sifat');
+                $data->tugas_perihal = $req->get('tugas_perihal');
+                $data->tugas_lampiran = $req->get('tugas_lampiran');
+                $data->tugas_kepada = $kepada;
+                $data->tugas_isi = $req->get('tugas_isi');
+                if($req->get('tugas_pejabat')){
+                    $data->tugas_ttd = $req->get('tugas_jenis_ttd') == 2? ($pengguna->gambar_nama? $pengguna->gambar->gambar_lokasi: null): 1;
+                    $data->tugas_pejabat = "<strong>".$pengguna->pengguna_nama."</strong><br>".$pengguna->pengguna_pangkat."<br>NIP. ".$pengguna->pengguna_nip;
                     $data->jabatan_nama = $pengguna->jabatan->jabatan_nama;
                 }
-                $data->edaran_tembusan = $tembusan;
+                $data->tugas_tembusan = $tembusan;
                 $data->salam_pembuka = $salam->salam_pembuka;
                 $data->salam_penutup = $salam->salam_penutup;
                 $data->kop_isi = $kop;
@@ -166,10 +176,10 @@ class EdaranController extends Controller
                     foreach ($req->file('lampiran') as $file) {
                         $ext = $file->getClientOriginalExtension();
                         $nama_file = time().Str::random().".".$ext;
-                        $file->move(public_path('uploads/edaran/gambar'), $nama_file);
-                        EdaranLampiran::create([
-                            'edaran_nomor' => $nomor,
-                            'file' => '/uploads/edaran/gambar/'.$nama_file
+                        $file->move(public_path('uploads/tugas/gambar'), $nama_file);
+                        TugasLampiran::create([
+                            'tugas_nomor' => $nomor,
+                            'file' => '/uploads/tugas/gambar/'.$nama_file
                             ]);
                     }
                 }
@@ -178,7 +188,7 @@ class EdaranController extends Controller
                 $review = new Review();
                 $review->review_nomor_surat = $nomor;
                 $review->review_nomor = 1;
-                $review->review_jenis_surat = "Edaran";
+                $review->review_jenis_surat = "Tugas";
                 $review->jabatan_id = $auth->jabatan->jabatan_parent;
                 $review->operator = $auth->pengguna_id;
                 $review->save();
@@ -187,44 +197,34 @@ class EdaranController extends Controller
                     $broadcast = [
                         'pengguna_id' => $atasan->pengguna_id,
                         'surat_nomor' => $nomor,
-                        'surat_jenis' => 'Edaran',
+                        'surat_jenis' => 'Tugas',
                     ];
                     event(new SuratKeluarEvent($broadcast));
                 }
             });
-            toast('Berhasil menambah edaran '.$req->get('edaran_nomor'), 'success')->autoClose(2000);
-			return redirect($req->get('redirect')? $req->get('redirect'): route('edaran'));
+            toast('Berhasil menambah surat tugas '.$req->get('tugas_nomor'), 'success')->autoClose(2000);
+			return redirect($req->get('redirect')? $req->get('redirect'): route('tugas'));
         }catch(\Exception $e){
             alert()->error('Tambah Data', $e->getMessage());
             return redirect()->back()->withInput();
         }
 	}
 
-    public function detail(Request $req)
-    {
-        $data = Edaran::with('lampiran')->with('review')->findOrFail($req->no);
-        return view('pages.tracking.suratkeluar.form',[
-            'data' => $data,
-            'halaman' => 'pages.suratkeluar.edaran.cetak',
-            'i' => 0
-        ]);
-    }
-
 	public function edit(Request $req)
 	{
-        $data = Edaran::with('lampiran')->findOrFail($req->no);
+        $data = Tugas::with('lampiran')->findOrFail($req->no);
 
         $kepada = null;
-        if($data && $data->edaran_kepada){
-            $kepada = explode("<ol>", $data->edaran_kepada);
+        if($data && $data->tugas_kepada){
+            $kepada = explode("<ol>", $data->tugas_kepada);
         }
 
         $tembusan = null;
-        if($data && $data->edaran_tembusan){
-            $tembusan = explode("<ol>", $data->edaran_tembusan);
+        if($data && $data->tugas_tembusan){
+            $tembusan = explode("<ol>", $data->tugas_tembusan);
         }
         $review = Review::where('review_nomor_surat', $req->get('no'))->where('fix', 1)->where('selesai', 0)->first();
-        return view('pages.suratkeluar.edaran.form', [
+        return view('pages.suratkeluar.tugas.form', [
             'aksi' => 'Edit',
             'edit' => 1,
             'catatan' => $review? $review: null,
@@ -235,24 +235,24 @@ class EdaranController extends Controller
             'pengguna' => Pengguna::whereHas('jabatan', function ($q) use ($req){
                 $q->where('jabatan_pimpinan', 1);
             })->get(),
-            'back' => Str::contains(url()->previous(), ['edaran/tambah', 'edaran/edit'])? '/edaran': url()->previous(),
+            'back' => Str::contains(url()->previous(), ['tugas/tambah', 'tugas/edit'])? '/tugas': url()->previous(),
         ]);
 	}
 
 	public function edit_isi(Request $req)
 	{
         $review = Review::where('review_nomor_surat', $req->get('no'))->where('fix', 1)->where('selesai', 0)->first();
-        return view('pages.suratkeluar.edaran.form', [
+        return view('pages.suratkeluar.tugas.form', [
             'aksi' => 'Edit',
             'edit' => 2,
             'kepada' => null,
             'tembusan' => null,
             'catatan' => $review? $review: null,
-            'data' => Edaran::with('lampiran')->findOrFail($req->no),
+            'data' => Tugas::with('lampiran')->findOrFail($req->no),
             'pengguna' => Pengguna::whereHas('jabatan', function ($q) use ($req){
                 $q->where('jabatan_struktural', 1);
             })->get(),
-            'back' => Str::contains(url()->previous(), ['edaran/tambah', 'edaran/edit'])? '/edaran': url()->previous(),
+            'back' => Str::contains(url()->previous(), ['tugas/tambah', 'tugas/edit'])? '/tugas': url()->previous(),
         ]);
 	}
 
@@ -260,9 +260,9 @@ class EdaranController extends Controller
 	{
         $validator = Validator::make($req->all(),
             [
-                'edaran_nomor' => 'required',
+                'tugas_nomor' => 'required',
             ],[
-                'edaran_nomor.required'  => 'Nomor tidak boleh kosong'
+                'tugas_nomor.required'  => 'Nomor tidak boleh kosong'
             ]
         );
 
@@ -276,19 +276,19 @@ class EdaranController extends Controller
                 $auth = Auth::user();
                 $salam = Salam::all()->first();
                 $kop = KopSurat::all()->first()->kop_isi;
-                if($req->get('edaran_pejabat')){
-                    $pengguna = Pengguna::findOrFail($req->get('edaran_pejabat'));
+                if($req->get('tugas_pejabat')){
+                    $pengguna = Pengguna::findOrFail($req->get('tugas_pejabat'));
                 }
 
                 $kepada = null;
                 if($req->get('tujuan')){
-                    $kepada = $req->get('edaran_kepada_awal')."<ol>";
+                    $kepada = $req->get('tugas_kepada_awal')."<ol>";
                     if($req->get('tujuan')){
                         foreach ($req->get('tujuan') as $key => $value) {
                             $kepada .= "<li>".$value."</li>";
                         }
                     }
-                    $kepada .= "</ol>".$req->get('edaran_kepada_akhir');
+                    $kepada .= "</ol>".$req->get('tugas_kepada_akhir');
                 }
 
                 $tembusan = null;
@@ -303,19 +303,19 @@ class EdaranController extends Controller
                     $tembusan .= "</ol>";
                 }
 
-                $data = Edaran::findOrFail($req->get('edaran_nomor'));
-                $data->edaran_tanggal = Carbon::parse($req->get('edaran_tanggal'))->format('Y-m-d');
-                $data->edaran_sifat = $req->get('edaran_sifat');
-                $data->edaran_perihal = $req->get('edaran_perihal');
-                $data->edaran_lampiran = $req->get('edaran_lampiran');
-                $data->edaran_kepada = $kepada;
-                $data->edaran_isi = $req->get('edaran_isi');
-                if($req->get('edaran_pejabat')){
-                    $data->edaran_ttd = $req->get('edaran_jenis_ttd') == 2? ($pengguna->gambar_nama? $pengguna->gambar->gambar_lokasi: null): 1;
-                    $data->edaran_pejabat = "<strong>".$pengguna->pengguna_nama."</strong><br>".$pengguna->pengguna_pangkat."<br>NIP. ".$pengguna->pengguna_nip;
+                $data = Tugas::findOrFail($req->get('tugas_nomor'));
+                $data->tugas_tanggal = Carbon::parse($req->get('tugas_tanggal'))->format('Y-m-d');
+                $data->tugas_sifat = $req->get('tugas_sifat');
+                $data->tugas_perihal = $req->get('tugas_perihal');
+                $data->tugas_lampiran = $req->get('tugas_lampiran');
+                $data->tugas_kepada = $kepada;
+                $data->tugas_isi = $req->get('tugas_isi');
+                if($req->get('tugas_pejabat')){
+                    $data->tugas_ttd = $req->get('tugas_jenis_ttd') == 2? ($pengguna->gambar_nama? $pengguna->gambar->gambar_lokasi: null): 1;
+                    $data->tugas_pejabat = "<strong>".$pengguna->pengguna_nama."</strong><br>".$pengguna->pengguna_pangkat."<br>NIP. ".$pengguna->pengguna_nip;
                     $data->jabatan_nama = $pengguna->jabatan->jabatan_nama;
                 }
-                $data->edaran_tembusan = $tembusan;
+                $data->tugas_tembusan = $tembusan;
                 $data->salam_pembuka = $salam->salam_pembuka;
                 $data->salam_penutup = $salam->salam_penutup;
                 $data->kop_isi = $kop;
@@ -328,16 +328,16 @@ class EdaranController extends Controller
                     foreach ($req->file('lampiran') as $file) {
                         $ext = $file->getClientOriginalExtension();
                         $nama_file = time().Str::random().".".$ext;
-                        $file->move(public_path('uploads/edaran/gambar'), $nama_file);
-                        EdaranLampiran::create([
-                            'edaran_nomor' => $req->get('edaran_nomor'),
-                            'file' => '/uploads/edaran/gambar/'.$nama_file
+                        $file->move(public_path('uploads/tugas/gambar'), $nama_file);
+                        TugasLampiran::create([
+                            'tugas_nomor' => $req->get('tugas_nomor'),
+                            'file' => '/uploads/tugas/gambar/'.$nama_file
                             ]);
                     }
                 }
-                $belum_selesai_review = Review::where('review_nomor_surat', $req->get('edaran_nomor'))->where('fix', 1)->where('selesai', 0)->first();
+                $belum_selesai_review = Review::where('review_nomor_surat', $req->get('tugas_nomor'))->where('fix', 1)->where('selesai', 0)->first();
                 if ($belum_selesai_review) {
-                    Review::where('review_nomor_surat', $req->get('edaran_nomor'))->where('selesai', 0)->where('fix', 1)
+                    Review::where('review_nomor_surat', $req->get('tugas_nomor'))->where('selesai', 0)->where('fix', 1)
                     ->update([
                         'selesai' => 1,
                     ]);
@@ -347,9 +347,9 @@ class EdaranController extends Controller
                     }
 
                     $review = new Review();
-                    $review->review_nomor_surat = $req->get('edaran_nomor');
+                    $review->review_nomor_surat = $req->get('tugas_nomor');
                     $review->review_nomor = $belum_selesai_review->review_nomor + 1;
-                    $review->review_jenis_surat = "Edaran";
+                    $review->review_jenis_surat = "Tugas";
                     $review->jabatan_id = $tujuan;
                     $review->operator = $auth->pengguna_id;
                     $review->save();
@@ -358,8 +358,8 @@ class EdaranController extends Controller
                     foreach ($atasan as $atasan) {
                         $broadcast = [
                             'pengguna_id' => $atasan->pengguna_id,
-                            'surat_nomor' => $req->get('edaran_nomor'),
-                            'surat_jenis' => 'Edaran',
+                            'surat_nomor' => $req->get('tugas_nomor'),
+                            'surat_jenis' => 'Tugas',
                         ];
                         event(new SuratKeluarEvent($broadcast));
                     }
@@ -367,8 +367,8 @@ class EdaranController extends Controller
                 }
             });
 
-            toast('Berhasil mengedit edaran '.$req->get('edaran_nomor'), 'success')->autoClose(2000);
-			return redirect($req->get('redirect')? $req->get('redirect'): route('edaran'));
+            toast('Berhasil mengedit surat tugas '.$req->get('tugas_nomor'), 'success')->autoClose(2000);
+			return redirect($req->get('redirect')? $req->get('redirect'): route('tugas'));
         }catch(\Exception $e){
             alert()->error('Tambah Data', $e->getMessage());
             return redirect()->back()->withInput();
@@ -378,7 +378,7 @@ class EdaranController extends Controller
 	public function hapus(Request $req)
 	{
 		try{
-            Edaran::findOrFail($req->get('no'))->delete();
+            Tugas::findOrFail($req->get('no'))->delete();
             toast('Berhasil menghapus data', 'success')->autoClose(2000);
 		}catch(\Exception $e){
             alert()->error('Hapus Data', $e->getMessage());
@@ -388,7 +388,7 @@ class EdaranController extends Controller
 	public function hapus_lampiran(Request $req)
 	{
 		try{
-            $data = EdaranLampiran::findOrFail($req->get('file'));
+            $data = TugasLampiran::findOrFail($req->get('file'));
             $data->delete();
             File::delete(public_path($req->get('file')));
             return 1;
@@ -400,7 +400,7 @@ class EdaranController extends Controller
 	public function restore(Request $req)
 	{
 		try{
-            Edaran::withTrashed()->findOrFail($req->get('no'))->restore();
+            Tugas::withTrashed()->findOrFail($req->get('no'))->restore();
             toast('Berhasil mengembalikan data', 'success')->autoClose(2000);
 		}catch(\Exception $e){
             alert()->error('Restore Data', $e->getMessage());
@@ -411,11 +411,11 @@ class EdaranController extends Controller
 	{
         $id = $req->get('no');
         try{
-            $data = Edaran::withTrashed()->findOrFail($id);
+            $data = Tugas::withTrashed()->findOrFail($id);
             $pdf = PDF::loadView('layouts.print-surat', [
-                'halaman' => 'pages.suratkeluar.edaran.cetak',
+                'halaman' => 'pages.suratkeluar.tugas.cetak',
                 'data' => $data,
-                'judul' => 'Nomor Edaran '.$data->edaran_nomor
+                'judul' => 'Nomor Tugas '.$data->tugas_nomor
             ], [], [
                 'format' => 'A4'
             ]);

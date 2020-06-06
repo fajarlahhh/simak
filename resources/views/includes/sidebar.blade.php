@@ -11,7 +11,7 @@
 					<div class="info">
 						<b class="caret pull-right"></b>
 						{{ $nama_pegawai }}
-                        <small>{{ Auth::user()->bidang_nama }}</small>
+                        <small>{{ Auth::user()->jabatan->jabatan_nama }} - {{ Auth::user()->jabatan->bidang->bidang_nama }}</small>
                         <br><span class="badge bg-blue-darker">{{ ucFirst(Auth::user()->getRoleNames()[0]) }}</span>
 					</div>
 				</a>

@@ -1,9 +1,9 @@
-@extends('pages.main')
+@extends('pages.tracking.main')
 
-@section('title', ' | Tracking Disposisi')
+@section('title', ' | Tracking Surat Keluar')
 
 @section('page')
-	<li class="breadcrumb-item active">Tracking Disposisi</li>
+	<li class="breadcrumb-item active">Surat Keluar</li>
 @endsection
 
 @push('css')
@@ -11,7 +11,7 @@
 @endpush
 
 @section('header')
-	<h1 class="page-header">Tracking Disposisi</h1>
+	<h1 class="page-header">Tracking Surat Keluar</h1>
 @endsection
 
 @section('subcontent')
@@ -19,7 +19,7 @@
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
             <div class="form-group">
-                <label class="control-label text-white">Cari Nomor/Asal/Perihal</label>
+                <label class="control-label text-white">Cari Nomor/Sifat/Perihal</label>
                 <select class="form-control" id="select2" style='width: 100%;'>
                 </select>
             </div>
@@ -36,12 +36,12 @@
 <script>
     $("#select2").on("change", function(e) {
         //$('#report-container').show();
-        $("#report-container").load("/trackingdisposisi/detail/" + $(this).select2('data')[0]['id']);
+        $("#report-container").load("/trackingsuratkeluar/detail/" + $(this).select2('data')[0]['jenis'] + "?no=" + $(this).select2('data')[0]['id']);
     });
 
     function format(data) {
         if (!data.id) { return data.text; }
-        var $data = $("<div style='color: #151e1e;'>" + data.nomor + "<br><small>Asal : " + data.asal + "<br>Perihal : " + data.perihal + "<small></div>");
+        var $data = $("<div><strong>Nomor : " + data.nomor + "</strong><div class='pull-right'>" + data.tanggal + "</div><br>Bidang : " + data.bidang + "<br>Perihal : " + data.perihal + "<br><strong>Status : " + (data.fix == 1? "Disetujui & Diterbitkan": "Belum Disetujui") + "</strong><br>Dibuat Oleh : " + data.operator + "</div>");
         return $data;
     }
 
@@ -49,7 +49,7 @@
         minimumInputLength: 1,
         templateResult: format,
         ajax:{
-            url: '/trackingdisposisi/cari',
+            url: '/trackingsuratkeluar/cari',
             dataType: "json",
             delay: 250,
             type : 'GET',
@@ -59,20 +59,22 @@
                 };
             },
             beforeSend: function() {
-                //$('#report-container').hide();
+                $('#report-container div').hide();
             },
             processResults: function(data){
                 var results = [];
 
                 $.each(data, function(index, item){
                     results.push({
-                        id: item.surat_masuk_id,
-                        nomor: item.surat_masuk_nomor,
-                        tgl_masuk: item.surat_masuk_tanggal_masuk,
-                        tgl_surat: item.surat_masuk_tanggal_surat,
-                        asal: item.surat_masuk_asal,
-                        rangkuman: item.surat_masuk_keterangan,
-                        perihal: item.surat_masuk_perihal
+                        id: item.nomor,
+                        nomor: item.nomor,
+                        tanggal: item.tanggal,
+                        sifat: item.sifat,
+                        perihal: item.perihal? item.perihal: "-",
+                        fix: item.fix,
+                        operator: item.operator,
+                        jenis: item.jenis,
+                        bidang: item.bidang.bidang_nama
                     });
                 });
                 return{

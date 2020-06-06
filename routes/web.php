@@ -85,11 +85,22 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
-    Route::group(['middleware' => ['role_or_permission:super-admin|trackingdisposisi']], function () {
-        Route::prefix('trackingdisposisi')->group(function () {
+    Route::group(['middleware' => ['role_or_permission:super-admin|trackingsuratmasuk']], function () {
+        Route::prefix('trackingsuratmasuk')->group(function () {
             Route::get('/', 'SuratmasukController@tracking')->name('suratmasuk');
             Route::get('/cari', 'SuratmasukController@cari')->middleware(['role:super-admin|user|supervisor']);
             Route::get('/detail/{id}', 'SuratmasukController@do_tracking')->middleware(['role:super-admin|user|supervisor']);
+        });
+    });
+
+    Route::group(['middleware' => ['role_or_permission:super-admin|trackingsuratkeluar']], function () {
+        Route::prefix('trackingsuratkeluar')->group(function () {
+            Route::get('/', 'SuratkeluarController@tracking')->name('suratmasuk');
+            Route::get('/cari', 'SuratkeluarController@cari')->middleware(['role:super-admin|user|supervisor']);
+            Route::get('/detail/edaran', 'EdaranController@detail')->middleware(['role:super-admin|user|supervisor']);
+            Route::get('/detail/pengantar', 'PengantarController@detail')->middleware(['role:super-admin|user|supervisor']);
+            Route::get('/detail/tugas', 'TugasController@detail')->middleware(['role:super-admin|user|supervisor']);
+            Route::get('/detail/undangan', 'UndanganController@detail')->middleware(['role:super-admin|user|supervisor']);
         });
     });
 
@@ -106,6 +117,54 @@ Route::group(['middleware' => ['auth']], function () {
             Route::patch('/restore', 'EdaranController@restore')->middleware(['role:super-admin|supervisor']);
             Route::get('/detail', 'EdaranController@detail')->name('edaran.detail');
             Route::get('/cetak', 'EdaranController@cetak')->middleware(['role:super-admin|user'])->name('edaran.cetak');
+        });
+    });
+
+    Route::group(['middleware' => ['role_or_permission:super-admin|undangan']], function () {
+        Route::prefix('undangan')->group(function () {
+            Route::get('/', 'UndanganController@index')->name('undangan');
+            Route::get('/edit', 'UndanganController@edit')->middleware(['role:super-admin|user|supervisor']);
+            Route::get('/edit/isi', 'UndanganController@edit_isi')->middleware(['role:super-admin|user|supervisor']);
+            Route::put('/edit', 'UndanganController@do_edit')->middleware(['role:super-admin|user|supervisor'])->name('undangan.edit');
+            Route::get('/tambah', 'UndanganController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('undangan.tambah');
+            Route::post('/tambah', 'UndanganController@do_tambah')->middleware(['role:super-admin|user'])->name('undangan.tambah');
+            Route::delete('/hapus', 'UndanganController@hapus')->middleware(['role:super-admin|user|supervisor']);
+            Route::delete('/hapus/lampiran', 'UndanganController@hapus_lampiran')->middleware(['role:super-admin|user|supervisor']);
+            Route::patch('/restore', 'UndanganController@restore')->middleware(['role:super-admin|supervisor']);
+            Route::get('/detail', 'UndanganController@detail')->name('undangan.detail');
+            Route::get('/cetak', 'UndanganController@cetak')->middleware(['role:super-admin|user'])->name('undangan.cetak');
+        });
+    });
+
+    Route::group(['middleware' => ['role_or_permission:super-admin|pengantar']], function () {
+        Route::prefix('pengantar')->group(function () {
+            Route::get('/', 'PengantarController@index')->name('pengantar');
+            Route::get('/edit', 'PengantarController@edit')->middleware(['role:super-admin|user|supervisor']);
+            Route::get('/edit/isi', 'PengantarController@edit_isi')->middleware(['role:super-admin|user|supervisor']);
+            Route::put('/edit', 'PengantarController@do_edit')->middleware(['role:super-admin|user|supervisor'])->name('pengantar.edit');
+            Route::get('/tambah', 'PengantarController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('pengantar.tambah');
+            Route::post('/tambah', 'PengantarController@do_tambah')->middleware(['role:super-admin|user'])->name('pengantar.tambah');
+            Route::delete('/hapus', 'PengantarController@hapus')->middleware(['role:super-admin|user|supervisor']);
+            Route::delete('/hapus/lampiran', 'PengantarController@hapus_lampiran')->middleware(['role:super-admin|user|supervisor']);
+            Route::patch('/restore', 'PengantarController@restore')->middleware(['role:super-admin|supervisor']);
+            Route::get('/detail', 'PengantarController@detail')->name('pengantar.detail');
+            Route::get('/cetak', 'PengantarController@cetak')->middleware(['role:super-admin|user'])->name('pengantar.cetak');
+        });
+    });
+
+    Route::group(['middleware' => ['role_or_permission:super-admin|tugas']], function () {
+        Route::prefix('tugas')->group(function () {
+            Route::get('/', 'TugasController@index')->name('tugas');
+            Route::get('/edit', 'TugasController@edit')->middleware(['role:super-admin|user|supervisor']);
+            Route::get('/edit/isi', 'TugasController@edit_isi')->middleware(['role:super-admin|user|supervisor']);
+            Route::put('/edit', 'TugasController@do_edit')->middleware(['role:super-admin|user|supervisor'])->name('tugas.edit');
+            Route::get('/tambah', 'TugasController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('tugas.tambah');
+            Route::post('/tambah', 'TugasController@do_tambah')->middleware(['role:super-admin|user'])->name('tugas.tambah');
+            Route::delete('/hapus', 'TugasController@hapus')->middleware(['role:super-admin|user|supervisor']);
+            Route::delete('/hapus/lampiran', 'TugasController@hapus_lampiran')->middleware(['role:super-admin|user|supervisor']);
+            Route::patch('/restore', 'TugasController@restore')->middleware(['role:super-admin|supervisor']);
+            Route::get('/detail', 'TugasController@detail')->name('tugas.detail');
+            Route::get('/cetak', 'TugasController@cetak')->middleware(['role:super-admin|user'])->name('tugas.cetak');
         });
     });
 

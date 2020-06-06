@@ -194,7 +194,7 @@ class SuratmasukController extends Controller
 
 	public function tracking(Request $req)
 	{
-        return view('pages.trackingdisposisi.index');
+        return view('pages.tracking.suratmasuk.index');
     }
 
 	public function cari(Request $req)
@@ -212,6 +212,5 @@ class SuratmasukController extends Controller
         return view('pages.trackingdisposisi.form',[
             'data' => $data
         ]);
-        return $data;
     }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Tugas;
 use App\Edaran;
 use App\Review;
 use App\Jabatan;
-use App\Pengguna;
+use App\Undangan;
+use App\Pengantar;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\SuratKeluarEvent;
@@ -45,6 +47,18 @@ class ReviewController extends Controller
             case 'Edaran':
                 $data = Edaran::findOrFail($req->no);
                 $halaman = 'pages.suratkeluar.edaran.cetak';
+                break;
+            case 'Pengantar':
+                $data = Pengantar::findOrFail($req->no);
+                $halaman = 'pages.suratkeluar.pengantar.cetak';
+                break;
+            case 'Tugas':
+                $data = Tugas::findOrFail($req->no);
+                $halaman = 'pages.suratkeluar.tugas.cetak';
+                break;
+            case 'Undangan':
+                $data = Undangan::findOrFail($req->no);
+                $halaman = 'pages.suratkeluar.undangan.cetak';
                 break;
         }
         return view('pages.review.form', [
@@ -89,7 +103,7 @@ class ReviewController extends Controller
                         $broadcast = [
                             'pengguna_id' => $data->operator,
                             'surat_nomor' => $req->get('review_nomor_surat'),
-                            'surat_jenis' => 'Edaran',
+                            'surat_jenis' => $data->review_jenis_surat,
                         ];
                         event(new SuratKeluarEvent($broadcast));
                         break;
@@ -102,7 +116,7 @@ class ReviewController extends Controller
                         $broadcast = [
                             'pengguna_id' => $atasan->jabatan_id,
                             'surat_nomor' => $req->get('review_nomor_surat'),
-                            'surat_jenis' => 'Edaran',
+                            'surat_jenis' => $data->review_jenis_surat,
                         ];
                         event(new SuratKeluarEvent($broadcast));
                         break;
@@ -115,7 +129,7 @@ class ReviewController extends Controller
                         $broadcast = [
                             'pengguna_id' => $atasan->jabatan_id,
                             'surat_nomor' => $req->get('review_nomor_surat'),
-                            'surat_jenis' => 'Edaran',
+                            'surat_jenis' => $data->review_jenis_surat,
                         ];
                         event(new SuratKeluarEvent($broadcast));
                         break;
@@ -128,7 +142,7 @@ class ReviewController extends Controller
                         $broadcast = [
                             'pengguna_id' => $atasan->jabatan_id,
                             'surat_nomor' => $req->get('review_nomor_surat'),
-                            'surat_jenis' => 'Edaran',
+                            'surat_jenis' => $data->review_jenis_surat,
                         ];
                         event(new SuratKeluarEvent($broadcast));
                         break;                    
@@ -139,9 +153,24 @@ class ReviewController extends Controller
                             'selesai' => 1,
                             'fix' => $req->get('fix'),
                         ]);
-                        switch ($data->review_jenis_surat == "Edaran") {
+                        switch ($data->review_jenis_surat) {
                             case 'Edaran':
                                 Edaran::where('edaran_nomor', $data->review_nomor_surat)->update([
+                                    'fix' => 1
+                                ]);
+                                break;
+                            case 'Pengantar':
+                                Pengantar::where('pengantar_nomor', $data->review_nomor_surat)->update([
+                                    'fix' => 1
+                                ]);
+                                break;
+                            case 'Tugas':
+                                Tugas::where('tugas_nomor', $data->review_nomor_surat)->update([
+                                    'fix' => 1
+                                ]);
+                                break;
+                            case 'Undangan':
+                                Undangan::where('undangan_nomor', $data->review_nomor_surat)->update([
                                     'fix' => 1
                                 ]);
                                 break;
@@ -149,32 +178,11 @@ class ReviewController extends Controller
                         $broadcast = [
                             'pengguna_id' => $atasan->jabatan_id,
                             'surat_nomor' => $req->get('review_nomor_surat'),
-                            'surat_jenis' => 'Edaran',
+                            'surat_jenis' => $data->review_jenis_surat,
                         ];
                         event(new SuratKeluarEvent($broadcast));
                         break;  
                 }
-                // if ($req->get('fix') == 1) {
-                // }else{
-                //     $review = new Review();
-                //     $review->review_nomor_surat = $nomor;
-                //     $review->review_nomor = 1;
-                //     $review->review_jenis_surat = "Edaran";
-                //     $review->verifikator = Auth::user()->jabatan->jabatan_parent;
-                //     $review->operator = $data->operator;
-                //     $review->save();
-
-                //     $atasan = Pengguna::where('jabatan_nama', Auth::user()->jabatan->jabatan_parent)->get();
-
-                //     foreach ($atasan as $atasan) {
-                //         $broadcast = [
-                //             'pengguna_id' => $atasan->pengguna_id,
-                //             'surat_nomor' => $nomor,
-                //             'surat_jenis' => 'Edaran',
-                //         ];
-                //         event(new SuratKeluarEvent($broadcast));
-                //     }
-                // }
             });
 
             toast('Berhasil  surat '.strtolower($data->review_jenis_surat)." ".$req->get('review_nomor_surat'), 'success')->autoClose(2000);

@@ -1,9 +1,9 @@
 @extends('pages.suratkeluar.main')
 
-@section('title', ' | Edaran')
+@section('title', ' | Surat Tugas')
 
 @section('page')
-	<li class="breadcrumb-item active">Edaran</li>
+	<li class="breadcrumb-item active">Surat Tugas</li>
 @endsection
 
 @push('css')
@@ -12,7 +12,7 @@
 @endpush
 
 @section('header')
-	<h1 class="page-header">Edaran</h1>
+	<h1 class="page-header">Surat Tugas</h1>
 @endsection
 
 @section('subcontent')
@@ -23,12 +23,12 @@
                 <div class="col-md-4 col-lg-5 col-xl-3 col-xs-12">
                 	@role('user|super-admin|supervisor')
                     <div class="form-inline">
-                        <a href="{{ route('edaran.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
+                        <a href="{{ route('tugas.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
                     </div>
                     @endrole
                 </div>
                 <div class="col-md-8 col-lg-7 col-xl-9 col-xs-12">
-                	<form action="{{ route('edaran') }}" method="GET" id="frm-cari">
+                	<form action="{{ route('tugas') }}" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
 							<div class="form-group">
 								<select class="form-control selectpicker cari" name="tahun" data-live-search="true" data-style="btn-danger" data-width="100%">
@@ -83,15 +83,15 @@
                                 {{ ++$i }}
                             </td>
 					        <td>
-                                <label data-toggle="tooltip" data-container="#sm{{ $i }}" id="sm{{ $i }}" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->updated_at)->isoFormat('LLL') }}">{{ $row->edaran_nomor }}</label>
+                                <label data-toggle="tooltip" data-container="#sm{{ $i }}" id="sm{{ $i }}" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->updated_at)->isoFormat('LLL') }}">{{ $row->tugas_nomor }}</label>
                             </td>
-					        <td>{{ \Carbon\Carbon::parse($row->edaran_tanggal)->isoFormat('LL') }}</td>
-					        <td>{{ $row->edaran_sifat }}</td>
-                            <td>{{ $row->edaran_perihal }}</td>
-                            <td>{!! $row->jabatan_nama." - ".$row->edaran_pejabat !!}</td>
+					        <td>{{ \Carbon\Carbon::parse($row->tugas_tanggal)->isoFormat('LL') }}</td>
+					        <td>{{ $row->tugas_sifat }}</td>
+                            <td>{{ $row->tugas_perihal }}</td>
+                            <td>{!! $row->jabatan_nama." - ".$row->tugas_pejabat !!}</td>
                             <td class="with-btn-group align-middle" nowrap>
                                 <div class="btn-group">
-                                    <a href="/edaran/cetak?no={{ $row->edaran_nomor }}" target="_blank"" class="btn btn-default btn-sm">Preview</a>
+                                    <a href="/tugas/cetak?no={{ $row->tugas_nomor }}" target="_blank"" class="btn btn-default btn-sm">Preview</a>
                                     <a href="#" class="btn btn-default btn-sm dropdown-toggle width-30 no-caret" data-toggle="dropdown">
                                         <span class="caret"></span>
                                     </a>
@@ -100,7 +100,7 @@
                                         @if (!$row->trashed())
                                         @if ($row->fix == 0)
                                         <li>
-                                            <a href="/edaran/edit?no={{ $row->edaran_nomor }}" class="m-2">
+                                            <a href="/tugas/edit?no={{ $row->tugas_nomor }}" class="m-2">
                                                 Edit Keseluruhan
                                                 @if ($row->harus_revisi)
                                                 <i class="fas fa-exclamation-circle text-red m-t-3 m-l-2 fa-lg" ></i>
@@ -108,15 +108,15 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="/edaran/edit/isi?no={{ $row->edaran_nomor }}" class="m-2"> Edit Isi</a>
+                                            <a href="/tugas/edit/isi?no={{ $row->tugas_nomor }}" class="m-2"> Edit Isi</a>
                                         </li>
                                         @endif
                                         <li>
-                                            <a href="javascript:;" onclick="hapus('{{ $row->edaran_nomor }}')" class="m-2" id='btn-del'> Hapus</a>
+                                            <a href="javascript:;" onclick="hapus('{{ $row->tugas_nomor }}')" class="m-2" id='btn-del'> Hapus</a>
                                         </li>
                                         @else
                                         <li>
-                                            <a href="javascript:;" onclick="restore('{{ $row->edaran_nomor }}')" class="m-2" id='btn-del'> Restore</a>
+                                            <a href="javascript:;" onclick="restore('{{ $row->tugas_nomor }}')" class="m-2" id='btn-del'> Restore</a>
                                         </li>
                                         @endif
                                         @endrole
@@ -169,7 +169,7 @@
     function restore(id) {
         Swal.fire({
             title: 'Restore Data',
-            text: 'Anda akan mengembalikan edaran ' + id + '',
+            text: 'Anda akan mengembalikan surat tugas ' + id + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -184,7 +184,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/edaran/restore?no=" + id,
+                    url: "/tugas/restore?no=" + id,
                     type: "POST",
                     data: {
                         "_method": 'PATCH'
@@ -207,7 +207,7 @@
     function hapus(id) {
         Swal.fire({
             title: 'Hapus Data',
-            text: 'Anda akan menghapus edaran ' + id + '',
+            text: 'Anda akan menghapus surat tugas ' + id + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -222,7 +222,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/edaran/hapus?no=" + id,
+                    url: "/tugas/hapus?no=" + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'
