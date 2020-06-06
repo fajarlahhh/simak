@@ -163,7 +163,7 @@ class JabatanController extends Controller
 		try{
             $data = Jabatan::findOrFail($id);
             $data->delete();
-            toast('Berhasil menghapus jabatan '.$data->jabatan_nama, 'success')->autoClose(2000);
+            toast('Berhasil menghapus data '.$data->jabatan_nama, 'success')->autoClose(2000);
 		}catch(\Exception $e){
             alert()->error('Hapus Data', $e->getMessage());
 		}

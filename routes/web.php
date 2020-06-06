@@ -16,7 +16,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::get('/gantisandi', 'PenggunaController@ganti_sandi')->name('gantisandi');
     Route::patch('/gantisandi', 'PenggunaController@do_ganti_sandi')->name('gantisandi');
-    Route::get('/datarekanan/cari', 'RekananController@cari')->middleware(['role:super-admin|user|supervisor']);
+    Route::get('/dataopd/cari', 'OpdController@cari')->middleware(['role:super-admin|user|supervisor']);
 
     Route::group(['middleware' => ['role_or_permission:super-admin|datapengguna']], function () {
         Route::prefix('datapengguna')->group(function () {
@@ -58,17 +58,17 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
-    Route::group(['middleware' => ['role_or_permission:super-admin|datarekanan']], function () {
-        Route::prefix('datarekanan')->group(function () {
-            Route::get('/', 'RekananController@index')->name('datarekanan');
-            Route::get('/edit', 'RekananController@edit')->middleware(['role:super-admin|user|supervisor']);
-            Route::put('/edit', 'RekananController@do_edit')->middleware(['role:super-admin|user|supervisor'])->name('datarekanan.edit');
-            Route::get('/tambah', 'RekananController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('datarekanan.tambah');
-            Route::get('/tambah', 'RekananController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('datarekanan.tambah');
-            Route::post('/tambah', 'RekananController@do_tambah')->middleware(['role:super-admin|user|supervisor'])->name('datarekanan.tambah');
-            Route::delete('/hapus', 'RekananController@hapus')->middleware(['role:super-admin|user|supervisor']);
-            Route::patch('/restore', 'RekananController@restore')->middleware(['role:super-admin|supervisor']);
-            Route::get('/detail', 'RekananController@detail')->name('datarekanan.detail');
+    Route::group(['middleware' => ['role_or_permission:super-admin|dataopd']], function () {
+        Route::prefix('dataopd')->group(function () {
+            Route::get('/', 'OpdController@index')->name('dataopd');
+            Route::get('/edit', 'OpdController@edit')->middleware(['role:super-admin|user|supervisor']);
+            Route::put('/edit', 'OpdController@do_edit')->middleware(['role:super-admin|user|supervisor'])->name('dataopd.edit');
+            Route::get('/tambah', 'OpdController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('dataopd.tambah');
+            Route::get('/tambah', 'OpdController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('dataopd.tambah');
+            Route::post('/tambah', 'OpdController@do_tambah')->middleware(['role:super-admin|user|supervisor'])->name('dataopd.tambah');
+            Route::delete('/hapus', 'OpdController@hapus')->middleware(['role:super-admin|user|supervisor']);
+            Route::patch('/restore', 'OpdController@restore')->middleware(['role:super-admin|supervisor']);
+            Route::get('/detail', 'OpdController@detail')->name('dataopd.detail');
         });
     });
 

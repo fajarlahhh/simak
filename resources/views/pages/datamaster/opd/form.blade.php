@@ -1,18 +1,18 @@
 @extends('pages.setup.main')
 
-@section('title', ' | '.$aksi.' Data Rekanan')
+@section('title', ' | '.$aksi.' Data OPD')
 
 @push('css')
 	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
 @endpush
 
 @section('page')
-	<li class="breadcrumb-item">Data Rekanan</li>
+	<li class="breadcrumb-item">Data OPD</li>
 	<li class="breadcrumb-item active">{{ $aksi }} Data</li>
 @endsection
 
 @section('header')
-	<h1 class="page-header">Data Rekanan <small>{{ $aksi }} Data</small></h1>
+	<h1 class="page-header">Data OPD <small>{{ $aksi }} Data</small></h1>
 @endsection
 
 @section('subcontent')
@@ -24,21 +24,21 @@
             </div>
 			<h4 class="panel-title">Form</h4>
 		</div>
-		<form action="{{ route('datarekanan.'.strtolower($aksi)) }}" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
+		<form action="{{ route('dataopd.'.strtolower($aksi)) }}" method="post" data-parsley-validate="true" data-parsley-errors-messages-disabled="">
 			@method(strtolower($aksi) == 'tambah'? 'POST': 'PUT')
 			@csrf
 			<div class="panel-body">
 				<input type="hidden" name="redirect" value="{{ $back }}">
                 @if($aksi == 'Edit')
-                <input type="hidden" name="id" value="{{ $data->rekanan_nama }}">
+                <input type="hidden" name="id" value="{{ $data->opd_nama }}">
                 @endif
                 <div class="form-group">
-                    <label class="control-label">Nama Rekanan</label>
-                    <input class="form-control" type="text" name="rekanan_nama" value="{{ $aksi == 'Edit'? $data->rekanan_nama: old('rekanan_nama') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
+                    <label class="control-label">Nama OPD</label>
+                    <input class="form-control" type="text" name="opd_nama" value="{{ $aksi == 'Edit'? $data->opd_nama: old('opd_nama') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
                 </div>
                 <div class="form-group">
                     <label class="control-label">Lokasi</label>
-                    <input class="form-control" type="text" name="rekanan_lokasi" value="{{ $aksi == 'Edit'? $data->rekanan_lokasi: old('rekanan_lokasi') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
+                    <input class="form-control" type="text" name="opd_lokasi" value="{{ $aksi == 'Edit'? $data->opd_lokasi: old('opd_lokasi') }}" required data-parsley-minlength="1" data-parsley-maxlength="250" autocomplete="off"  />
                 </div>
 			</div>
 			<div class="panel-footer">

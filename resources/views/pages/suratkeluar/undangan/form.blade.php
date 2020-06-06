@@ -132,7 +132,7 @@
                                    @foreach ($kepada[1] as $tujuan)
                                    <tr>
                                        <td>
-                                           <select class="form-control rekanan m-t-5" name="tujuan[]" style='width: 100%;'>
+                                           <select class="form-control opd m-t-5" name="tujuan[]" style='width: 100%;'>
                                                <option value="{{ $tujuan }}" selected>{{ $tujuan }}</option>
                                            </select>
                                        </td>
@@ -187,12 +187,12 @@
                                    @if ($tembusan)
                                    @foreach ($tembusan[1] as $tembusan)
                                    @php
-                                       $rekanan = explode(" di ", $tembusan);
+                                       $opd = explode(" di ", $tembusan);
                                    @endphp
                                    <tr>
                                        <td>
-                                           <select class="form-control rekanan m-t-5" name="tembusan[]" style='width: 100%;'>
-                                               <option value="{{ $rekanan[0] }}" selected>{{ $rekanan[0] }}</option>
+                                           <select class="form-control opd m-t-5" name="tembusan[]" style='width: 100%;'>
+                                               <option value="{{ $opd[0] }}" selected>{{ $opd[0] }}</option>
                                            </select>
                                        </td>
                                        <td style='width: 5px'>
@@ -251,14 +251,14 @@
         function addRekanan(element){
             $("#" + element).append("<tr>\
                 <td>\
-                    <select class='form-control rekanan m-t-5' name='" + element + "[]' id='rekanan" + id + "' style='width: 100%;'></select>\
+                    <select class='form-control opd m-t-5' name='" + element + "[]' id='opd" + id + "' style='width: 100%;'></select>\
                 </td>\
 	            <td style='width: 5px'>\
 	                <a onclick='delRekanan(this)' href='javascript:;' class='m-t-5 btn btn-danger btn-xs'>\
 						<i class='fa fa-times'></i>\
 					</a>\
 	            </td>\</tr>");
-            select2("#rekanan" + id );
+            select2("#opd" + id );
             id++;
         }
 
@@ -326,11 +326,11 @@
             });
         }
 
-	    function select2(elmt = '.rekanan'){
+	    function select2(elmt = '.opd'){
             $(elmt).select2({
                 minimumInputLength: 1,
                 ajax:{
-                    url: '/datarekanan/cari',
+                    url: '/dataopd/cari',
                     dataType: "json",
                     delay: 250,
                     type : 'GET',
@@ -344,8 +344,8 @@
 
                         $.each(data, function(index, item){
                             results.push({
-                                id: item.rekanan_nama,
-                                text: item.rekanan_nama
+                                id: item.opd_nama,
+                                text: item.opd_nama
                             });
                         });
                         return{

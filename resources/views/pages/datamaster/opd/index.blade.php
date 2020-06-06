@@ -1,6 +1,6 @@
 @extends('pages.setup.main')
 
-@section('title', ' | Data Rekanan')
+@section('title', ' | Data OPD')
 
 @push('css')
 	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
@@ -8,11 +8,11 @@
 @endpush
 
 @section('page')
-	<li class="breadcrumb-item active">Data Rekanan</li>
+	<li class="breadcrumb-item active">Data OPD</li>
 @endsection
 
 @section('header')
-	<h1 class="page-header">Data Rekanan</h1>
+	<h1 class="page-header">Data OPD</h1>
 @endsection
 
 @section('subcontent')
@@ -23,15 +23,15 @@
             <div class="col-md-2 col-lg-2 col-xl-2 col-xs-12">
                 @role('user|super-admin|supervisor')
                 <div class="form-inline">
-                    <a href="{{ route('datarekanan.tambah') }}" class="btn btn-primary">Tambah</a>
+                    <a href="{{ route('dataopd.tambah') }}" class="btn btn-primary">Tambah</a>
                 </div>
                 @endrole
             </div>
             <div class="col-md-10 col-lg-10 col-xl-10 col-xs-12">
-                <form id="frm-cari" action="{{ route('datarekanan') }}" method="GET">
+                <form id="frm-cari" action="{{ route('dataopd') }}" method="GET">
                     <div class="form-inline pull-right">
                         <div class="input-group">
-                            <input type="text" class="form-control cari" name="cari" placeholder="Cari Nama Rekanan" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
+                            <input type="text" class="form-control cari" name="cari" placeholder="Cari Nama OPD" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
                             <div class="input-group-append">
                                 <span class="input-group-text" id="basic-addon2"><i class="fad fa-search"></i></span>
                             </div>
@@ -47,7 +47,7 @@
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Nama Rekanan</th>
+                        <th>Nama OPD</th>
                         <th>Lokasi</th>
                         <th class="width-90"></th>
                     </tr>
@@ -56,12 +56,12 @@
                     @foreach ($data as $index => $row)
                     <tr>
                         <td>{{ ++$i }}</td>
-                        <td class="align-middle">{{ $row->rekanan_nama }}</td>
-                        <td class="align-middle">{{ $row->rekanan_lokasi }}</td>
+                        <td class="align-middle">{{ $row->opd_nama }}</td>
+                        <td class="align-middle">{{ $row->opd_lokasi }}</td>
                         <td class="text-center">
                             @role('user|super-admin|supervisor')
-                            <a href="/datarekanan/edit?nama={{ $row->rekanan_nama }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
-                            <a href="javascript:;" onclick="hapus('{{ $row->rekanan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
+                            <a href="/dataopd/edit?nama={{ $row->opd_nama }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
+                            <a href="javascript:;" onclick="hapus('{{ $row->opd_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
                             @endrole
                         </td>
                     </tr>
@@ -84,7 +84,7 @@
 	<div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Pratinjau Usulan Program/Rekanan</h4>
+                <h4 class="modal-title">Pratinjau Usulan Program/OPD</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div id="modal-detail-form"></div>
@@ -105,7 +105,7 @@
     function hapus(id) {
         Swal.fire({
             title: 'Hapus Data',
-            text: 'Anda akan menghapus rekanan ' + id + '',
+            text: 'Anda akan menghapus opd ' + id + '',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -120,7 +120,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/datarekanan/hapus?nama=" + id,
+                    url: "/dataopd/hapus?nama=" + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'

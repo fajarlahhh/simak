@@ -78,7 +78,7 @@ class GambarController extends Controller
             $data = Gambar::findOrFail($req->nama);
             $data->delete();
             File::delete(public_path($data->gambar_lokasi));
-            toast('Berhasil menghapus gambar '.$data->gambar_nama, 'success')->autoClose(2000);
+            toast('Berhasil menghapus data '.$data->gambar_nama, 'success')->autoClose(2000);
 		}catch(\Exception $e){
             alert()->error('Hapus Data', $e->getMessage());
 		}

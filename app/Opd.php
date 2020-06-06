@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Rekanan extends Model
+class Opd extends Model
 {
     //
-    protected $table = 'rekanan';
-    protected $primaryKey = 'rekanan_nama';
+    protected $table = 'opd';
+    protected $primaryKey = 'opd_nama';
     public $incrementing = false;
     protected $keyType = 'string';
 }

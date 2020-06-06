@@ -111,7 +111,7 @@ class BidangController extends Controller
 		try{
             $data = Bidang::findOrFail($id);
             $data->delete();
-            toast('Berhasil menghapus bidang '.$data->bidang_nama, 'success')->autoClose(2000);
+            toast('Berhasil menghapus data '.$data->bidang_nama, 'success')->autoClose(2000);
 		}catch(\Exception $e){
             alert()->error('Hapus Data', $e->getMessage());
 		}

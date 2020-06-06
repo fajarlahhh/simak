@@ -7,7 +7,7 @@ use App\Salam;
 use App\Tugas;
 use App\Review;
 use App\Jabatan;
-use App\Rekanan;
+use App\Opd;
 use App\KopSurat;
 use App\Pengguna;
 use App\Tembusan;
@@ -142,8 +142,8 @@ class TugasController extends Controller
                     $tembusan = Tembusan::all()->first()->tembusan_isi."<ol>";
                     if($req->get('tembusan')){
                         foreach ($req->get('tembusan') as $key => $value) {
-                            $rekanan = Rekanan::findOrFail($value);
-                            $tembusan .= "<li>".$rekanan->rekanan_nama." di ".$rekanan->rekanan_lokasi."</li>";
+                            $opd = Opd::findOrFail($value);
+                            $tembusan .= "<li>".$opd->opd_nama." di ".$opd->opd_lokasi."</li>";
                         }
                     }
                     $tembusan .= "</ol>";
@@ -296,8 +296,8 @@ class TugasController extends Controller
                     $tembusan = Tembusan::all()->first()->tembusan_isi."<ol>";
                     if($req->get('tembusan')){
                         foreach ($req->get('tembusan') as $key => $value) {
-                            $rekanan = Rekanan::findOrFail($value);
-                            $tembusan .= "<li>".$rekanan->rekanan_nama." di ".$rekanan->rekanan_lokasi."</li>";
+                            $opd = Opd::findOrFail($value);
+                            $tembusan .= "<li>".$opd->opd_nama." di ".$opd->opd_lokasi."</li>";
                         }
                     }
                     $tembusan .= "</ol>";
