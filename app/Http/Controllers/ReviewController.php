@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Edaran;
 use App\Review;
+use App\Jabatan;
 use App\Pengguna;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -48,7 +49,8 @@ class ReviewController extends Controller
         }
         return view('pages.review.form', [
             'data' => $data,
-            'history' => Review::where('review_nomor_surat', $req->no)->where('fix', 1)->orderBy('review_nomor', 'asc')->get(),
+            'atasan' => Auth::user()->jabatan->atasan,
+            'history' => Review::where('review_nomor_surat', $req->no)->where('fix', 1)->orderBy('review_nomor', 'desc')->get(),
             'halaman' => $halaman,
             'back' => Str::contains(url()->previous(), ['review/cek'])? '/review': url()->previous(),
         ]);
@@ -74,42 +76,108 @@ class ReviewController extends Controller
         try
         {
             $data = Review::where('review_nomor', $req->get('review_nomor'))->where('review_nomor_surat', $req->get('review_nomor_surat'))->first();
+            $pesan = null;
             DB::transaction(function() use ($req, $data){
-                Review::where('review_nomor', $req->get('review_nomor'))->where('review_nomor_surat', $req->get('review_nomor_surat'))->whereNull('fix')
-                ->update([
-                    'review_catatan' => $req->get('review_catatan'),
-                    'fix' => $req->get('fix'),
-                ]);
-                if ($req->get('fix') == 1) {
-                    $broadcast = [
-                        'pengguna_id' => $data->operator,
-                        'surat_nomor' => $req->get('review_nomor_surat'),
-                        'surat_jenis' => 'Edaran',
-                    ];
-                    event(new SuratKeluarEvent($broadcast));
-                }else{
-                    $review = new Review();
-                    $review->review_nomor_surat = $nomor;
-                    $review->review_nomor = 1;
-                    $review->review_jenis_surat = "Edaran";
-                    $review->verifikator = Auth::user()->jabatan->jabatan_parent;
-                    $review->operator = $data->operator;
-                    $review->save();
-
-                    $atasan = Pengguna::where('jabatan_nama', Auth::user()->jabatan->jabatan_parent)->get();
-
-                    foreach ($atasan as $atasan) {
+                $review = Review::where('review_nomor', $req->get('review_nomor'))->where('review_nomor_surat', $req->get('review_nomor_surat'))->whereNull('fix');
+                switch ($req->get('fix')) {
+                    case 1:
+                        $pesan = "mereview";
+                        $review->update([
+                            'review_catatan' => $req->get('review_catatan'),
+                            'fix' => $req->get('fix'),
+                        ]);
                         $broadcast = [
-                            'pengguna_id' => $atasan->pengguna_id,
-                            'surat_nomor' => $nomor,
+                            'pengguna_id' => $data->operator,
+                            'surat_nomor' => $req->get('review_nomor_surat'),
                             'surat_jenis' => 'Edaran',
                         ];
                         event(new SuratKeluarEvent($broadcast));
-                    }
+                        break;
+                    case 2:
+                        $pesan = "meneruskan ke atasan";
+                        $atasan = Auth::user()->jabatan->atasan;
+                        $review->update([
+                            'jabatan_id' => $atasan->jabatan_id
+                        ]);
+                        $broadcast = [
+                            'pengguna_id' => $atasan->jabatan_id,
+                            'surat_nomor' => $req->get('review_nomor_surat'),
+                            'surat_jenis' => 'Edaran',
+                        ];
+                        event(new SuratKeluarEvent($broadcast));
+                        break;
+                    case 3:
+                        $pesan = "meneruskan ke verifikator";
+                        $atasan = Jabatan::where('jabatan_verifikator', 1)->first();
+                        $review->update([
+                            'jabatan_id' => $atasan->jabatan_id
+                        ]);
+                        $broadcast = [
+                            'pengguna_id' => $atasan->jabatan_id,
+                            'surat_nomor' => $req->get('review_nomor_surat'),
+                            'surat_jenis' => 'Edaran',
+                        ];
+                        event(new SuratKeluarEvent($broadcast));
+                        break;
+                    case 4:
+                        $pesan = "meneruskan ke pimpinan";
+                        $atasan = Jabatan::where('jabatan_pimpinan', 1)->first();
+                        $review->update([
+                            'jabatan_id' => $atasan->jabatan_id
+                        ]);
+                        $broadcast = [
+                            'pengguna_id' => $atasan->jabatan_id,
+                            'surat_nomor' => $req->get('review_nomor_surat'),
+                            'surat_jenis' => 'Edaran',
+                        ];
+                        event(new SuratKeluarEvent($broadcast));
+                        break;                    
+                    case 5:
+                        $pesan = "menyetujui & menerbitkan";
+                        $atasan = Jabatan::where('jabatan_pimpinan', 1)->first();
+                        $review->update([
+                            'selesai' => 1,
+                            'fix' => $req->get('fix'),
+                        ]);
+                        switch ($data->review_jenis_surat == "Edaran") {
+                            case 'Edaran':
+                                Edaran::where('edaran_nomor', $data->review_nomor_surat)->update([
+                                    'fix' => 1
+                                ]);
+                                break;
+                        }
+                        $broadcast = [
+                            'pengguna_id' => $atasan->jabatan_id,
+                            'surat_nomor' => $req->get('review_nomor_surat'),
+                            'surat_jenis' => 'Edaran',
+                        ];
+                        event(new SuratKeluarEvent($broadcast));
+                        break;  
                 }
+                // if ($req->get('fix') == 1) {
+                // }else{
+                //     $review = new Review();
+                //     $review->review_nomor_surat = $nomor;
+                //     $review->review_nomor = 1;
+                //     $review->review_jenis_surat = "Edaran";
+                //     $review->verifikator = Auth::user()->jabatan->jabatan_parent;
+                //     $review->operator = $data->operator;
+                //     $review->save();
+
+                //     $atasan = Pengguna::where('jabatan_nama', Auth::user()->jabatan->jabatan_parent)->get();
+
+                //     foreach ($atasan as $atasan) {
+                //         $broadcast = [
+                //             'pengguna_id' => $atasan->pengguna_id,
+                //             'surat_nomor' => $nomor,
+                //             'surat_jenis' => 'Edaran',
+                //         ];
+                //         event(new SuratKeluarEvent($broadcast));
+                //     }
+                // }
             });
 
-            toast('Berhasil mereview surat '.strtolower($data->review_jenis_surat)." ".$req->get('review_nomor_surat'), 'success')->autoClose(2000);
+            toast('Berhasil  surat '.strtolower($data->review_jenis_surat)." ".$req->get('review_nomor_surat'), 'success')->autoClose(2000);
 			return redirect('review');
         }catch(\Exception $e){
             alert()->error('Tambah Data', $e->getMessage());

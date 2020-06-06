@@ -56,6 +56,18 @@ class JabatanController extends Controller
             return redirect()->back()->withInput()->with('error', $validator->messages()->all());
         }
 
+        try{
+            if($req->get('jabatan_verifikator') == 1){
+                Jabatan::where('jabatan_verifikator', 1)->update([
+                    'jabatan_verifikator' => 0
+                ]);
+            }
+            if($req->get('jabatan_pimpinan') == 1){
+                Jabatan::where('jabatan_pimpinan', 1)->update([
+                    'jabatan_pimpinan' => 0
+                ]);
+            }
+
             $parent = $req->get('jabatan_parent')? $req->get('jabatan_parent'): null;
             $silsilah = null;
             if($parent){
@@ -74,6 +86,10 @@ class JabatanController extends Controller
             $data->save();
             toast('Berhasil menambah jabatan '.$req->get('jabatan_nama'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('datajabatan'));
+        }catch(\Exception $e){
+            alert()->error('Edit Data', $e->getMessage());
+            return redirect()->back()->withInput();
+        }
 
 	}
 
@@ -110,6 +126,17 @@ class JabatanController extends Controller
             $silsilah = null;
             if($parent){
                 $silsilah = (Jabatan::findOrFail($parent)->jabatan_silsilah? Jabatan::findOrFail($parent)->jabatan_silsilah.";": "").$parent;
+            }
+            
+            if($req->get('jabatan_verifikator') == 1){
+                Jabatan::where('jabatan_verifikator', 1)->update([
+                    'jabatan_verifikator' => 0
+                ]);
+            }
+            if($req->get('jabatan_pimpinan') == 1){
+                Jabatan::where('jabatan_pimpinan', 1)->update([
+                    'jabatan_pimpinan' => 0
+                ]);
             }
 
 			$data = Jabatan::findOrFail($req->get('id'));

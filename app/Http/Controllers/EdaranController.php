@@ -6,6 +6,7 @@ use PDF;
 use App\Salam;
 use App\Edaran;
 use App\Review;
+use App\Jabatan;
 use App\Rekanan;
 use App\KopSurat;
 use App\Pengguna;
@@ -36,6 +37,12 @@ class EdaranController extends Controller
             $data = $data->where('bidang_id', $auth->jabatan->bidang->bidang_id);
         }
 
+        if ($req->terbit == 1) {
+            $data = $data->where('fix', 1);
+        }else{
+            $data = $data->where('fix', 0);
+        }
+
         switch ($req->tipe) {
             case '1':
                 $data = $data->onlyTrashed();
@@ -51,11 +58,12 @@ class EdaranController extends Controller
 
         $data = $data->paginate(10);
 
-        $data->appends(['cari' => $req->tipe, 'cari' => $req->tipe]);
+        $data->appends(['cari' => $req->cari, 'tipe' => $req->tipe, 'terbit' => $req->terbit]);
         return view('pages.suratkeluar.edaran.index', [
             'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,
             'tipe' => $req->tipe,
+            'terbit' => $req->terbit,
             'cari' => $req->cari
         ]);
     }
@@ -321,17 +329,20 @@ class EdaranController extends Controller
                     ->update([
                         'selesai' => 1,
                     ]);
-
-                    $atasan = Pengguna::where('jabatan_id', $auth->jabatan->jabatan_parent)->get();
+                    $tujuan = $belum_selesai_review->jabatan_id;
+                    if(Jabatan::where('jabatan_id', $belum_selesai_review->jabatan_id)->first()->jabatan_pimpinan == 1){
+                        $tujuan = Jabatan::where('jabatan_verifikator', 1)->first()->jabatan_id;
+                    }
 
                     $review = new Review();
                     $review->review_nomor_surat = $req->get('edaran_nomor');
                     $review->review_nomor = $belum_selesai_review->review_nomor + 1;
                     $review->review_jenis_surat = "Edaran";
-                    $review->jabatan_id = $auth->jabatan->jabatan_parent;
+                    $review->jabatan_id = $tujuan;
                     $review->operator = $auth->pengguna_id;
                     $review->save();
 
+                    $atasan = Pengguna::where('jabatan_id', $tujuan)->get();
                     foreach ($atasan as $atasan) {
                         $broadcast = [
                             'pengguna_id' => $atasan->pengguna_id,

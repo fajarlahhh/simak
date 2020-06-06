@@ -35,8 +35,9 @@
             <input type="hidden" name="edaran_nomor" value="{{ $aksi == 'Edit'? $data->edaran_nomor: old('edaran_nomor') }}" readonly/>
             @if ($catatan)
             <div class="alert alert-danger">
-                <h4>Catatan Hasil Review {{ $catatan->verifikator }}</h4>
-                {!! $catatan->review_catatan !!}
+                <h4>Catatan Hasil Review </h4>
+                {!! $catatan->review_catatan !!}<br>
+                <small><strong>Oleh : {{ $catatan->jabatan->jabatan_nama }}</strong></small>
             </div>
             @endif
             @endif

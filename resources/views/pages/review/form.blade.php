@@ -84,16 +84,27 @@
                         @endif
                         <div class="note note-primary">
                             <div class="form-group">
+                                <label class="control-label">Hasil</label>
+                                <select class="form-control " name="fix" id="fix" data-live-search="true" data-style="btn-info" data-width="100%">
+                                    <option value="1">Revisi</option>
+                                    @if (Auth::user()->jabatan->jabatan_pimpinan == 1)
+                                    <option value="5">Menyetujui & Terbitkan</option> 
+                                    @else
+                                    @if (Auth::user()->jabatan->jabatan_verifikator == 1)
+                                    <option value="4">Teruskan ke Pimpinan</option> 
+                                    @else
+                                    @if ($atasan->jabatan_pimpinan == 1)
+                                    <option value="3">Teruskan ke Verifikator</option>
+                                    @else
+                                    <option value="2">Teruskan ke Atasan</option>
+                                    @endif
+                                    @endif
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="form-group" id="catatan">
                                 <label class="control-label">Catatan</label>
                                 <textarea class="form-control" rows="15" id="editor1" name="review_catatan"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label">Hasil</label>
-                                <select class="form-control " name="fix" data-live-search="true" data-style="btn-info" data-width="100%">
-                                    <option value="1">Revisi</option>
-                                    <option value="2">Teruskan ke Atasan</option>
-                                    <option value="3">Teruskan ke Verifikator</option>
-                                </select>
                             </div>
                             @role('user|super-admin|supervisor')
                             <input type="submit" value="Simpan" class="btn btn-sm btn-success m-r-3"  />
@@ -130,5 +141,13 @@
         CKEDITOR.replace( 'editor1',{
             height: 200
         } );
+
+        $("#fix").change(function () {
+            if(this.value == 1){
+                $("#catatan").show();
+            }else{
+                $("#catatan").hide();
+            }
+        })
     </script>
 @endpush

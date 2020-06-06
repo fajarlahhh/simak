@@ -31,6 +31,12 @@
                 	<form action="{{ route('edaran') }}" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
 							<div class="form-group">
+								<select class="form-control selectpicker cari" name="terbit" data-live-search="true" data-style="btn-success" data-width="100%">
+									<option value="0" {{ $terbit == '0'? 'selected': '' }}>Belum Disetujui</option>
+									<option value="1" {{ $terbit == '1'? 'selected': '' }}>Sudah Disetujui & Diterbitkan</option>
+								</select>
+							</div>&nbsp;
+							<div class="form-group">
 								<select class="form-control selectpicker cari" name="tipe" data-live-search="true" data-style="btn-warning" data-width="100%">
 									<option value="0" {{ $tipe == '0'? 'selected': '' }}>Exist</option>
 									<option value="1" {{ $tipe == '1'? 'selected': '' }}>Deleted</option>
