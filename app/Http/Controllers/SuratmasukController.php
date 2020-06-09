@@ -109,11 +109,11 @@ class SuratmasukController extends Controller
         }
 	}
 
-	public function edit(Request $req)
+	public function edit($id)
 	{
         return view('pages.suratmasuk.form', [
             'aksi' => 'Edit',
-            'data' => SuratMasuk::findOrFail($req->get('no')),
+            'data' => SuratMasuk::findOrFail($id),
             'back' => Str::contains(url()->previous(), ['suratmasuk/tambah', 'suratmasuk/edit'])? '/suratmasuk': url()->previous(),
         ]);
 	}

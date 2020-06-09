@@ -77,10 +77,10 @@
 	                            <a href="{{ $row->file }}" target="_blank" class='btn btn-success btn-xs m-r-3'><i class='fas fa-file-pdf'></i></a>
 					        	@role('user|super-admin|supervisor')
                                 @if (!$row->trashed())
-                                <a href="{{ route('suratmasuk.edit', array('no' => $row->surat_masuk_nomor)) }}" class="btn btn-secondary btn-xs m-r-3"><i class='fas fa-edit'></i></a>
-                                <a href="javascript:;" onclick="hapus('{{ $row->surat_masuk_nomor }}', '{{ $row->jumlah_total }}')" class="btn btn-danger btn-xs m-r-3" id='btn-del' data-toggle="tooltip" title="Hapus Data"><i class='fas fa-trash'></i></a>
+                                <a href="/suratmasuk/edit/{{ $row->surat_masuk_id }}" class="btn btn-secondary btn-xs m-r-3"><i class='fas fa-edit'></i></a>
+                                <a href="javascript:;" onclick="hapus('{{ $row->surat_masuk_id }}', '{{ $row->surat_masuk_nomor }}')" class="btn btn-danger btn-xs m-r-3" id='btn-del' data-toggle="tooltip" title="Hapus Data"><i class='fas fa-trash'></i></a>
                                 @else
-                                <a href="javascript:;" onclick="restore('{{ $row->surat_masuk_nomor }}', '{{ $row->jumlah_total }}')" class="btn btn-info btn-xs m-r-3" id='btn-restore' data-toggle="tooltip" title="Restore Data"><i class='fas fa-undo'></i></a>
+                                <a href="javascript:;" onclick="restore('{{ $row->surat_masuk_id }}', '{{ $row->surat_masuk_nomor }}')" class="btn btn-info btn-xs m-r-3" id='btn-restore' data-toggle="tooltip" title="Restore Data"><i class='fas fa-undo'></i></a>
                                 @endif
                                 @endrole
 					        </td>

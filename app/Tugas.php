@@ -29,16 +29,16 @@ class Tugas extends Model
 
     public function review()
     {
-        return $this->hasMany('App\Review', 'review_nomor_surat', 'tugas_nomor');
+        return $this->hasMany('App\Review', 'review_surat_nomor', 'tugas_nomor');
     }
 
     public function harus_revisi()
     {
-        return $this->hasOne('App\Review', 'review_nomor_surat', 'tugas_nomor')->where('fix', 1)->where('selesai', 0);
+        return $this->hasOne('App\Review', 'review_surat_nomor', 'tugas_nomor')->where('fix', 1)->where('selesai', 0);
     }
 
     public function belum_review()
     {
-        return $this->hasOne('App\Review', 'review_nomor_surat', 'tugas_nomor')->whereNull('fix');
+        return $this->hasOne('App\Review', 'review_surat_nomor', 'tugas_nomor')->whereNull('fix');
     }
 }

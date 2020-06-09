@@ -29,16 +29,16 @@ class Pengantar extends Model
 
     public function review()
     {
-        return $this->hasMany('App\Review', 'review_nomor_surat', 'pengantar_nomor');
+        return $this->hasMany('App\Review', 'review_surat_nomor', 'pengantar_nomor');
     }
 
     public function harus_revisi()
     {
-        return $this->hasOne('App\Review', 'review_nomor_surat', 'pengantar_nomor')->where('fix', 1)->where('selesai', 0);
+        return $this->hasOne('App\Review', 'review_surat_nomor', 'pengantar_nomor')->where('fix', 1)->where('selesai', 0);
     }
 
     public function belum_review()
     {
-        return $this->hasOne('App\Review', 'review_nomor_surat', 'pengantar_nomor')->whereNull('fix');
+        return $this->hasOne('App\Review', 'review_surat_nomor', 'pengantar_nomor')->whereNull('fix');
     }
 }

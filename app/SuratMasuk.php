@@ -14,6 +14,9 @@ class SuratMasuk extends Model
 
     protected $table = 'surat_masuk';
     protected $primaryKey = 'surat_masuk_id';
-    public $incrementing = false;
-    protected $keyType = 'string';
+
+    public function disposisi()
+    {
+        return $this->hasMany('App\Disposisi', 'disposisi_surat_id', 'surat_masuk_id')->where('disposisi_jenis_surat', 'Surat Masuk')->orderBy('created_at', 'desc');
+    }
 }

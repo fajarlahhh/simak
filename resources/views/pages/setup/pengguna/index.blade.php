@@ -20,14 +20,14 @@
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
 			<div class="row">
-                <div class="col-md-6 col-lg-7 col-xl-9 col-xs-12">
+                <div class="col-md-2 col-lg-2 col-xl-2 col-xs-12">
                 	@role('user|super-admin')
                     <div class="form-inline">
                         <a href="{{ route('datapengguna.tambah') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah</a>
                     </div>
                     @endrole
                 </div>
-                <div class="col-md-6 col-lg-5 col-xl-3 col-xs-12">
+                <div class="col-md-10 col-lg-10 col-xl-10 col-xs-12">
                     <form id="frm-cari" action="{{ route('datapengguna') }}" method="GET">
                 		<div class="form-inline pull-right">
                             <div class="form-group">
@@ -78,19 +78,19 @@
                             <td>{{ $row->jabatan->bidang_nama }}</td>
                             <td>{{ $row->jabatan->jabatan_struktural == 1? "YA": "" }}</td>
                             <td>{{ $row->jabatan->jabatan_pimpinan == 1? "YA": "" }}</td>
-					        <td class="text-right">
+					        <td class="text-center">
                                 @if (!$row->trashed())
                                 @if ($row->gambar_nama)
-                                <a href="/{{ $row->gambar->gambar_lokasi }}" target="_blank" class='btn btn-warning btn-xs m-r-3'><i class='fas fa-signature'></i></a>
+                                <a href="/{{ $row->gambar->gambar_lokasi }}" target="_blank" class='btn btn-warning btn-xs '><i class='fas fa-signature'></i></a>
                                 @endif
 					        	@role('user|super-admin')
-                                <a href="/datapengguna/edit/{{ $row->pengguna_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
+                                <a href="/datapengguna/edit/{{ $row->pengguna_id }}" id='btn-del' class='btn btn-grey btn-xs '><i class='fas fa-edit'></i></a>
                                 @if (!in_array($row->pengguna_id, config('admin.nip')))
 	                            <a href="javascript:;" onclick="hapus('{{ $row->pengguna_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
                                 @endif
 	                    		@endrole
                                 @else
-                                <a href="javascript:;" onclick="restore('{{ $row->pengguna_id }}', '{{ $row->jumlah_total }}')" class="btn btn-info btn-xs m-r-3" id='btn-restore' data-toggle="tooltip" title="Restore Data"><i class='fas fa-undo'></i></a>
+                                <a href="javascript:;" onclick="restore('{{ $row->pengguna_id }}', '{{ $row->jumlah_total }}')" class="btn btn-info btn-xs " id='btn-restore' data-toggle="tooltip" title="Restore Data"><i class='fas fa-undo'></i></a>
                                 @endif
 					        </td>
 				      	</tr>

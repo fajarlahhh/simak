@@ -14,10 +14,10 @@ class CreateReviewTables extends Migration
     public function up()
     {
         Schema::create('review', function (Blueprint $table) {
-            $table->string('review_nomor_surat');
+            $table->string('review_surat_nomor');
             $table->tinyInteger('review_nomor');
             $table->text('review_catatan')->nullable();
-            $table->text('review_jenis_surat');
+            $table->text('review_surat_jenis');
             $table->tinyInteger('fix')->nullable();
             $table->tinyInteger('selesai')->default(0);
             $table->bigInteger('jabatan_id')->unsigned();

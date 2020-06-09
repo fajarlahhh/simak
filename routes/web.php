@@ -75,7 +75,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['role_or_permission:super-admin|suratmasuk']], function () {
         Route::prefix('suratmasuk')->group(function () {
             Route::get('/', 'SuratmasukController@index')->name('suratmasuk');
-            Route::get('/edit', 'SuratmasukController@edit')->middleware(['role:super-admin|user|supervisor']);
+            Route::get('/edit/{id}', 'SuratmasukController@edit')->middleware(['role:super-admin|user|supervisor']);
             Route::put('/edit', 'SuratmasukController@do_edit')->middleware(['role:super-admin|user|supervisor'])->name('suratmasuk.edit');
             Route::get('/tambah', 'SuratmasukController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('suratmasuk.tambah');
             Route::post('/tambah', 'SuratmasukController@do_tambah')->middleware(['role:super-admin|user|supervisor'])->name('suratmasuk.tambah');
@@ -174,6 +174,15 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/cek', 'ReviewController@review')->middleware(['role:super-admin|user|supervisor'])->name('review');
             Route::put('/cek', 'ReviewController@do_review')->middleware(['role:super-admin|user|supervisor'])->name('review.simpan');
             Route::put('/selesai', 'ReviewController@selesai')->middleware(['role:super-admin|user|supervisor'])->name('review.selesai');
+        });
+    });
+
+    Route::group(['middleware' => ['role_or_permission:super-admin|disposisi']], function () {
+        Route::prefix('disposisi')->group(function () {
+            Route::get('/', 'DisposisiController@index');
+            Route::get('/form', 'DisposisiController@disposisi')->middleware(['role:super-admin|user|supervisor'])->name('disposisi');
+            Route::put('/form', 'DisposisiController@do_disposisi')->middleware(['role:super-admin|user|supervisor'])->name('disposisi.simpan');
+            Route::put('/selesai', 'DisposisiController@selesai')->middleware(['role:super-admin|user|supervisor'])->name('disposisi.selesai');
         });
     });
 

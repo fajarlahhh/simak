@@ -2,13 +2,13 @@
 <link rel="stylesheet" href="{{ "/assets/pdf/css/viewer.css" }}">
 <link rel="resource" type="application/l10n" href="{{ "/assets/pdf/locale/locale.properties" }}">
 <script type="text/javascript">
-    var pdf = '{{ "/".$data->file }}';
+    var pdf = '{{ $data->file }}';
     var worker = '{{ "/assets/pdf/js/pdf.worker.js" }}';
 </script>
 <script src="{{ '/assets/pdf/js/pdf.js' }}"></script>
 <script src="{{ '/assets/pdf/js/viewer.js' }}"></script>
 
-    <div id="outerContainer" style="height: 600px; background-image: url(/assets/pdf/images/texture.png);" >
+    <div id="outerContainer" style="height: 700px; background-image: url(/assets/pdf/images/texture.png);" >
 
     <div id="sidebarContainer" class="hidden">
     <div id="toolbarSidebar">

@@ -42,6 +42,11 @@ return [
 			'title' => 'Gambar'
         ]]
 	],[
+		'icon' => 'fas fa-share-alt-square',
+		'title' => 'Disposisi',
+		'id' => 'disposisi',
+		'url' => '/disposisi'
+	],[
 		'icon' => 'fas fa-check-double',
 		'title' => 'Review',
 		'id' => 'review',

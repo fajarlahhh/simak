@@ -33,7 +33,7 @@ class PengantarController extends Controller
         $data = Pengantar::with('harus_revisi')->where(function($q) use ($req){
             $q->where('pengantar_sifat', 'like', '%'.$req->cari.'%')->orWhere('pengantar_perihal', 'like', '%'.$req->cari.'%')->orWhere('pengantar_nomor', 'like', '%'.$req->cari.'%');
         })->whereYear('pengantar_tanggal', '=', $tahun)->orderBy('pengantar_tanggal', 'desc');
-        
+
         if ($auth->getRoleNames()[0] != 'super-admin') {
             $data = $data->where('bidang_id', $auth->jabatan->bidang->bidang_id);
         }
@@ -176,9 +176,9 @@ class PengantarController extends Controller
                 $atasan = Pengguna::where('jabatan_id', $auth->jabatan->jabatan_parent)->get();
 
                 $review = new Review();
-                $review->review_nomor_surat = $nomor;
+                $review->review_surat_nomor = $nomor;
                 $review->review_nomor = 1;
-                $review->review_jenis_surat = "Pengantar";
+                $review->review_surat_jenis = "Pengantar";
                 $review->jabatan_id = $auth->jabatan->jabatan_parent;
                 $review->operator = $auth->pengguna_id;
                 $review->save();
@@ -224,7 +224,7 @@ class PengantarController extends Controller
         if($data && $data->pengantar_tembusan){
             $tembusan = explode("<ol>", $data->pengantar_tembusan);
         }
-        $review = Review::where('review_nomor_surat', $req->get('no'))->where('fix', 1)->where('selesai', 0)->first();
+        $review = Review::where('review_surat_nomor', $req->get('no'))->where('fix', 1)->where('selesai', 0)->first();
         return view('pages.suratkeluar.pengantar.form', [
             'aksi' => 'Edit',
             'edit' => 1,
@@ -242,7 +242,7 @@ class PengantarController extends Controller
 
 	public function edit_isi(Request $req)
 	{
-        $review = Review::where('review_nomor_surat', $req->get('no'))->where('fix', 1)->where('selesai', 0)->first();
+        $review = Review::where('review_surat_nomor', $req->get('no'))->where('fix', 1)->where('selesai', 0)->first();
         return view('pages.suratkeluar.pengantar.form', [
             'aksi' => 'Edit',
             'edit' => 2,
@@ -336,9 +336,9 @@ class PengantarController extends Controller
                             ]);
                     }
                 }
-                $belum_selesai_review = Review::where('review_nomor_surat', $req->get('pengantar_nomor'))->where('fix', 1)->where('selesai', 0)->first();
+                $belum_selesai_review = Review::where('review_surat_nomor', $req->get('pengantar_nomor'))->where('fix', 1)->where('selesai', 0)->first();
                 if ($belum_selesai_review) {
-                    Review::where('review_nomor_surat', $req->get('pengantar_nomor'))->where('selesai', 0)->where('fix', 1)
+                    Review::where('review_surat_nomor', $req->get('pengantar_nomor'))->where('selesai', 0)->where('fix', 1)
                     ->update([
                         'selesai' => 1,
                     ]);
@@ -348,9 +348,9 @@ class PengantarController extends Controller
                     }
 
                     $review = new Review();
-                    $review->review_nomor_surat = $req->get('pengantar_nomor');
+                    $review->review_surat_nomor = $req->get('pengantar_nomor');
                     $review->review_nomor = $belum_selesai_review->review_nomor + 1;
-                    $review->review_jenis_surat = "Pengantar";
+                    $review->review_surat_jenis = "Pengantar";
                     $review->jabatan_id = $tujuan;
                     $review->operator = $auth->pengguna_id;
                     $review->save();

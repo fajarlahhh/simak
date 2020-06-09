@@ -33,7 +33,7 @@ class TugasController extends Controller
         $data = Tugas::with('harus_revisi')->where(function($q) use ($req){
             $q->where('tugas_sifat', 'like', '%'.$req->cari.'%')->orWhere('tugas_perihal', 'like', '%'.$req->cari.'%')->orWhere('tugas_nomor', 'like', '%'.$req->cari.'%');
         })->whereYear('tugas_tanggal', '=', $tahun)->orderBy('tugas_tanggal', 'desc');
-        
+
         if ($auth->getRoleNames()[0] != 'super-admin') {
             $data = $data->where('bidang_id', $auth->jabatan->bidang->bidang_id);
         }
@@ -186,9 +186,9 @@ class TugasController extends Controller
                 $atasan = Pengguna::where('jabatan_id', $auth->jabatan->jabatan_parent)->get();
 
                 $review = new Review();
-                $review->review_nomor_surat = $nomor;
+                $review->review_surat_nomor = $nomor;
                 $review->review_nomor = 1;
-                $review->review_jenis_surat = "Tugas";
+                $review->review_surat_jenis = "Tugas";
                 $review->jabatan_id = $auth->jabatan->jabatan_parent;
                 $review->operator = $auth->pengguna_id;
                 $review->save();
@@ -223,7 +223,7 @@ class TugasController extends Controller
         if($data && $data->tugas_tembusan){
             $tembusan = explode("<ol>", $data->tugas_tembusan);
         }
-        $review = Review::where('review_nomor_surat', $req->get('no'))->where('fix', 1)->where('selesai', 0)->first();
+        $review = Review::where('review_surat_nomor', $req->get('no'))->where('fix', 1)->where('selesai', 0)->first();
         return view('pages.suratkeluar.tugas.form', [
             'aksi' => 'Edit',
             'edit' => 1,
@@ -241,7 +241,7 @@ class TugasController extends Controller
 
 	public function edit_isi(Request $req)
 	{
-        $review = Review::where('review_nomor_surat', $req->get('no'))->where('fix', 1)->where('selesai', 0)->first();
+        $review = Review::where('review_surat_nomor', $req->get('no'))->where('fix', 1)->where('selesai', 0)->first();
         return view('pages.suratkeluar.tugas.form', [
             'aksi' => 'Edit',
             'edit' => 2,
@@ -335,9 +335,9 @@ class TugasController extends Controller
                             ]);
                     }
                 }
-                $belum_selesai_review = Review::where('review_nomor_surat', $req->get('tugas_nomor'))->where('fix', 1)->where('selesai', 0)->first();
+                $belum_selesai_review = Review::where('review_surat_nomor', $req->get('tugas_nomor'))->where('fix', 1)->where('selesai', 0)->first();
                 if ($belum_selesai_review) {
-                    Review::where('review_nomor_surat', $req->get('tugas_nomor'))->where('selesai', 0)->where('fix', 1)
+                    Review::where('review_surat_nomor', $req->get('tugas_nomor'))->where('selesai', 0)->where('fix', 1)
                     ->update([
                         'selesai' => 1,
                     ]);
@@ -347,9 +347,9 @@ class TugasController extends Controller
                     }
 
                     $review = new Review();
-                    $review->review_nomor_surat = $req->get('tugas_nomor');
+                    $review->review_surat_nomor = $req->get('tugas_nomor');
                     $review->review_nomor = $belum_selesai_review->review_nomor + 1;
-                    $review->review_jenis_surat = "Tugas";
+                    $review->review_surat_jenis = "Tugas";
                     $review->jabatan_id = $tujuan;
                     $review->operator = $auth->pengguna_id;
                     $review->save();

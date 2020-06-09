@@ -6,10 +6,6 @@
 	<li class="breadcrumb-item active">Review</li>
 @endsection
 
-@push('css')
-	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
-@endpush
-
 @section('header')
 	<h1 class="page-header">Review</h1>
 @endsection
@@ -52,10 +48,10 @@
 					    <tr>
 					        <td>{{ ++$i }}</td>
 					        <td>
-                                <label data-toggle="tooltip" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->created_at)->isoFormat('LLL') }}">{{ $row->review_nomor_surat }}</label>
+                                <label data-toggle="tooltip" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->created_at)->isoFormat('LLL') }}">{{ $row->review_surat_nomor }}</label>
                             </td>
 					        <td>
-                                @switch($row->review_jenis_surat)
+                                @switch($row->review_surat_jenis)
                                     @case('Edaran')
                                         {{ \Carbon\Carbon::parse($row->edaran_tanggal)->isoFormat('LL') }}
                                         @break
@@ -71,7 +67,7 @@
                                 @endswitch
                             </td>
 					        <td>
-                                @switch($row->review_jenis_surat)
+                                @switch($row->review_surat_jenis)
                                     @case('Edaran')
                                         {{ $row->edaran->edaran_perihal }}
                                         @break
@@ -86,13 +82,13 @@
                                         @break
                                 @endswitch
                             </td>
-					        <td>{{ $row->review_jenis_surat }}</td>
+					        <td>{{ $row->review_surat_jenis }}</td>
 					        <td class="text-right">
 					        	@role('user|super-admin|supervisor')
                                 @if (Auth::user()->jabatan->jabatan_struktural == 1)
-                                <a href="{{ route('review', array('no' => $row->review_nomor_surat, 'tipe' => $row->review_jenis_surat)) }}" class="btn btn-success btn-xs m-r-3"><i class='fas fa-check'></i></a>
+                                <a href="{{ route('review', array('no' => $row->review_surat_nomor, 'tipe' => $row->review_surat_jenis)) }}" class="btn btn-success btn-xs m-r-3"><i class='fas fa-check'></i></a>
                                 @else
-                                <a href="/{{ strtolower($row->review_jenis_surat) }}/edit?no={{ $row->review_nomor_surat }}" class="btn btn-default btn-xs m-r-3"><i class='fas fa-edit'></i></a>
+                                <a href="/{{ strtolower($row->review_surat_jenis) }}/edit?no={{ $row->review_surat_nomor }}" class="btn btn-default btn-xs m-r-3"><i class='fas fa-edit'></i></a>
                                 @endif
                                 @endrole
                             </td>
@@ -115,97 +111,9 @@
 @endsection
 
 @push('scripts')
-<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script>
     $(".cari").change(function() {
             $("#frm-cari").submit();
     });
-
-    $(function () {
-        $('#datetimepicker').datepicker({
-            autoclose: true,
-            minViewMode: 1,
-            format: 'MM yyyy'
-        }).on('changeDate', function(selected){
-            $("#frm-cari").submit();
-        });
-    });
-
-    function restore(id, ket) {
-        Swal.fire({
-            title: 'Restore Data',
-            text: 'Anda akan mengembalikan surat masuk ' + ket + '',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.value == true) {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    url: "/suratmasuk/restore?no=" + id,
-                    type: "POST",
-                    data: {
-                        "_method": 'PATCH'
-                    },
-                    success: function(data){
-                        location.reload(true);
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Restore data',
-                            text: xhr.status
-                        })
-                    }
-                });
-            }
-        });
-    }
-
-    function hapus(id, ket) {
-        Swal.fire({
-            title: 'Hapus Data',
-            text: 'Anda akan menghapus surat masuk ' + ket + '',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.value == true) {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    url: "/suratmasuk/hapus?no=" + id,
-                    type: "POST",
-                    data: {
-                        "_method": 'DELETE'
-                    },
-                    success: function(data){
-                        location.reload(true);
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Hapus data',
-                            text: xhr.status
-                        })
-                    }
-                });
-            }
-        });
-    }
 </script>
 @endpush

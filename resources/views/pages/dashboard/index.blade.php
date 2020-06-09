@@ -12,7 +12,7 @@
 	<!-- begin page-header -->
 	<h1 class="page-header">Dashboard</h1>
 	<!-- end page-header -->
-	
+
 	<div class="row">
 		<div class="col-lg-3 col-md-6">
 			<div class="widget widget-stats bg-red">
@@ -71,12 +71,17 @@
 		@if ($auth->jabatan->jabatan_pimpinan == 0 && $review[0]->count() > 0)
 		<div class="col-md-4">
 			<div class="list-group">
-				<a href="#" class="list-group-item list-group-item-action active bg-teal">
+				<a href="#" class="list-group-item list-group-item-action active bg-black">
 				  	<strong>Daftar Revisi Surat Keluar</strong>
 				</a>
-				@foreach ($review[0] as $row)
-				<a href="/{{ strtolower($row->review_jenis_surat) }}/edit?no={{ $row->review_nomor_surat }}" class="list-group-item list-group-item-action">Surat {{ $row->review_jenis_surat }}, Nomor {{ $row->review_nomor_surat }}</a>
-				@endforeach
+				@foreach ($review[0]->take(5) as $row)
+				<a href="/{{ strtolower($row->review_surat_jenis) }}/edit?no={{ $row->review_surat_nomor }}" class="list-group-item list-group-item-action">Surat {{ $row->review_surat_jenis }}, Nomor {{ $row->review_surat_nomor }} <span class="badge badge-{{ $row->jabatan->bidang->warna }} pull-right">{{ $row->jabatan->bidang->bidang_nama }}</span></a>
+                @endforeach
+                @if ($review[0]->count() > 5)
+				<a href="/review" class="list-group-item list-group-item-action">
+				  	<strong class="text-blue-darker">Lihat Semua {{ $review[0]->count() }} data</strong>
+				</a>
+                @endif
 			  </div>
 		</div>
 		@endif
@@ -84,25 +89,34 @@
 		@if ($review[1]->count() > 0)
 		<div class="col-md-4">
 			<div class="list-group">
-				<a href="#" class="list-group-item list-group-item-action active bg-aqua">
+				<a href="#" class="list-group-item list-group-item-action active bg-black">
 				  	<strong>Perlu Review Anda</strong>
 				</a>
-				@foreach ($review[1] as $row)
-				<a href="{{ route('review', array('no' => $row->review_nomor_surat, 'tipe' => $row->review_jenis_surat)) }}" class="list-group-item list-group-item-action">Surat {{ $row->review_jenis_surat }}, Nomor {{ $row->review_nomor_surat }}</a>
+				@foreach ($review[1]->take(5) as $row)
+				<a href="{{ route('review', array('no' => $row->review_surat_nomor, 'tipe' => $row->review_surat_jenis)) }}" class="list-group-item list-group-item-action">Surat {{ $row->review_surat_jenis }}, Nomor {{ $row->review_surat_nomor }} <span class="badge badge-{{ $row->jabatan->bidang->warna }} pull-right">{{ $row->jabatan->bidang->bidang_nama }}</span></a>
 				@endforeach
+                @if ($review[1]->count() > 5)
+				<a href="/review" class="list-group-item list-group-item-action">
+				  	<strong class="text-blue-darker">Lihat Semua {{ $review[1]->count() }} data</strong>
+				</a>
+                @endif
 			  </div>
 		</div>
 		@endif
-		@if ($disposisi)
+		@if ($disposisi && $disposisi->count() > 0)
 		<div class="col-md-4">
 			<div class="list-group">
 				<a href="#" class="list-group-item list-group-item-action active bg-black">
 				  	<strong>Perlu Disposisi Anda</strong>
 				</a>
-				<a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
-				<a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-				<a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-				<a href="#" class="list-group-item list-group-item-action disabled">Vestibulum at eros</a>
+				@foreach ($disposisi->take(5) as $row)
+				<a href="{{ route('disposisi', array('id' => $row['id'], 'tipe' => $row['jenis'])) }}" class="list-group-item list-group-item-action">{{ $row['jenis'] }}, Nomor {{ $row['nomor'] }} <span class="badge badge-secondary pull-right">{{ $row['asal'] }}</span></a>
+				@endforeach
+                @if ($disposisi->count() > 5)
+				<a href="/disposisi" class="list-group-item list-group-item-action">
+				  	<strong class="text-blue-darker">Lihat Semua {{ $disposisi->count() }} data</strong>
+				</a>
+                @endif
 			  </div>
 		</div>
 		@endif

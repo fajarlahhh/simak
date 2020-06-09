@@ -27,8 +27,8 @@ class SuratkeluarController extends Controller
             'edaran_tanggal AS tanggal',
             'bidang_id AS bidang_id',
             'edaran_perihal AS perihal',
-            'fix AS fix', 
-            'operator AS operator', 
+            'fix AS fix',
+            'operator AS operator',
             DB::raw('"edaran" as jenis')
         ]);
         $pengantar = Pengantar::with('bidang')->where(function($q) use ($req){
@@ -38,8 +38,8 @@ class SuratkeluarController extends Controller
             'pengantar_tanggal AS tanggal',
             'bidang_id AS bidang_id',
             'pengantar_perihal AS perihal',
-            'fix AS fix', 
-            'operator AS operator', 
+            'fix AS fix',
+            'operator AS operator',
             DB::raw('"pengantar" as jenis')
         ]);
         $tugas = Tugas::with('bidang')->where(function($q) use ($req){
@@ -49,8 +49,8 @@ class SuratkeluarController extends Controller
             'tugas_tanggal AS tanggal',
             'bidang_id AS bidang_id',
             'tugas_perihal AS perihal',
-            'fix AS fix', 
-            'operator AS operator', 
+            'fix AS fix',
+            'operator AS operator',
             DB::raw('"tugas" as jenis')
         ]);
         $undangan = Undangan::with('bidang')->where(function($q) use ($req){
@@ -60,13 +60,11 @@ class SuratkeluarController extends Controller
             'undangan_tanggal AS tanggal',
             'bidang_id AS bidang_id',
             'undangan_perihal AS perihal',
-            'fix AS fix', 
-            'operator AS operator', 
+            'fix AS fix',
+            'operator AS operator',
             DB::raw('"undangan" as jenis')
         ]);
-        $surat_keluar = collect($edaran)->merge(collect($pengantar));
-        $surat_keluar = $surat_keluar->merge(collect($tugas));
-        $surat_keluar = $surat_keluar->merge(collect($undangan)); 
+        $surat_keluar = $edaran->toBase()->merge($pengantar->toBase())->merge($tugas->toBase())->merge($undangan->toBase());
 		return $surat_keluar;
     }
 }

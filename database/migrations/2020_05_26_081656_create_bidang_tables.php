@@ -17,6 +17,7 @@ class CreateBidangTables extends Migration
             $table->bigIncrements('bidang_id');
             $table->string('bidang_nama')->unique();
             $table->string('bidang_alias');
+            $table->string('warna');
             $table->string('operator');
             $table->timestamps();
         });

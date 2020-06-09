@@ -10,7 +10,21 @@ use Illuminate\Support\Facades\Validator;
 
 class BidangController extends Controller
 {
-
+    private $warna = array(
+        'primary',
+        'secondary',
+        'success',
+        'danger',
+        'warning',
+        'yellow',
+        'info',
+        'lime',
+        'purple',
+        'dark',
+        'indigo',
+        'pink',
+        'green'
+    );
 
     public function index(Request $req)
 	{
@@ -52,9 +66,18 @@ class BidangController extends Controller
         }
 
         try{
+            $warna = $this->warna[rand(0, 12)];
+            foreach ($this->warna as $wrn) {
+                $data = Bidang::where('warna', $wrn)->count();
+                if($data == 0){
+                    $warna = $wrn;
+                    break;
+                }
+            }
 			$data = new Bidang();
 			$data->bidang_nama = $req->get('bidang_nama');
 			$data->bidang_alias = $req->get('bidang_alias');
+			$data->warna = $warna;
             $data->operator = Auth::user()->pengguna_nama;
             $data->save();
             toast('Berhasil menambah bidang '.$req->get('bidang_nama'), 'success')->autoClose(2000);

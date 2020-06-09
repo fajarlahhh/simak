@@ -9,11 +9,11 @@
 
 @section('page')
 	<li class="breadcrumb-item">Review</li>
-	<li class="breadcrumb-item active">{{ $data->review_nomor_surat }}</li>
+	<li class="breadcrumb-item active">{{ $data->review_surat_nomor }}</li>
 @endsection
 
 @section('header')
-	<h1 class="page-header">Review <small>{{ $data->review_nomor_surat }}</small></h1>
+	<h1 class="page-header">Review <small>{{ $data->review_surat_nomor }}</small></h1>
 @endsection
 
 @section('subcontent')
@@ -30,7 +30,7 @@
 			@csrf
 			<div class="panel-body">
                 <input type="hidden" name="redirect" value="{{ $back }}">
-                <input type="hidden" name="review_nomor_surat" value="{{ $data->belum_review->review_nomor_surat }}" required/>
+                <input type="hidden" name="review_surat_nomor" value="{{ $data->belum_review->review_surat_nomor }}" required/>
                 <input type="hidden" name="review_nomor" value="{{ $data->belum_review->review_nomor }}" required/>
                 <div class="row">
                     <div class="col-xl-8 m-b-10 m-t-5" >
@@ -88,10 +88,10 @@
                                 <select class="form-control " name="fix" id="fix" data-live-search="true" data-style="btn-info" data-width="100%">
                                     <option value="1">Revisi</option>
                                     @if (Auth::user()->jabatan->jabatan_pimpinan == 1)
-                                    <option value="5">Menyetujui & Terbitkan</option> 
+                                    <option value="5">Menyetujui & Terbitkan</option>
                                     @else
                                     @if (Auth::user()->jabatan->jabatan_verifikator == 1)
-                                    <option value="4">Teruskan ke Pimpinan</option> 
+                                    <option value="4">Teruskan ke Pimpinan</option>
                                     @else
                                     @if ($atasan->jabatan_pimpinan == 1)
                                     <option value="3">Teruskan ke Verifikator</option>

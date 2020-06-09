@@ -23,4 +23,9 @@ class Jabatan extends Model
 	{
 		return $this->hasOne('App\Jabatan', 'jabatan_id', 'jabatan_parent');
 	}
+
+	public function review()
+	{
+		return $this->hasMany('App\Review', 'jabatan_id', 'jabatan_parent');
+	}
 }
