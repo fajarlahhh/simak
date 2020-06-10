@@ -15,15 +15,16 @@ class CreateDisposisiTables extends Migration
     {
         Schema::create('disposisi', function (Blueprint $table) {
             $table->bigIncrements('disposisi_id');
-            $table->bigInteger('disposisi_id_sebelumnya')->unsigned();
             $table->bigInteger('disposisi_surat_id')->unsigned();
             $table->string('disposisi_jenis_surat');
             $table->string('disposisi_sifat');
             $table->text('disposisi_catatan');
             $table->text('disposisi_proses')->nullable();
             $table->text('disposisi_hasil')->nullable();
+            $table->bigInteger('jabatan_id')->unsigned();
             $table->string('operator');
             $table->timestamps();
+            $table->foreign('jabatan_id')->references('jabatan_id')->on('jabatan')->onDelete('restrict')->onUpdate('cascade');
         });
 
         Schema::create('disposisi_detail', function (Blueprint $table) {

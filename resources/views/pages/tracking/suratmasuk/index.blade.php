@@ -35,7 +35,6 @@
 <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
 <script>
     $("#select2").on("change", function(e) {
-        //$('#report-container').show();
         $("#report-container").load("/trackingsuratmasuk/detail/" + $(this).select2('data')[0]['id']);
     });
 
@@ -57,9 +56,6 @@
                 return{
                     cari : params.term
                 };
-            },
-            beforeSend: function() {
-                $('#report-container div').hide();
             },
             processResults: function(data){
                 var results = [];

@@ -17,6 +17,11 @@ class Disposisi extends Model
 
 	public function detail()
 	{
-		return $this->belongsTo('App\DisposisiDetail', 'disposisi_id', 'disposisi_id');
+		return $this->hasMany('App\DisposisiDetail', 'disposisi_id', 'disposisi_id');
+	}
+
+	public function jabatan()
+	{
+		return $this->belongsTo('App\Jabatan', 'jabatan_id', 'jabatan_id');
 	}
 }

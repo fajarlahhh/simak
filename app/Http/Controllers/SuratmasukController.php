@@ -208,9 +208,10 @@ class SuratmasukController extends Controller
 
     public function do_tracking($id)
     {
-        $data = SuratMasuk::findOrFail($id);
-        return view('pages.trackingdisposisi.form',[
-            'data' => $data
+        $data = SuratMasuk::with('history_disposisi')->findOrFail($id);
+        return view('pages.tracking.suratmasuk.form',[
+            'data' => $data,
+            'i' => 0
         ]);
     }
 }

@@ -32,29 +32,20 @@ class DashboardController extends Controller
         $disposisi = [];
         if($auth->jabatan->jabatan_struktural == 1){
             if($auth->jabatan->jabatan_pimpinan == 1){
-                $data = SuratMasuk::where('disposisi', 0)->get([
+                $disposisi = SuratMasuk::where('disposisi', 0)->get([
                     'surat_masuk_id AS id',
                     'surat_masuk_nomor AS nomor',
                     'surat_masuk_asal AS asal',
                     'surat_masuk_perihal AS perihal',
                     DB::raw('"Surat Masuk" as jenis')
-                ]);
-                foreach ($data as $row) {
-                    array_push($disposisi, [
-                        'id' => $row->id,
-                        'nomor' => $row->nomor,
-                        'asal' => $row->asal,
-                        'perihal' => $row->perihal,
-                        'jenis' => "Surat Masuk"
-                    ]);
-                }
+                ])->toArray();
             }else{
                 $data = Disposisi::with('surat_masuk')->whereHas('detail', function ($q) use ($auth){
-                    $q->where('jabatan_id', $auth->jabatan_id);
+                    $q->where('jabatan_id', $auth->jabatan_id)->where('proses', 0);
                 })->orderBy('created_at', 'desc')->get();
                 foreach ($data as $row) {
                     array_push($disposisi, [
-                        'id' => $row->disposisi_surat_id,
+                        'id' => $row->disposisi_id,
                         'nomor' => $row->surat_masuk->surat_masuk_nomor,
                         'asal' => $row->surat_masuk->surat_masuk_asal,
                         'perihal' => $row->surat_masuk->surat_masuk_perihal,

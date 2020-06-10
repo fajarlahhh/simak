@@ -26,6 +26,7 @@
 							<th>Nomor</th>
 							<th>Tanggal Surat</th>
 							<th>Tanggal Masuk</th>
+							<th>Asal</th>
                             <th>Perihal</th>
 							<th class="width-110"></th>
 						</tr>
@@ -35,15 +36,16 @@
 					    <tr>
 					        <td>{{ ++$i }}</td>
 					        <td class="text-left">
-                                <span data-toggle="tooltip" title="{{ $row->operator.", ".\Carbon\Carbon::parse($row->created_at)->isoFormat('LLL') }}">{{ $row->nomor }}</span>
+                                <span data-toggle="tooltip" title="{{ $row['operator'].", ".\Carbon\Carbon::parse($row['created_at'])->isoFormat('LLL') }}">{{ $row['nomor'] }}</span>
                             </td>
-					        <td>{{ \Carbon\Carbon::parse($row->tanggal_surat)->isoFormat('LL') }}</td>
-					        <td>{{ \Carbon\Carbon::parse($row->tanggal_masuk)->isoFormat('LL') }}</td>
-					        <td>{{ $row->perihal }}</td>
+					        <td>{{ \Carbon\Carbon::parse($row['tanggal_surat'])->isoFormat('LL') }}</td>
+					        <td>{{ \Carbon\Carbon::parse($row['tanggal_masuk'])->isoFormat('LL') }}</td>
+					        <td>{{ $row['asal'] }}</td>
+					        <td>{{ $row['perihal'] }}</td>
 					        <td class="text-right">
 					        	@role('user|super-admin|supervisor')
                                 @if (Auth::user()->jabatan->jabatan_struktural == 1)
-                                <a href="{{ route('disposisi', array('id' => $row->id, 'tipe' => $row->jenis)) }}" class="btn btn-success btn-xs m-r-3"><i class='fas fa-paper-plane'></i></a>
+                                <a href="{{ route('disposisi', array('id' => $row['id'], 'tipe' => $row['jenis'])) }}" class="btn btn-success btn-xs m-r-3"><i class='fas fa-paper-plane'></i></a>
                                 @endif
                                 @endrole
                             </td>
@@ -66,8 +68,17 @@
 <script>
 	if ($('#data-table-default').length !== 0) {
 		$('#data-table-default').DataTable({
-			responsive: true
-		});
+            columnDefs : [{
+                targets: 0,
+                className: 'width-10'
+                },{
+                targets: [1, 4],
+                className: 'width-150'
+                },{
+                targets: [2,3],
+                className: 'width-100'
+                }]
+        });
 	}
 </script>
 @endpush

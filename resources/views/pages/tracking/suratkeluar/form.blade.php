@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-xl-12 m-b-10 m-t-5" >
+    <div class="col-xl-7 m-b-10 m-t-5" >
         <div class=" border overflow-auto" style="height: 900px;">
             <style type="text/css">
                 p, table {
@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-12">
+    <div class="col-xl-5">
         @if ($data->review)
         <div class="note note-primary">
             <h5>History Review</h5>

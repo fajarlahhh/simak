@@ -22,7 +22,7 @@ class ReviewController extends Controller
 	public function index(Request $req)
 	{
         $auth = Auth::user();
-        $data = Review::where(function($q) use ($req){
+        $data = Review::with('edaran')->where(function($q) use ($req){
             $q->where('review_surat_nomor', 'like', '%'.$req->cari.'%');
         })->orderBy('created_at', 'asc');
         if($auth->jabatan->jabatan_struktural == 0){
@@ -31,7 +31,6 @@ class ReviewController extends Controller
             $data = $data->where('jabatan_id', $auth->jabatan_id)->whereNull('fix');
         }
         $data = $data->paginate(10);
-
         $data->appends(['cari' => $req->tipe]);
         return view('pages.review.index', [
             'data' => $data,

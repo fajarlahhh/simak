@@ -9,28 +9,28 @@ class Review extends Model
     //
 
     protected $table = 'review';
-    protected $primaryKey = ['review_nomor_surat', 'review_nomor'];
+    protected $primaryKey = ['review_surat_nomor', 'review_nomor'];
     public $incrementing = false;
     protected $keyType = 'string';
 
 	public function edaran()
 	{
-		return $this->belongsTo('App\Edaran', 'edaran_nomor', 'review_nomor_surat');
+		return $this->belongsTo('App\Edaran', 'review_surat_nomor', 'edaran_nomor');
 	}
 
 	public function pengantar()
 	{
-		return $this->belongsTo('App\Pengantar', 'pengantar_nomor', 'review_nomor_surat');
+		return $this->belongsTo('App\Pengantar', 'review_surat_nomor', 'pengantar_nomor');
 	}
 
 	public function tugas()
 	{
-		return $this->belongsTo('App\Tugas', 'tugas_nomor', 'review_nomor_surat');
+		return $this->belongsTo('App\Tugas', 'review_surat_nomor', 'tugas_nomor');
 	}
 
 	public function undangan()
 	{
-		return $this->belongsTo('App\Undangan', 'undangan_nomor', 'review_nomor_surat');
+		return $this->belongsTo('App\Undangan', 'review_surat_nomor', 'undangan_nomor');
 	}
 
 	public function jabatan()

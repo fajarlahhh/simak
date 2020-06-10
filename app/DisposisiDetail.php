@@ -16,4 +16,9 @@ class DisposisiDetail extends Model
         'disposisi_id', 'jabatan_id'
     ];
     public $timestamps = false;
+
+	public function jabatan()
+	{
+		return $this->belongsTo('App\Jabatan', 'jabatan_id', 'jabatan_id');
+	}
 }
