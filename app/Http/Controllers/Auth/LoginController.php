@@ -90,7 +90,10 @@ class LoginController extends Controller
             // $pengguna->session_id = $new_session_id;
             // $pengguna->save();
             if($api){
-                return response()->json(Pengguna::findOrFail($req->uid));
+                $data = Pengguna::findOrFail($req->uid);
+                $data->notif_id = $req->notif;
+                $data->save();
+                return response()->json($data);
             }else{
                 return redirect()->intended('dashboard')
                 ->with([

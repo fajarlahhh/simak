@@ -23,7 +23,7 @@ class CreatePenggunaTables extends Migration
             $table->string('gambar_nama')->nullable();
             $table->string('session_id')->nullable();
             $table->bigInteger('jabatan_id')->unsigned();
-            $table->string('token')->nullable();
+            $table->string('notif_id')->nullable();
             $table->string('token');
             $table->rememberToken();
             $table->timestamps();
