@@ -6,6 +6,7 @@ use App\Tugas;
 use App\Edaran;
 use App\Review;
 use App\Jabatan;
+use App\Pengguna;
 use App\Undangan;
 use App\Pengantar;
 use Illuminate\Support\Str;
@@ -22,21 +23,37 @@ class ReviewController extends Controller
 	public function index(Request $req)
 	{
         $auth = Auth::user();
-        $data = Review::with('edaran')->where(function($q) use ($req){
-            $q->where('review_surat_nomor', 'like', '%'.$req->cari.'%');
-        })->orderBy('created_at', 'asc');
-        if($auth->jabatan->jabatan_struktural == 0){
-            $data = $data->where('operator', $auth->pengguna_id)->where('fix', 1)->where('selesai', 0);
-        }else{
-            $data = $data->where('jabatan_id', $auth->jabatan_id)->whereNull('fix');
-        }
-        $data = $data->paginate(10);
+        $data = $this->data(0, $auth, $req->cari);
         $data->appends(['cari' => $req->tipe]);
         return view('pages.review.index', [
             'data' => $data,
             'i' => ($req->input('page', 1) - 1) * 10,
             'cari' => $req->cari
         ]);
+    }
+
+	public function get($pengguna, Request $req)
+	{
+        $auth = Pengguna::findOrFail($pengguna);
+        return response()->json($this->data(1, $auth, $req->cari));
+    }
+
+	public function data($api = 1, $auth, $cari = null)
+	{
+        $data = Review::with('edaran')->where(function($q) use ($cari){
+            $q->where('review_surat_nomor', 'like', '%'.$cari.'%');
+        })->orderBy('created_at', 'asc');
+        if($auth->jabatan->jabatan_struktural == 0){
+            $data = $data->where('operator', $auth->jabatan_id)->where('fix', 1)->where('selesai', 0);
+        }else{
+            $data = $data->where('jabatan_id', $auth->jabatan_id)->whereNull('fix');
+        }
+
+        if ($api == 1) {
+            return $data->get();
+        }else{
+            return $data->paginate(10);
+        }
     }
 
 	public function review(Request $req)

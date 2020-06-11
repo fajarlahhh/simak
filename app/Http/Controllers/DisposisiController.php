@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jabatan;
+use App\Pengguna;
 use App\Disposisi;
 use App\SuratMasuk;
 use App\DisposisiDetail;
@@ -19,6 +20,22 @@ class DisposisiController extends Controller
 	public function index(Request $req)
 	{
         $auth = Auth::user();
+        $data = $this->data($auth, $req->cari);
+        return view('pages.disposisi.index', [
+            'data' => collect($data),
+            'i' => ($req->input('page', 1) - 1) * 10,
+            'cari' => $req->cari
+        ]);
+    }
+
+	public function get($pengguna, Request $req)
+	{
+        $auth = Pengguna::findOrFail($pengguna);
+        return response()->json($this->data($auth, $req->cari));
+    }
+
+	public function data($auth, $cari = null)
+	{
         $disposisi = [];
         if($auth->jabatan->jabatan_pimpinan == 1){
             $disposisi = SuratMasuk::where('disposisi', 0)->get([
@@ -52,11 +69,7 @@ class DisposisiController extends Controller
                 ]);
             }
         }
-        return view('pages.disposisi.index', [
-            'data' => collect($disposisi),
-            'i' => ($req->input('page', 1) - 1) * 10,
-            'cari' => $req->cari
-        ]);
+        return $disposisi;
     }
 
 	public function disposisi(Request $req)

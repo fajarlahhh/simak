@@ -56,7 +56,7 @@ class LoginController extends Controller
         return view('pages.login');
     }
 
-    public function login(Request $req)
+    public function login($api = null, Request $req)
     {
         $validator = Validator::make($req->all(), [
             'uid' => 'required',
@@ -76,7 +76,7 @@ class LoginController extends Controller
         if (Auth::attempt(['pengguna_id' => $req->uid, 'password' => $req->password], $remember)) {
 
             // $new_session_id = Session::getId();
-            // $pengguna = Pengguna::find($req->uid);
+            //
 
             // if($pengguna->session_id != '') {
             //     $last_session = Session::getHandler()->read($pengguna->session_id);
@@ -89,16 +89,23 @@ class LoginController extends Controller
 
             // $pengguna->session_id = $new_session_id;
             // $pengguna->save();
-
-            return redirect()->intended('dashboard')
-            ->with([
-                'gritter_judul' => 'Selamat datang ',
-                'gritter_teks' => 'Selamat bekerja dan semoga sukses',
-                'gritter_gambar' => '/assets/img/user/user.png'
-                ]);
+            if($api){
+                return response()->json(Pengguna::findOrFail($req->uid));
+            }else{
+                return redirect()->intended('dashboard')
+                ->with([
+                    'gritter_judul' => 'Selamat datang ',
+                    'gritter_teks' => 'Selamat bekerja dan semoga sukses',
+                    'gritter_gambar' => '/assets/img/user/user.png'
+                    ]);
+            }
         }
-        alert()->error('Login Gagal','ID Pengguna atau Kata Sandi salah');
-        return Redirect::back()->withInput();
+        if($api){
+            return response()->json(null);
+        }else{
+            alert()->error('Login Gagal','ID Pengguna atau Kata Sandi salah');
+            return Redirect::back()->withInput();
+        }
     }
 
     private function username()
