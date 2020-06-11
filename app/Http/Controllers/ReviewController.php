@@ -58,7 +58,7 @@ class ReviewController extends Controller
 
 	public function review(Request $req)
 	{
-        switch ($req->get('tipe')) {
+        switch ($req->tipe) {
             case 'Edaran':
                 $data = Edaran::findOrFail($req->no);
                 $halaman = 'pages.suratkeluar.edaran.cetak';
@@ -76,13 +76,22 @@ class ReviewController extends Controller
                 $halaman = 'pages.suratkeluar.undangan.cetak';
                 break;
         }
-        return view('pages.review.form', [
-            'data' => $data,
-            'atasan' => Auth::user()->jabatan->atasan,
-            'history' => Review::where('review_surat_nomor', $req->no)->where('fix', 1)->orderBy('review_nomor', 'desc')->get(),
-            'halaman' => $halaman,
-            'back' => Str::contains(url()->previous(), ['review/cek'])? '/review': url()->previous(),
-        ]);
+        if($req->uid){
+            $post = [
+                'data' => $data,
+                'atasan' => Pengguna::findOrFail($req->uid)->jabatan->atasan,
+                'history' => Review::where('review_surat_nomor', $req->no)->where('fix', 1)->orderBy('review_nomor', 'desc')->get(),
+            ];
+            return response()->json($post);
+        }else{
+            return view('pages.review.form', [
+                'data' => $data,
+                'atasan' => Auth::user()->jabatan->atasan,
+                'history' => Review::where('review_surat_nomor', $req->no)->where('fix', 1)->orderBy('review_nomor', 'desc')->get(),
+                'halaman' => $halaman,
+                'back' => Str::contains(url()->previous(), ['review/cek'])? '/review': url()->previous(),
+            ]);
+        }
 	}
 
 	public function do_review(Request $req)

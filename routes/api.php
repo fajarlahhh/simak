@@ -25,14 +25,14 @@ Route::post('/login/{api}', 'Auth\LoginController@login');
 
 Route::prefix('review')->group(function () {
     Route::get('/{pengguna}', 'ReviewController@get');
-    Route::get('/form', 'ReviewController@review');
+    Route::post('/form', 'ReviewController@review');
     Route::put('/review', 'ReviewController@do_review');
     Route::put('/selesai', 'ReviewController@selesai');
 });
 
 Route::prefix('disposisi')->group(function () {
     Route::get('/{pengguna}', 'DisposisiController@get');
-    Route::get('/form', 'DisposisiController@disposisi');
+    Route::post('/form', 'DisposisiController@disposisi');
     Route::put('/disposisi', 'DisposisiController@do_disposisi');
     Route::put('/selesai', 'DisposisiController@selesai');
 });
