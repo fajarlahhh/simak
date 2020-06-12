@@ -62,7 +62,7 @@
                         <td>{{ ++$i }}</td>
                         <td class="align-middle">{{ $row->jabatan_nama }}</td>
                         <td class="align-middle">{{ $row->bidang->bidang_nama }}</td>
-                        <td class="align-middle">{{ $row->jabatan_parent? $row->atasan->jabatan_nama: "" }}</td>
+                        <td class="align-middle">{{ $row->atasan? $row->atasan->jabatan_nama: "" }}</td>
                         <td class="align-middle">{{ $row->jabatan_pimpinan == 0? "": "Ya" }}</td>
                         <td class="align-middle">{{ $row->jabatan_struktural == 0? "": "Ya" }}</td>
                         <td class="align-middle">{{ $row->jabatan_verifikator == 0? "": "Ya" }}</td>
