@@ -99,7 +99,7 @@ class LoginController extends Controller
                 ->with([
                     'gritter_judul' => 'Selamat datang ',
                     'gritter_teks' => 'Selamat bekerja dan semoga sukses',
-                    'gritter_gambar' => '/assets/img/user/user.png'
+                    'gritter_gambar' => url('public/assets/img/user/user.png')
                     ]);
             }
         }
