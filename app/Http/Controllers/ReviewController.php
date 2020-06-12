@@ -209,11 +209,19 @@ class ReviewController extends Controller
                 }
             });
 
-            toast('Berhasil  surat '.strtolower($data->review_surat_jenis)." ".$req->get('review_surat_nomor'), 'success')->autoClose(2000);
-			return redirect('review');
+            if($req->uid){
+                return response()->json("Berhasil");
+            }else{
+                toast('Berhasil  surat '.strtolower($data->review_surat_jenis)." ".$req->get('review_surat_nomor'), 'success')->autoClose(2000);
+                return redirect('review');
+            }
         }catch(\Exception $e){
-            alert()->error('Tambah Data', $e->getMessage());
-            return redirect()->back()->withInput();
+            if($req->uid){
+                return response()->json("Gagal, ".$e->getMessage());
+            }else{
+                alert()->error('Tambah Data', $e->getMessage());
+                return redirect()->back()->withInput();
+            }
         }
 	}
 }

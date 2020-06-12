@@ -173,7 +173,6 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/', 'ReviewController@index');
             Route::get('/cek', 'ReviewController@review')->middleware(['role:super-admin|user|supervisor'])->name('review');
             Route::put('/cek', 'ReviewController@do_review')->middleware(['role:super-admin|user|supervisor'])->name('review.simpan');
-            Route::put('/selesai', 'ReviewController@selesai')->middleware(['role:super-admin|user|supervisor'])->name('review.selesai');
         });
     });
 

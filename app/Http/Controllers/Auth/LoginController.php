@@ -90,9 +90,23 @@ class LoginController extends Controller
             // $pengguna->session_id = $new_session_id;
             // $pengguna->save();
             if($api){
-                $data = Pengguna::findOrFail($req->uid);
-                $data->notif_id = $req->notif;
-                $data->save();
+                $pengguna = Pengguna::findOrFail($req->uid);
+                $pengguna->notif_id = $req->notif;
+                $pengguna->save();
+                $data = [
+                    'pengguna_id' => $pengguna->pengguna_id,
+                    'pengguna_nama' => $pengguna->pengguna_nama,
+                    'notif_id' => $pengguna->notif_id,
+                    'pengguna_nama' => $pengguna->pengguna_nama,
+                    'pengguna_nama' => $pengguna->pengguna_nama,
+                    'jabatan_id' => $pengguna->jabatan_id,
+                    'jabatan_nama' => $pengguna->jabatan->jabatan_nama,
+                    'jabatan_pimpinan' => $pengguna->jabatan->jabatan_pimpinan,
+                    'jabatan_verifikator' => $pengguna->jabatan->jabatan_verifikator,
+                    'atasan_jabatan_id' => $pengguna->jabatan->atasan->jabatan_id,
+                    'atasan_jabatan_pimpinan' => $pengguna->jabatan->atasan->jabatan_pimpinan,
+                    'atasan_jabatan_verifikator' => $pengguna->jabatan->atasan->jabatan_verifikator
+                ];
                 return response()->json($data);
             }else{
                 return redirect()->intended('dashboard')
