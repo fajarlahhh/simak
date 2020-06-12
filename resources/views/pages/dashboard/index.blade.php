@@ -23,7 +23,7 @@
 					<p class="f-s-16">Terbit : {{ number_format($edaran[1]) }}</p>
                 </div>
                 <div class="stats-link">
-                    <a href="/edaran">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
+                    <a href="{{ url('/edaran')}}">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
                 </div>
 			</div>
 		</div>
@@ -36,7 +36,7 @@
 					<p class="f-s-16">Terbit : {{ number_format($pengantar[1]) }}</p>
                 </div>
                 <div class="stats-link">
-                    <a href="/pengantar">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
+                    <a href="{{ url('/pengantar') }}">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
                 </div>
 			</div>
 		</div>
@@ -49,7 +49,7 @@
 					<p class="f-s-16">Terbit : {{ number_format($tugas[1]) }}</p>
                 </div>
                 <div class="stats-link">
-                    <a href="/tugas">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
+                    <a href="{{ url('/tugas') }}">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
                 </div>
 			</div>
 		</div>
@@ -62,7 +62,7 @@
 					<p class="f-s-16">Terbit : {{ number_format($undangan[1]) }}</p>
                 </div>
                 <div class="stats-link">
-                    <a href="/undangan">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
+                    <a href="{{ url('/undangan') }}">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
                 </div>
 			</div>
 		</div>
@@ -75,10 +75,10 @@
 				  	<strong>Daftar Revisi Surat Keluar</strong>
 				</a>
 				@foreach ($review[0]->take(5) as $row)
-				<a href="/{{ strtolower($row->review_surat_jenis) }}/edit?no={{ $row->review_surat_nomor }}" class="list-group-item list-group-item-action">Surat {{ $row->review_surat_jenis }}, Nomor {{ $row->review_surat_nomor }} <span class="badge badge-{{ $row->jabatan->bidang->warna }} pull-right">{{ $row->jabatan->bidang->bidang_nama }}</span></a>
+				<a href="{{ url('/'.strtolower($row->review_surat_jenis).'/edit?no='.$row->review_surat_nomor) }}" class="list-group-item list-group-item-action">Surat {{ $row->review_surat_jenis }}, Nomor {{ $row->review_surat_nomor }} <span class="badge badge-{{ $row->jabatan->bidang->warna }} pull-right">{{ $row->jabatan->bidang->bidang_nama }}</span></a>
                 @endforeach
                 @if ($review[0]->count() > 5)
-				<a href="/review" class="list-group-item list-group-item-action">
+				<a href="{{ url('/review') }}" class="list-group-item list-group-item-action">
 				  	<strong class="text-blue-darker">Lihat Semua {{ $review[0]->count() }} data</strong>
 				</a>
                 @endif
@@ -96,7 +96,7 @@
 				<a href="{{ route('review', array('no' => $row->review_surat_nomor, 'tipe' => $row->review_surat_jenis)) }}" class="list-group-item list-group-item-action">Surat {{ $row->review_surat_jenis }}, Nomor {{ $row->review_surat_nomor }} <span class="badge badge-{{ $row->jabatan->bidang->warna }} pull-right">{{ $row->jabatan->bidang->bidang_nama }}</span></a>
 				@endforeach
                 @if ($review[1]->count() > 5)
-				<a href="/review" class="list-group-item list-group-item-action">
+				<a href="{{ url('/review') }}" class="list-group-item list-group-item-action">
 				  	<strong class="text-blue-darker">Lihat Semua {{ $review[1]->count() }} data</strong>
 				</a>
                 @endif
@@ -113,7 +113,7 @@
 				<a href="{{ route('disposisi', array('id' => $row['id'], 'tipe' => $row['jenis'])) }}" class="list-group-item list-group-item-action">{{ $row['jenis'] }}, Nomor {{ $row['nomor'] }} <span class="badge badge-secondary pull-right">{{ $row['asal'] }}</span></a>
 				@endforeach
                 @if ($disposisi->count() > 5)
-				<a href="/disposisi" class="list-group-item list-group-item-action">
+				<a href="{{ url('/disposisi') }}" class="list-group-item list-group-item-action">
 				  	<strong class="text-blue-darker">Lihat Semua {{ $disposisi->count() }} data</strong>
 				</a>
                 @endif

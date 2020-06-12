@@ -71,7 +71,7 @@
             {{ $data->jabatan_nama }}<br>
             {{ env('APP_DESKRIPSI') }}<br>
             @if ($data->fix == 1)
-            {!! $data->edaran_ttd == 1? QrCode::size(150)->generate(URL::to('/cetak/edaran?no='.$data->edaran_nomor)): "<img src='/".$data->edaran_ttd."' height='150'>" !!}
+            {!! $data->edaran_ttd == 1? QrCode::size(150)->generate(URL::to('/cetak/edaran?no='.$data->edaran_nomor)): "<img src='".url('public/'.$data->edaran_ttd)."' height='150'>" !!}
             @endif
             <br>
             {!! $data->edaran_pejabat !!}<br>
@@ -89,6 +89,6 @@
 <center><h1>Lampiran</h1></center>
 @foreach ($data->lampiran as $row)
 <pagebreak></pagebreak>
-<img src='{{ $row->file }}' class="width-full">
+<img src='{{ url('public/'.$row->file) }}' style="width:100%">
 @endforeach
 @endif

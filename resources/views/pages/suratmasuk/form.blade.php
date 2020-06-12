@@ -3,9 +3,9 @@
 @section('title', ' | '.$aksi.' Surat Masuk')
 
 @push('css')
-	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
-	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
-	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/parsleyjs/src/parsley.css') }}" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css') }}" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css') }}" rel="stylesheet" />
 @endpush
 
 @section('page')
@@ -34,7 +34,7 @@
                     <div class="col-xl-5" >
                         <input type="hidden" name="redirect" value="{{ $back }}">
                         @if($aksi == 'Edit')
-                        <input type="hidden" name="ID" value="{{ $data->surat_masuk_nomor }}">
+                        <input type="hidden" name="ID" value="{{ $data->surat_masuk_id }}">
                         <input type="hidden" name="file_old" value="{{ $data->file }}">
                         @endif
                         <div class="form-group">
@@ -100,9 +100,9 @@
 @endsection
 
 @push('scripts')
-	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
-	<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="/assets/plugins/ckeditor4/ckeditor.js"></script>
+	<script src="{{ url('/public/assets/plugins/parsleyjs/dist/parsley.js') }}"></script>
+	<script src="{{ url('/public/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ url('/public/assets/plugins/ckeditor4/ckeditor.js') }}"></script>
     <script>
         CKEDITOR.replace( 'editor1' );
 

@@ -7,7 +7,7 @@
 			<li class="nav-profile">
 				<a href="javascript:;" data-toggle="nav-profile">
 					<div class="cover with-shadow"></div>
-					<img src="/assets/img/user/user.png" alt="" class="image"/>
+					<img src="{{ url('public/assets/img/user/user.png') }}" alt="" class="image"/>
 					<div class="info">
 						<b class="caret pull-right"></b>
 						{{ $nama_pegawai }}
@@ -62,7 +62,7 @@
 							}
 							$subMenu .= '
 								<li class="'. $hasSub .' '. $active .'">
-									<a href="'. (Auth::user()->can(strtolower($hasTitle)) || Auth::user()->role('super-admin')? $menu['url']: '#') .'">'. $hasCaret . $hasTitle . $hasHighlight .'</a>
+									<a href="'. (Auth::user()->can(strtolower($hasTitle)) || Auth::user()->role('super-admin')? ($menu['url'] == 'javascript:;'? $menu['url']: url($menu['url'])): '#') .'">'. $hasCaret . $hasTitle . $hasHighlight .'</a>
 									'. $subSubMenu .'
 								</li>
 							';
@@ -95,7 +95,7 @@
 						$active = (empty($active) && !empty($GLOBALS['parent_active'])) ? 'active' : $active;
 						echo '
 							<li class="'. $hasSub .' '. $active .'">
-								<a href="'. $menu['url'] .'">
+								<a href="'. ($menu['url'] == 'javascript:;'? $menu['url']: url($menu['url'])) .'">
 									'. $hasImg .'
 									'. $hasBadge .'
 									'. $hasCaret .'

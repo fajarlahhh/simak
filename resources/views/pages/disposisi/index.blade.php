@@ -7,8 +7,8 @@
 @endsection
 
 @push('css')
-	<link href="/assets/plugins/DataTables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
-	<link href="/assets/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/DataTables/media/css/dataTables.bootstrap.min.css') }}" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css') }}" rel="stylesheet" />
 @endpush
 
 @section('header')
@@ -62,9 +62,9 @@
 @endsection
 
 @push('scripts')
-<script src="/assets/plugins/DataTables/media/js/jquery.dataTables.js"></script>
-<script src="/assets/plugins/DataTables/media/js/dataTables.bootstrap.min.js"></script>
-<script src="/assets/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+<script src="{{ url('/public/assets/plugins/DataTables/media/js/jquery.dataTables.js') }}"></script>
+<script src="{{ url('/public/assets/plugins/DataTables/media/js/dataTables.bootstrap.min.js') }}"></script>
+<script src="{{ url('/public/assets/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js') }}"></script>
 <script>
 	if ($('#data-table-default').length !== 0) {
 		$('#data-table-default').DataTable({

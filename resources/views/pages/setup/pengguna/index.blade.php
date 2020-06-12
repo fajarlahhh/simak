@@ -7,7 +7,7 @@
 @endsection
 
 @push('css')
-	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css') }}" rel="stylesheet" />
 @endpush
 
 
@@ -81,10 +81,10 @@
 					        <td class="text-center">
                                 @if (!$row->trashed())
                                 @if ($row->gambar_nama)
-                                <a href="/{{ $row->gambar->gambar_lokasi }}" target="_blank" class='btn btn-warning btn-xs '><i class='fas fa-signature'></i></a>
+                                <a href="{{ url('/'.$row->gambar->gambar_lokasi) }}" target="_blank" class='btn btn-warning btn-xs '><i class='fas fa-signature'></i></a>
                                 @endif
 					        	@role('user|super-admin')
-                                <a href="/datapengguna/edit/{{ $row->pengguna_id }}" id='btn-del' class='btn btn-grey btn-xs '><i class='fas fa-edit'></i></a>
+                                <a href="{{ url('/datapengguna/edit/'.$row->pengguna_id) }}" id='btn-del' class='btn btn-grey btn-xs '><i class='fas fa-edit'></i></a>
                                 @if (!in_array($row->pengguna_id, config('admin.nip')))
 	                            <a href="javascript:;" onclick="hapus('{{ $row->pengguna_id }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
                                 @endif
@@ -112,7 +112,7 @@
 @endsection
 
 @push('scripts')
-<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="{{ url('/public/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
 <script>
     $(".cari").change(function() {
             $("#frm-cari").submit();
@@ -136,7 +136,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/datapengguna/restore/" + id,
+                    url: '{{ url("/datapengguna/restore") }}/' + id,
                     type: "POST",
                     data: {
                         "_method": 'PATCH'
@@ -174,7 +174,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/datapengguna/hapus/" + id,
+                    url: '{{ url("/datapengguna/hapus") }}/' + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'

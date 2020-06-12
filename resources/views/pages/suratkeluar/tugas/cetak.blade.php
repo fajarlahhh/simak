@@ -52,7 +52,6 @@
     </div>
     <div class="column-2">
         Mataram, {{ \Carbon\Carbon::parse($data->tugas_tanggal)->isoFormat('LL') }}<br>
-        {!! $data->tugas_kepada !!}
     </div>
 </div>
 <br>
@@ -71,7 +70,7 @@
             {{ $data->jabatan_nama }}<br>
             {{ env('APP_DESKRIPSI') }}<br>
             @if ($data->fix == 1)
-            {!! $data->tugas_ttd == 1? QrCode::size(150)->generate(URL::to('/cetak/tugas?no='.$data->tugas_nomor)): "<img src='/".$data->tugas_ttd."' height='150'>" !!}
+            {!! $data->tugas_ttd == 1? QrCode::size(150)->generate(URL::to('/cetak/tugas?no='.$data->tugas_nomor)): "<img src='".url('public/'.$data->tugas_ttd)."' height='150'>" !!}
             @endif
             <br>
             {!! $data->tugas_pejabat !!}<br>
@@ -89,6 +88,6 @@
 <center><h1>Lampiran</h1></center>
 @foreach ($data->lampiran as $row)
 <pagebreak></pagebreak>
-<img src='{{ $row->file }}' class="width-full">
+<img src='{{ url('public/'.$row->file) }}' style="width:100%">
 @endforeach
 @endif

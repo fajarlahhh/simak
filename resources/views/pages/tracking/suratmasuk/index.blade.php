@@ -7,7 +7,7 @@
 @endsection
 
 @push('css')
-	<link href="/assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
 @endpush
 
 @section('header')
@@ -32,10 +32,10 @@
 @endsection
 
 @push('scripts')
-<script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
+<script src="{{ url('/public/assets/plugins/select2/dist/js/select2.min.js') }}"></script>
 <script>
     $("#select2").on("change", function(e) {
-        $("#report-container").load("/trackingsuratmasuk/detail/" + $(this).select2('data')[0]['id']);
+        $("#report-container").load("{{ url('/trackingsuratmasuk/detail') }}/" + $(this).select2('data')[0]['id']);
     });
 
     function format(data) {
@@ -48,7 +48,7 @@
         minimumInputLength: 1,
         templateResult: format,
         ajax:{
-            url: '/trackingsuratmasuk/cari',
+            url: '{{ url('/trackingsuratmasuk/cari') }}',
             dataType: "json",
             delay: 250,
             type : 'GET',

@@ -24,7 +24,7 @@
 	<ul class="navbar-nav navbar-right">
 		<li class="dropdown navbar-user">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-				<img src="/assets/img/user/user.png" alt="" />
+				<img src="{{ url('public/assets/img/user/user.png') }}" alt="" />
 				<span class="d-none d-md-inline">{{ $nama_pegawai }}</span> <b class="caret"></b>
 			</a>
 			<div class="dropdown-menu dropdown-menu-right">
@@ -47,9 +47,9 @@
 @push('scripts')
 	<script type="text/javascript">
 		$("#btn-password").click(function(){
-	    	$("#modal-password").load("/gantisandi");
-	      	$.getScript("/assets/plugins/bootstrap-show-password/dist/bootstrap-show-password.min.js");
-	      	$.getScript("/assets/plugins/parsleyjs/dist/parsley.js");
+	    	$("#modal-password").load("{{ url('/gantisandi') }}");
+	      	$.getScript("{{ url('public/assets/plugins/bootstrap-show-password/dist/bootstrap-show-password.min.js') }}");
+	      	$.getScript("{{ url('public/assets/plugins/parsleyjs/dist/parsley.js') }}");
 	  	});
 	</script>
 @endpush

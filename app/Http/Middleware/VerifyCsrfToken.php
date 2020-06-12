@@ -22,7 +22,11 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/gantisandi',
         '/logout',
-        '/login'
+        '/login',
+        '/edaran/hapus/lampiran',
+        '/pengantar/hapus/lampiran',
+        '/tugas/hapus/lampiran',
+        '/undangan/hapus/lampiran'
     ];
 
     protected function tokensMatch($request)

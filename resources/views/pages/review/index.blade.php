@@ -88,7 +88,7 @@
                                 @if (Auth::user()->jabatan->jabatan_struktural == 1)
                                 <a href="{{ route('review', array('no' => $row->review_surat_nomor, 'tipe' => $row->review_surat_jenis)) }}" class="btn btn-success btn-xs m-r-3"><i class='fas fa-check'></i></a>
                                 @else
-                                <a href="/{{ strtolower($row->review_surat_jenis) }}/edit?no={{ $row->review_surat_nomor }}" class="btn btn-default btn-xs m-r-3"><i class='fas fa-edit'></i></a>
+                                <a href="{{ url('/'.strtolower($row->review_surat_jenis).'/edit?no='.$row->review_surat_nomor) }}" class="btn btn-default btn-xs m-r-3"><i class='fas fa-edit'></i></a>
                                 @endif
                                 @endrole
                             </td>

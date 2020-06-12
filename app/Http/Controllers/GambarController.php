@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Gambar;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -53,17 +54,19 @@ class GambarController extends Controller
         }
 
         try{
-            $gambar = $req->file('gambar_lokasi');
+            DB::transaction(function() use ($req){
+                $gambar = $req->file('gambar_lokasi');
 
-            $ext = $gambar->getClientOriginalExtension();
-            $nama_gambar = time().Str::random().".".$ext;
-            $gambar->move(public_path('uploads/gambar'), $nama_gambar);
+                $ext = $gambar->getClientOriginalExtension();
+                $nama_gambar = time().Str::random().".".$ext;
+                $gambar->move(public_path('uploads/gambar'), $nama_gambar);
 
-			$data = new Gambar();
-			$data->gambar_nama = $req->get('gambar_nama');
-			$data->gambar_lokasi = '/uploads/gambar/'.$nama_gambar;
-            $data->operator = Auth::user()->pengguna_nama;
-            $data->save();
+                $data = new Gambar();
+                $data->gambar_nama = $req->get('gambar_nama');
+                $data->gambar_lokasi = '/uploads/gambar/'.$nama_gambar;
+                $data->operator = Auth::user()->pengguna_nama;
+                $data->save();
+            });
             toast('Berhasil menambah gambar '.$req->get('gambar_nama'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('gambar'));
         }catch(\Exception $e){
@@ -76,8 +79,10 @@ class GambarController extends Controller
 	{
 		try{
             $data = Gambar::findOrFail($req->nama);
-            $data->delete();
-            File::delete(public_path($data->gambar_lokasi));
+            DB::transaction(function() use ($data){
+                $data->delete();
+                File::delete(public_path($data->gambar_lokasi));
+            });
             toast('Berhasil menghapus data '.$data->gambar_nama, 'success')->autoClose(2000);
 		}catch(\Exception $e){
             alert()->error('Hapus Data', $e->getMessage());

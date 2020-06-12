@@ -389,9 +389,11 @@ class UndanganController extends Controller
 	public function hapus_lampiran(Request $req)
 	{
 		try{
-            $data = UndanganLampiran::findOrFail($req->get('file'));
-            $data->delete();
-            File::delete(public_path($req->get('file')));
+            DB::transaction(function() use ($req){
+                $data = UndanganLampiran::findOrFail($req->get('file'));
+                $data->delete();
+                File::delete(public_path($req->get('file')));
+            });
             return 1;
 		}catch(\Exception $e){
             return 0;

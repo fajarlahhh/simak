@@ -3,8 +3,8 @@
 @section('title', ' | Gambar')
 
 @push('css')
-	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
-	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css') }}" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet') }}" />
 @endpush
 
 @section('page')
@@ -33,7 +33,7 @@
                         <div class="input-group">
                             <input type="text" class="form-control cari" name="cari" placeholder="Cari Gambar" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
                             <div class="input-group-append">
-                                <span class="input-group-text" id="basic-addon2"><i class="fad fa-search"></i></span>
+                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
                             </div>
                         </div>
                     </div>
@@ -46,9 +46,9 @@
             @foreach ($data as $index => $row)
             <div class="col-md-3">
                 <strong>{{ $row->gambar_nama }}</strong><br>
-                <img src="{{ $row->gambar_lokasi }}" alt="" style="width: 100%">
+                <img src="{{ url('public/'.$row->gambar_lokasi) }}" alt="" style="width: 100%">
                 <div class="input-group">
-                    <input id="clipboard-default{{ $i }}" type="text" class="form-control" value="{{ $row->gambar_lokasi }}" readonly/>
+                    <input id="clipboard-default{{ $i }}" type="text" class="form-control" value="{{ url('public/'.$row->gambar_lokasi) }}" readonly/>
                     <div class="input-group-append">
                         <button class="btn btn-warning clipboard" type="button" data-clipboard-target="#clipboard-default{{ $i }}">Copy</button>
                         <button onclick="hapus('{{ $row->gambar_nama }}')" type="button"  id='btn-del' class='btn btn-danger btn-xs'>Hapus</button>
@@ -84,8 +84,8 @@
 @endsection
 
 @push('scripts')
-<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-<script src="/assets/plugins/clipboard/clipboard.min.js"></script>
+<script src="{{ url('/public/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
+<script src="{{ url('/public/assets/plugins/clipboard/clipboard.min.js') }}"></script>
 <script>
     $(".cari").change(function() {
          $("#frm-cari").submit();
@@ -128,7 +128,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/gambar/hapus?nama=" + id,
+                    url: '{{ url("/gambar/hapus") }}?nama=' + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'

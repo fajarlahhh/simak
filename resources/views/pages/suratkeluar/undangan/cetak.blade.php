@@ -1,4 +1,4 @@
-@section('title', ' | Cetak Undangan'.$data->undangan_nomor)
+@section('title', ' | Cetak Surat Undangan'.$data->undangan_nomor)
 <style>
     .v-top{
         vertical-align: text-top;
@@ -89,6 +89,6 @@
 <center><h1>Lampiran</h1></center>
 @foreach ($data->lampiran as $row)
 <pagebreak></pagebreak>
-<img src='{{ $row->file }}' class="width-full">
+<img src='{{ url('public/'.$row->file) }}' style="width:100%">
 @endforeach
 @endif

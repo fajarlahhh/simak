@@ -7,7 +7,7 @@
 @endsection
 
 @push('css')
-	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css') }}" rel="stylesheet" />
 @endpush
 
 @section('header')
@@ -74,10 +74,10 @@
 					        <td>{{ $row->surat_masuk_perihal }}</td>
 					        <td>{{ \Carbon\Carbon::parse($row->surat_masuk_tanggal_masuk)->isoFormat('LL') }}</td>
 					        <td class="text-right">
-	                            <a href="{{ $row->file }}" target="_blank" class='btn btn-success btn-xs m-r-3'><i class='fas fa-file-pdf'></i></a>
+	                            <a href="{{ url('/public'.$row->file) }}" target="_blank" class='btn btn-success btn-xs m-r-3'><i class='fas fa-file-pdf'></i></a>
 					        	@role('user|super-admin|supervisor')
                                 @if (!$row->trashed())
-                                <a href="/suratmasuk/edit/{{ $row->surat_masuk_id }}" class="btn btn-secondary btn-xs m-r-3"><i class='fas fa-edit'></i></a>
+                                <a href="{{ url('/suratmasuk/edit/'.$row->surat_masuk_id) }}" class="btn btn-secondary btn-xs m-r-3"><i class='fas fa-edit'></i></a>
                                 <a href="javascript:;" onclick="hapus('{{ $row->surat_masuk_id }}', '{{ $row->surat_masuk_nomor }}')" class="btn btn-danger btn-xs m-r-3" id='btn-del' data-toggle="tooltip" title="Hapus Data"><i class='fas fa-trash'></i></a>
                                 @else
                                 <a href="javascript:;" onclick="restore('{{ $row->surat_masuk_id }}', '{{ $row->surat_masuk_nomor }}')" class="btn btn-info btn-xs m-r-3" id='btn-restore' data-toggle="tooltip" title="Restore Data"><i class='fas fa-undo'></i></a>
@@ -103,8 +103,8 @@
 @endsection
 
 @push('scripts')
-<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="{{ url('/public/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
+<script src="{{ url('/public/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
 <script>
     $(".cari").change(function() {
             $("#frm-cari").submit();
@@ -138,7 +138,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/suratmasuk/restore?no=" + id,
+                    url: '{{ url("/suratmasuk/restore/") }}/' + id,
                     type: "POST",
                     data: {
                         "_method": 'PATCH'
@@ -176,7 +176,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/suratmasuk/hapus?no=" + id,
+                    url: '{{ url("/suratmasuk/hapus/") }}/' + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'

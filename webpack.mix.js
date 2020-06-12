@@ -11,6 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.config.fileLoaderDirs.fonts = 'simak/public/fonts';
 mix.js('resources/js/app.js', 'public/assets/js/bundle.js')
     .sass('resources/sass/app.scss', 'public/assets/css');
 /*mix.copy('node_modules/jqueryui/', 'public/assets/css/jqueryui');

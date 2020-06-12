@@ -7,8 +7,8 @@
 @endsection
 
 @push('css')
-	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
-	<link href="/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css') }}" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css') }}" rel="stylesheet" />
 @endpush
 
 @section('header')
@@ -20,14 +20,14 @@
 		<!-- begin panel-heading -->
 		<div class="panel-heading">
 			<div class="row">
-                <div class="col-md-4 col-lg-5 col-xl-3 col-xs-12">
+                <div class="col-md-2 col-lg-2 col-xl-2 col-xs-12">
                 	@role('user|super-admin|supervisor')
                     <div class="form-inline">
                         <a href="{{ route('tugas.tambah') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</a>
                     </div>
                     @endrole
                 </div>
-                <div class="col-md-8 col-lg-7 col-xl-9 col-xs-12">
+                <div class="col-md-10 col-lg-10 col-xl-10 col-xs-12">
                 	<form action="{{ route('tugas') }}" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
 							<div class="form-group">
@@ -91,7 +91,7 @@
                             <td>{!! $row->jabatan_nama." - ".$row->tugas_pejabat !!}</td>
                             <td class="with-btn-group align-middle" nowrap>
                                 <div class="btn-group">
-                                    <a href="/tugas/cetak?no={{ $row->tugas_nomor }}" target="_blank"" class="btn btn-default btn-sm">Preview</a>
+                                    <a href="{{ url('/tugas/cetak?no='.$row->tugas_nomor) }}" target="_blank"" class="btn btn-default btn-sm">Preview</a>
                                     <a href="#" class="btn btn-default btn-sm dropdown-toggle width-30 no-caret" data-toggle="dropdown">
                                         <span class="caret"></span>
                                     </a>
@@ -100,7 +100,7 @@
                                         @if (!$row->trashed())
                                         @if ($row->fix == 0)
                                         <li>
-                                            <a href="/tugas/edit?no={{ $row->tugas_nomor }}" class="m-2">
+                                            <a href="{{ url('/tugas/edit?no='.$row->tugas_nomor) }}" class="m-2">
                                                 Edit Keseluruhan
                                                 @if ($row->harus_revisi)
                                                 <i class="fas fa-exclamation-circle text-red m-t-3 m-l-2 fa-lg" ></i>
@@ -108,7 +108,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="/tugas/edit/isi?no={{ $row->tugas_nomor }}" class="m-2"> Edit Isi</a>
+                                            <a href="{{ url('/tugas/edit/isi?no='.$row->tugas_nomor) }}" class="m-2"> Edit Isi</a>
                                         </li>
                                         @endif
                                         <li>
@@ -145,8 +145,8 @@
 @endsection
 
 @push('scripts')
-<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="{{ url('/public/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
+<script src="{{ url('/public/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
 <script>
     $('.table-responsive').on('show.bs.dropdown', function () {
         $('.table-responsive').css( "overflow", "inherit" );
@@ -184,7 +184,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/tugas/restore?no=" + id,
+                    url: '{{ url("/tugas/restore") }}?no=' + id,
                     type: "POST",
                     data: {
                         "_method": 'PATCH'
@@ -222,7 +222,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/tugas/hapus?no=" + id,
+                    url: '{{ url("/tugas/hapus") }}?no=' + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'

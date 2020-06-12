@@ -3,12 +3,12 @@
 @section('title', ' | Login')
 
 @push('css')
-	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
+	<link href="{{ url('public/assets/plugins/parsleyjs/src/parsley.css') }}" rel="stylesheet" />
 @endpush
 
 @section('content')
 	<div class="login-cover">
-	    <div class="login-cover-image" style="background-image: url(../assets/img/login-bg/login-bg.jpg)" data-id="login-cover-image"></div>
+	    <div class="login-cover-image" style="background-image: url({{ 'public/assets/img/login-bg/login-bg.jpg' }})" data-id="login-cover-image"></div>
 	    <div class="login-cover-bg"></div>
 	</div>
 	<!-- begin login -->
@@ -16,7 +16,7 @@
 		<!-- begin brand -->
 		<div class="login-header">
 			<div class="brand">
-	            <img src="/assets/img/logo/favicon.png" height="30"> {{ config("app.name") }}
+	            <img src="{{ url('public/assets/img/logo/favicon.png') }}" height="30"> {{ config("app.name") }}
 				<small>{{ env('APP_COMPANY_ALIAS') }}</small>
 			</div>
 			<div class="icon">
@@ -57,5 +57,5 @@
 
 
 @push('scripts')
-	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
+	<script src="{{ url('public/assets/plugins/parsleyjs/dist/parsley.js') }}"></script>
 @endpush

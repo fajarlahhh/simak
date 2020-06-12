@@ -1,10 +1,10 @@
-@extends('pages.setup.main')
+@extends('pages.datamaster.main')
 
 @section('title', ' | Data Jabatan')
 
 @push('css')
-	<link href="/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet" />
-	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/bootstrap-select/dist/css/bootstrap-select.min.css') }}" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/parsleyjs/src/parsley.css') }}" rel="stylesheet" />
 @endpush
 
 @section('page')
@@ -33,7 +33,7 @@
                         <div class="input-group">
                             <input type="text" class="form-control cari" name="cari" placeholder="Cari Nama Jabatan" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
                             <div class="input-group-append">
-                                <span class="input-group-text" id="basic-addon2"><i class="fad fa-search"></i></span>
+                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                         <td class="align-middle">{{ $row->jabatan_verifikator == 0? "": "Ya" }}</td>
                         <td class="text-center">
                             @role('user|super-admin|supervisor')
-                            <a href="/datajabatan/edit/{{ $row->jabatan_id }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
+                            <a href="{{ url('/datajabatan/edit/'.$row->jabatan_id) }}" id='btn-del' class='btn btn-grey btn-xs m-r-3'><i class='fas fa-edit'></i></a>
                             <a href="javascript:;" onclick="hapus('{{ $row->jabatan_id }}', '{{ $row->jabatan_nama }}')" id='btn-del' class='btn btn-danger btn-xs'><i class='fas fa-trash'></i></a>
                             @endrole
                         </td>
@@ -103,7 +103,7 @@
 @endsection
 
 @push('scripts')
-<script src="/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="{{ url('/public/assets/plugins/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
 <script>
     $(".cari").change(function() {
          $("#frm-cari").submit();
@@ -127,7 +127,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/datajabatan/hapus/" + id,
+                    url: '{{ url("/datajabatan/hapus/") }}/' + id,
                     type: "POST",
                     data: {
                         "_method": 'DELETE'

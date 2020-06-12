@@ -3,7 +3,7 @@
 @section('title', ' | Penomoran')
 
 @push('css')
-	<link href="/assets/plugins/parsleyjs/src/parsley.css" rel="stylesheet" />
+	<link href="{{ url('/public/assets/plugins/parsleyjs/src/parsley.css') }}" rel="stylesheet" />
 @endpush
 
 @section('page')
@@ -96,5 +96,5 @@
 @endsection
 
 @push('scripts')
-	<script src="/assets/plugins/parsleyjs/dist/parsley.js"></script>
+	<script src="{{ url('/public/assets/plugins/parsleyjs/dist/parsley.js') }}"></script>
 @endpush

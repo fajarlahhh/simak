@@ -16,5 +16,5 @@
 @endsection
 
 @push('scripts')
-	<script src="/assets/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
+	<script src="{{ url('/public/assets/plugins/jquery-sparkline/jquery.sparkline.min.js') }}"></script>
 @endpush

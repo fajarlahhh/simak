@@ -172,20 +172,20 @@ class SuratmasukController extends Controller
         }
 	}
 
-	public function hapus(Request $req)
+	public function hapus($id)
 	{
 		try{
-            SuratMasuk::findOrFail($req->get('no'))->delete();
+            SuratMasuk::findOrFail($id)->delete();
             toast('Berhasil menghapus data', 'success')->autoClose(2000);
 		}catch(\Exception $e){
             alert()->error('Hapus Data', $e->getMessage());
 		}
 	}
 
-	public function restore(Request $req)
+	public function restore($id)
 	{
 		try{
-            SuratMasuk::withTrashed()->findOrFail($req->get('no'))->restore();
+            SuratMasuk::withTrashed()->findOrFail($id)->restore();
             toast('Berhasil mengembalikan data', 'success')->autoClose(2000);
 		}catch(\Exception $e){
             alert()->error('Restore Data', $e->getMessage());

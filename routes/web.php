@@ -79,15 +79,15 @@ Route::group(['middleware' => ['auth']], function () {
             Route::put('/edit', 'SuratmasukController@do_edit')->middleware(['role:super-admin|user|supervisor'])->name('suratmasuk.edit');
             Route::get('/tambah', 'SuratmasukController@tambah')->middleware(['role:super-admin|user|supervisor'])->name('suratmasuk.tambah');
             Route::post('/tambah', 'SuratmasukController@do_tambah')->middleware(['role:super-admin|user|supervisor'])->name('suratmasuk.tambah');
-            Route::delete('/hapus', 'SuratmasukController@hapus')->middleware(['role:super-admin|user|supervisor']);
-            Route::patch('/restore', 'SuratmasukController@restore')->middleware(['role:super-admin|supervisor']);
+            Route::delete('/hapus/{id}', 'SuratmasukController@hapus')->middleware(['role:super-admin|user|supervisor']);
+            Route::patch('/restore/{id}', 'SuratmasukController@restore')->middleware(['role:super-admin|supervisor']);
             Route::get('/detail', 'SuratmasukController@detail')->name('suratmasuk.detail');
         });
     });
 
     Route::group(['middleware' => ['role_or_permission:super-admin|trackingsuratmasuk']], function () {
         Route::prefix('trackingsuratmasuk')->group(function () {
-            Route::get('/', 'SuratmasukController@tracking')->name('suratmasuk');
+            Route::get('/', 'SuratmasukController@tracking');
             Route::get('/cari', 'SuratmasukController@cari')->middleware(['role:super-admin|user|supervisor']);
             Route::get('/detail/{id}', 'SuratmasukController@do_tracking')->middleware(['role:super-admin|user|supervisor']);
         });
@@ -95,7 +95,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['middleware' => ['role_or_permission:super-admin|trackingsuratkeluar']], function () {
         Route::prefix('trackingsuratkeluar')->group(function () {
-            Route::get('/', 'SuratkeluarController@tracking')->name('suratmasuk');
+            Route::get('/', 'SuratkeluarController@tracking');
             Route::get('/cari', 'SuratkeluarController@cari')->middleware(['role:super-admin|user|supervisor']);
             Route::get('/detail/edaran', 'EdaranController@detail')->middleware(['role:super-admin|user|supervisor']);
             Route::get('/detail/pengantar', 'PengantarController@detail')->middleware(['role:super-admin|user|supervisor']);
