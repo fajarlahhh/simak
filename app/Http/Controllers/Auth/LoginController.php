@@ -100,12 +100,12 @@ class LoginController extends Controller
                     'pengguna_nama' => $pengguna->pengguna_nama,
                     'pengguna_nama' => $pengguna->pengguna_nama,
                     'jabatan_id' => $pengguna->jabatan_id,
-                    'jabatan_nama' => $pengguna->jabatan->jabatan_nama,
-                    'jabatan_pimpinan' => $pengguna->jabatan->jabatan_pimpinan,
-                    'jabatan_verifikator' => $pengguna->jabatan->jabatan_verifikator,
-                    'atasan_jabatan_id' => $pengguna->jabatan->atasan->jabatan_id,
-                    'atasan_jabatan_pimpinan' => $pengguna->jabatan->atasan->jabatan_pimpinan,
-                    'atasan_jabatan_verifikator' => $pengguna->jabatan->atasan->jabatan_verifikator
+                    'jabatan_nama' => $pengguna->jabatan? $pengguna->jabatan->jabatan_nama: null,
+                    'jabatan_pimpinan' => $pengguna->jabatan? $pengguna->jabatan->jabatan_pimpinan: null,
+                    'jabatan_verifikator' => $pengguna->jabatan? $pengguna->jabatan->jabatan_verifikator: null,
+                    'atasan_jabatan_id' => $pengguna->jabatan? ($pengguna->jabatan->atasan? $pengguna->jabatan->atasan->jabatan_id: null): null,
+                    'atasan_jabatan_pimpinan' => $pengguna->jabatan? ($pengguna->jabatan->atasan? $pengguna->jabatan->atasan->jabatan_pimpinan: null): null,
+                    'atasan_jabatan_verifikator' => $pengguna->jabatan? ($pengguna->jabatan->atasan? $pengguna->jabatan->atasan->jabatan_verifikator: null): null
                 ];
                 return response()->json($data);
             }else{
