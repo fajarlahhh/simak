@@ -21,7 +21,7 @@ $router->get('/', function (){
     return "API SIMAK DINAS PENDIDIKAN PROVINSI NTB";
 });
 
-Route::post('/login/{api}', 'Auth\LoginController@login');
+Route::post('/login', 'Auth\LoginController@login');
 
 Route::prefix('review')->group(function () {
     Route::get('/{pengguna}', 'ReviewController@get');
