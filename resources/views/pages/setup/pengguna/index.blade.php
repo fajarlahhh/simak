@@ -81,7 +81,7 @@
 					        <td class="text-center">
                                 @if (!$row->trashed())
                                 @if ($row->gambar_nama)
-                                <a href="{{ url('/'.$row->gambar->gambar_lokasi) }}" target="_blank" class='btn btn-warning btn-xs '><i class='fas fa-signature'></i></a>
+                                <a href="{{ url($row->gambar->gambar_lokasi) }}" target="_blank" class='btn btn-warning btn-xs '><i class='fas fa-signature'></i></a>
                                 @endif
 					        	@role('user|super-admin')
                                 <a href="{{ url('/datapengguna/edit/'.$row->pengguna_id) }}" id='btn-del' class='btn btn-grey btn-xs '><i class='fas fa-edit'></i></a>
