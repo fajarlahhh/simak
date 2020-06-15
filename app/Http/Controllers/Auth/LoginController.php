@@ -117,7 +117,7 @@ class LoginController extends Controller
                     ]);
             }
         }
-        if($api){
+        if($req->notif){
             return response()->json(null);
         }else{
             alert()->error('Login Gagal','ID Pengguna atau Kata Sandi salah');
