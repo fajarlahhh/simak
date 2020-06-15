@@ -56,7 +56,7 @@ class LoginController extends Controller
         return view('pages.login');
     }
 
-    public function login($api = null, Request $req)
+    public function login( Request $req)
     {
         $validator = Validator::make($req->all(), [
             'uid' => 'required',
@@ -89,7 +89,7 @@ class LoginController extends Controller
 
             // $pengguna->session_id = $new_session_id;
             // $pengguna->save();
-            if($api){
+            if($req->notif){
                 $pengguna = Pengguna::findOrFail($req->uid);
                 $pengguna->notif_id = $req->notif;
                 $pengguna->save();
