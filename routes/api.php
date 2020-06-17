@@ -32,6 +32,6 @@ Route::prefix('review')->group(function () {
 Route::prefix('disposisi')->group(function () {
     Route::get('/{pengguna}', 'DisposisiController@get');
     Route::post('/form', 'DisposisiController@disposisi');
-    Route::put('/disposisi', 'DisposisiController@do_disposisi');
-    Route::put('/selesai', 'DisposisiController@selesai');
+    Route::post('/disposisi', 'DisposisiController@do_disposisi');
+    Route::post('/selesai', 'DisposisiController@selesai');
 });
