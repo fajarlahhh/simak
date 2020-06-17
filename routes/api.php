@@ -26,7 +26,7 @@ Route::post('/login', 'Auth\LoginController@login');
 Route::prefix('review')->group(function () {
     Route::get('/{pengguna}', 'ReviewController@get');
     Route::post('/form', 'ReviewController@review');
-    Route::put('/review', 'ReviewController@do_review');
+    Route::post('/review', 'ReviewController@do_review');
 });
 
 Route::prefix('disposisi')->group(function () {
