@@ -193,13 +193,21 @@ class TugasController extends Controller
                 $review->operator = $auth->pengguna_id;
                 $review->save();
 
+                $notif_id = [];
                 foreach ($atasan as $atasan) {
                     $broadcast = [
                         'pengguna_id' => $atasan->pengguna_id,
                         'surat_nomor' => $nomor,
                         'surat_jenis' => 'Tugas',
                     ];
+                    array_push($notif_id, [
+                        $atasan->notif_id
+                    ]);
                     event(new SuratKeluarEvent($broadcast));
+                }
+                if($notif_id){
+                    $notif = new PushNotification();
+                    $notif->send($notif_id, 'Surat tugas perihal '.$req->get('tugas_perihal'), 'Surat Tugas');
                 }
             });
             toast('Berhasil menambah surat tugas '.$req->get('tugas_nomor'), 'success')->autoClose(2000);

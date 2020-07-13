@@ -183,13 +183,22 @@ class EdaranController extends Controller
                 $review->operator = $auth->pengguna_id;
                 $review->save();
 
+                $notif_id = [];
                 foreach ($atasan as $atasan) {
                     $broadcast = [
                         'pengguna_id' => $atasan->pengguna_id,
                         'surat_nomor' => $nomor,
                         'surat_jenis' => 'Edaran',
                     ];
+                    array_push($notif_id, [
+                        $atasan->notif_id
+                    ]);
                     event(new SuratKeluarEvent($broadcast));
+                }
+                return $notif_id;
+                if($notif_id){
+                    $notif = new PushNotification();
+                    $notif->send($notif_id, 'Edaran perihal '.$req->get('edaran_perihal'), 'Edaran');
                 }
             });
             toast('Berhasil menambah edaran '.$req->get('edaran_nomor'), 'success')->autoClose(2000);

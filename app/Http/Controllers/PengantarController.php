@@ -183,13 +183,21 @@ class PengantarController extends Controller
                 $review->operator = $auth->pengguna_id;
                 $review->save();
 
+                $notif_id = [];
                 foreach ($atasan as $atasan) {
                     $broadcast = [
                         'pengguna_id' => $atasan->pengguna_id,
                         'surat_nomor' => $nomor,
                         'surat_jenis' => 'Pengantar',
                     ];
+                    array_push($notif_id, [
+                        $atasan->notif_id
+                    ]);
                     event(new SuratKeluarEvent($broadcast));
+                }
+                if($notif_id){
+                    $notif = new PushNotification();
+                    $notif->send($notif_id, 'Surat pengantar perihal '.$req->get('pengantar_perihal'), 'Surat Pengantar');
                 }
             });
             toast('Berhasil menambah surat pengantar '.$req->get('pengantar_nomor'), 'success')->autoClose(2000);

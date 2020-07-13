@@ -29,18 +29,18 @@ class VerifyCsrfToken extends Middleware
         '/undangan/hapus/lampiran'
     ];
 
-    protected function tokensMatch($request)
-    {
-        $token = $request->input('_token') ?: $request->header('X-CSRF-TOKEN');
+    // protected function tokensMatch($request)
+    // {
+    //     $token = $request->input('_token') ?: $request->header('X-CSRF-TOKEN');
 
-        if (!$token && $header = $request->header('X-XSRF-TOKEN')) {
-            $token = $this->encrypter->decrypt($header);
-        }
+    //     if (!$token && $header = $request->header('X-XSRF-TOKEN')) {
+    //         $token = $this->encrypter->decrypt($header);
+    //     }
 
-        $tokensMatch = hash_equals($request->session()->token(), $token);
+    //     $tokensMatch = hash_equals($request->session()->token(), $token);
 
-        if($tokensMatch) $request->session()->regenerateToken();
+    //     if($tokensMatch) $request->session()->regenerateToken();
 
-        return $tokensMatch;
-    }
+    //     return $tokensMatch;
+    // }
 }

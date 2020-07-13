@@ -106,7 +106,7 @@ class SuratmasukController extends Controller
             $pimpinan = Jabatan::with('pengguna')->where('jabatan_pimpinan', 1)->get();
             if($pimpinan){
                 $notif = new PushNotification();
-                $notif->send([ $pimpinan->pengguna->first()->pengguna_nama ], 'Surat masuk dari '.$req->get('surat_masuk_asal'), 'Surat Masuk');
+                $notif->send([ $pimpinan->pengguna->first()->notif_id ], 'Surat masuk dari '.$req->get('surat_masuk_asal'), 'Surat Masuk');
             }
 
             toast('Berhasil menambah surat masuk '.$req->get('surat_masuk_nomor'), 'success')->autoClose(2000);

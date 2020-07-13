@@ -113,10 +113,12 @@ class ReviewController extends Controller
 
         try
         {
-            $data = Review::where('review_nomor', $req->get('review_nomor'))->where('review_surat_nomor', $req->get('review_surat_nomor'))->first();
+            $data = Review::with('pengguna')->where('review_nomor', $req->get('review_nomor'))->where('review_surat_nomor', $req->get('review_surat_nomor'))->first();
             $pesan = null;
             DB::transaction(function() use ($req, $data){
                 $review = Review::where('review_nomor', $req->get('review_nomor'))->where('review_surat_nomor', $req->get('review_surat_nomor'))->whereNull('fix');
+                $atasan = null;
+                $notif = new PushNotification();
                 switch ($req->get('fix')) {
                     case 1:
                         $pesan = "mereview";
@@ -130,6 +132,9 @@ class ReviewController extends Controller
                             'surat_jenis' => $data->review_surat_jenis,
                         ];
                         event(new SuratKeluarEvent($broadcast));
+
+                        $notif_id = [ $data->notif_id ];
+                        $notif->send($notif_id, 'Hasil review '.$data->review_surat_jenis.' nomor '.$req->get('review_surat_nomor'), $data->review_surat_jenis);
                         break;
                     case 2:
                         $pesan = "meneruskan ke atasan";
@@ -137,12 +142,23 @@ class ReviewController extends Controller
                         $review->update([
                             'jabatan_id' => $atasan->jabatan_id
                         ]);
-                        $broadcast = [
-                            'pengguna_id' => $atasan->jabatan_id,
-                            'surat_nomor' => $req->get('review_surat_nomor'),
-                            'surat_jenis' => $data->review_surat_jenis,
-                        ];
-                        event(new SuratKeluarEvent($broadcast));
+
+                        $pimpinan = Pengguna::where('jabatan_id', $atasan->jabatan_id)->get();
+                        $notif_id = [];
+                        foreach ($pimpinan as $row) {
+                            $broadcast = [
+                                'pengguna_id' => $row->pengguna_id,
+                                'surat_nomor' => $nomor,
+                                'surat_jenis' => $data->review_surat_jenis,
+                            ];
+                            array_push($notif_id, [
+                                $atasan->notif_id
+                            ]);
+                            event(new SuratKeluarEvent($broadcast));
+                        }
+                        if($notif_id){
+                            $notif->send($notif_id, 'Surat '.$data->review_surat_jenis.' nomor '.$req->get('review_surat_nomor'), $data->review_surat_jenis);
+                        }
                         break;
                     case 3:
                         $pesan = "meneruskan ke verifikator";
@@ -150,12 +166,23 @@ class ReviewController extends Controller
                         $review->update([
                             'jabatan_id' => $atasan->jabatan_id
                         ]);
-                        $broadcast = [
-                            'pengguna_id' => $atasan->jabatan_id,
-                            'surat_nomor' => $req->get('review_surat_nomor'),
-                            'surat_jenis' => $data->review_surat_jenis,
-                        ];
-                        event(new SuratKeluarEvent($broadcast));
+
+                        $pimpinan = Pengguna::where('jabatan_id', $atasan->jabatan_id)->get();
+                        $notif_id = [];
+                        foreach ($pimpinan as $row) {
+                            $broadcast = [
+                                'pengguna_id' => $row->pengguna_id,
+                                'surat_nomor' => $nomor,
+                                'surat_jenis' => $data->review_surat_jenis,
+                            ];
+                            array_push($notif_id, [
+                                $atasan->notif_id
+                            ]);
+                            event(new SuratKeluarEvent($broadcast));
+                        }
+                        if($notif_id){
+                            $notif->send($notif_id, 'Surat '.$data->review_surat_jenis.' nomor '.$req->get('review_surat_nomor'), $data->review_surat_jenis);
+                        }
                         break;
                     case 4:
                         $pesan = "meneruskan ke pimpinan";
@@ -163,16 +190,26 @@ class ReviewController extends Controller
                         $review->update([
                             'jabatan_id' => $atasan->jabatan_id
                         ]);
-                        $broadcast = [
-                            'pengguna_id' => $atasan->jabatan_id,
-                            'surat_nomor' => $req->get('review_surat_nomor'),
-                            'surat_jenis' => $data->review_surat_jenis,
-                        ];
-                        event(new SuratKeluarEvent($broadcast));
+                        $pimpinan = Pengguna::where('jabatan_id', $atasan->jabatan_id)->get();
+                        $notif_id = [];
+                        foreach ($pimpinan as $row) {
+                            $broadcast = [
+                                'pengguna_id' => $row->pengguna_id,
+                                'surat_nomor' => $nomor,
+                                'surat_jenis' => $data->review_surat_jenis,
+                            ];
+                            array_push($notif_id, [
+                                $atasan->notif_id
+                            ]);
+                            event(new SuratKeluarEvent($broadcast));
+                        }
+                        if($notif_id){
+                            $notif->send($notif_id, 'Surat '.$data->review_surat_jenis.' nomor '.$req->get('review_surat_nomor'), $data->review_surat_jenis);
+                        }
                         break;
                     case 5:
                         $pesan = "menyetujui & menerbitkan";
-                        $atasan = Jabatan::where('jabatan_pimpinan', 1)->first();
+                        //$atasan = Jabatan::where('jabatan_pimpinan', 1)->first();
                         $review->update([
                             'selesai' => 1,
                             'fix' => $req->get('fix'),
@@ -199,12 +236,12 @@ class ReviewController extends Controller
                                 ]);
                                 break;
                         }
-                        $broadcast = [
-                            'pengguna_id' => $atasan->jabatan_id,
-                            'surat_nomor' => $req->get('review_surat_nomor'),
-                            'surat_jenis' => $data->review_surat_jenis,
-                        ];
-                        event(new SuratKeluarEvent($broadcast));
+                        // $broadcast = [
+                        //     'pengguna_id' => $atasan->jabatan_id,
+                        //     'surat_nomor' => $req->get('review_surat_nomor'),
+                        //     'surat_jenis' => $data->review_surat_jenis,
+                        // ];
+                        // event(new SuratKeluarEvent($broadcast));
                         break;
                 }
             });

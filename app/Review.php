@@ -13,6 +13,11 @@ class Review extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
+	public function pengguna()
+	{
+		return $this->belongsTo('App\Pengguna', 'operator', 'pengguna_id');
+	}
+
 	public function edaran()
 	{
 		return $this->belongsTo('App\Edaran', 'review_surat_nomor', 'edaran_nomor');

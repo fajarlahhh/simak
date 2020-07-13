@@ -194,13 +194,21 @@ class UndanganController extends Controller
                 $review->operator = $auth->pengguna_id;
                 $review->save();
 
+                $notif_id = [];
                 foreach ($atasan as $atasan) {
                     $broadcast = [
                         'pengguna_id' => $atasan->pengguna_id,
                         'surat_nomor' => $nomor,
                         'surat_jenis' => 'Undangan',
                     ];
+                    array_push($notif_id, [
+                        $atasan->notif_id
+                    ]);
                     event(new SuratKeluarEvent($broadcast));
+                }
+                if($notif_id){
+                    $notif = new PushNotification();
+                    $notif->send($notif_id, 'Undangan perihal '.$req->get('undangan_perihal'), 'Undangan');
                 }
             });
             toast('Berhasil menambah undangan '.$req->get('undangan_nomor'), 'success')->autoClose(2000);
