@@ -141,7 +141,7 @@ class ReviewController extends Controller
                         break;
                     case 2:
                         $pesan = "meneruskan ke atasan";
-                        $atasan = Auth::user()->jabatan->atasan;
+                        $atasan = Pengguna::findOrFail($req->uid? $req->uid: Auth::id())->jabatan->atasan;
                         $review->update([
                             'jabatan_id' => $atasan->jabatan_id
                         ]);

@@ -76,7 +76,7 @@ class DisposisiController extends Controller
 
 	public function disposisi(Request $req)
 	{
-        $auth = Auth::user();
+        $auth = Pengguna::findOrFail($req->uid? $req->uid: Auth::id());
         $disposisi = null;
 
         if($auth->jabatan->jabatan_pimpinan == 1){
@@ -102,9 +102,19 @@ class DisposisiController extends Controller
                     ])->first();
                     break;
             }
-            if($disposisi == null){
-                alert()->error('Disposisi', "Data tidak ditemukan");
-                return redirect()->back()->withInput();
+            if($req->uid){
+                if($disposisi == null){
+                    $post = [
+                        'data' => null,
+                        'bawahan' => null,
+                    ];
+                    return response()->json($post);
+                }
+            }else{
+                if($disposisi == null){
+                    alert()->error('Disposisi', "Data tidak ditemukan");
+                    return redirect()->back()->withInput();
+                }
             }
         }else{
             if(DisposisiDetail::where('disposisi_id', $req->id)->where('jabatan_id', $auth->jabatan_id)->where('proses', 0)->count() == 0){
@@ -135,12 +145,34 @@ class DisposisiController extends Controller
                     })->first();
                     break;
             }
+            if($req->uid){
+                if($disposisi == null){
+                    $post = [
+                        'data' => null,
+                        'bawahan' => null,
+                    ];
+                    return response()->json($post);
+                }
+            }else{
+                if($disposisi == null){
+                    alert()->error('Disposisi', "Data tidak ditemukan");
+                    return redirect()->back()->withInput();
+                }
+            }
         }
-        return view('pages.disposisi.form', [
-            'data' => $disposisi,
-            'bawahan' => Jabatan::where('jabatan_parent', Auth::user()->jabatan_id)->where('jabatan_struktural', 1)->get(),
-            'back' => Str::contains(url()->previous(), ['disposisi/form'])? '/disposisi': url()->previous(),
-        ]);
+        if($req->uid){
+            $post = [
+                'data' => $disposisi,
+                'bawahan' => Jabatan::where('jabatan_parent', Pengguna::findOrFail($req->uid)->jabatan_id)->where('jabatan_struktural', 1)->get(),
+            ];
+            return response()->json($post);
+        }else{
+            return view('pages.disposisi.form', [
+                'data' => $disposisi,
+                'bawahan' => Jabatan::where('jabatan_parent', Auth::user()->jabatan_id)->where('jabatan_struktural', 1)->get(),
+                'back' => Str::contains(url()->previous(), ['disposisi/form'])? '/disposisi': url()->previous(),
+            ]);
+        }
 	}
 
     public function selesai(Request $req)
@@ -161,7 +193,7 @@ class DisposisiController extends Controller
         try
         {
             DB::transaction(function() use ($req){
-                $auth = Auth::user();
+                $auth = Pengguna::findOrFail($req->uid? $req->uid: Auth::id());
                 DisposisiDetail::where('disposisi_id', $req->disposisi_id)->where('jabatan_id', $auth->jabatan_id)->update([
                     'proses' => 1
                     ]);
@@ -169,17 +201,22 @@ class DisposisiController extends Controller
                 $data = new Disposisi();
                 $data->disposisi_surat_id = $req->disposisi_surat_id;
                 $data->disposisi_jenis_surat = $req->disposisi_jenis_surat;
-                $data->disposisi_sifat = "11111111";
+                $data->disposisi_sifat = $req->disposisi_sifat;
                 $data->disposisi_catatan = $req->disposisi_catatan;
-                $data->disposisi_proses = "11111111";
-                $data->disposisi_hasil = "11111111";
+                // $data->disposisi_proses = $req->disposisi_sifat;
+                $data->disposisi_hasil = $req->disposisi_hasil;
                 $data->jabatan_id = $auth->jabatan_id;
                 $data->operator = Auth::id();
                 $data->save();
             });
 
-            toast('Disposisi berhasil', 'success')->autoClose(2000);
-			return redirect($req->get('redirect')? $req->get('redirect'): route('disposisi'));
+
+            if($req->uid){
+                return response()->json("Berhasil");
+            }else{
+                toast('Disposisi berhasil', 'success')->autoClose(2000);
+                return redirect($req->get('redirect')? $req->get('redirect'): route('disposisi'));
+            }
         }catch(\Exception $e){
             alert()->error('Disposisi', $e->getMessage());
             return redirect()->back()->withInput();
@@ -210,7 +247,7 @@ class DisposisiController extends Controller
         try
         {
             DB::transaction(function() use ($req){
-                $auth = Auth::user();
+                $auth = Pengguna::findOrFail($req->uid? $req->uid: Auth::id());
                 if ($auth->jabatan->jabatan_pimpinan == 1) {
                     switch ($req->disposisi_jenis_surat) {
                         case 'Surat Masuk':
@@ -261,8 +298,12 @@ class DisposisiController extends Controller
                 }
             });
 
-            toast('Disposisi berhasil', 'success')->autoClose(2000);
-			return redirect($req->get('redirect')? $req->get('redirect'): route('disposisi'));
+            if($req->uid){
+                return response()->json("Berhasil");
+            }else{
+                toast('Disposisi selesai', 'success')->autoClose(2000);
+                return redirect($req->get('redirect')? $req->get('redirect'): route('disposisi'));
+            }
         }catch(\Exception $e){
             alert()->error('Disposisi', $e->getMessage());
             return redirect()->back()->withInput();
