@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Jabatan;
 use Carbon\Carbon;
 use App\SuratMasuk;
+use App\PushNotification;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\SuratMasukEvent;
@@ -100,6 +102,12 @@ class SuratmasukController extends Controller
                 'nomor' => $req->get('surat_masuk_nomor')
             ];
             event(new SuratMasukEvent($data));
+            //Pimpinan
+            $pimpinan = Jabatan::with('pengguna')->where('jabatan_pimpinan', 1)->get();
+            if($pimpinan){
+                $notif = new PushNotification();
+                $notif->send([ $pimpinan->pengguna->first()->pengguna_nama ], 'Surat masuk dari '.$req->get('surat_masuk_asal'), 'Surat Masuk');
+            }
 
             toast('Berhasil menambah surat masuk '.$req->get('surat_masuk_nomor'), 'success')->autoClose(2000);
 			return redirect($req->get('redirect')? $req->get('redirect'): route('suratmasuk'));
