@@ -152,7 +152,7 @@ class ReviewController extends Controller
                                 'surat_jenis' => $data->review_surat_jenis,
                             ];
                             array_push($notif_id, [
-                                $atasan->notif_id
+                                $row->notif_id
                             ]);
                             event(new SuratKeluarEvent($broadcast));
                         }
@@ -176,7 +176,7 @@ class ReviewController extends Controller
                                 'surat_jenis' => $data->review_surat_jenis,
                             ];
                             array_push($notif_id, [
-                                $atasan->notif_id
+                                $row->notif_id
                             ]);
                             event(new SuratKeluarEvent($broadcast));
                         }
@@ -199,7 +199,7 @@ class ReviewController extends Controller
                                 'surat_jenis' => $data->review_surat_jenis,
                             ];
                             array_push($notif_id, [
-                                $atasan->notif_id
+                                $row->notif_id
                             ]);
                             event(new SuratKeluarEvent($broadcast));
                         }

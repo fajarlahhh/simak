@@ -239,6 +239,23 @@ class DisposisiController extends Controller
                         'disposisi_id' => $data->disposisi_id,
                         'jabatan_id' => $value
                         ]);
+                    $pengguna = Pengguna::where('jabatan_id', $value)->get();
+                    $notif_id = [];
+                    foreach ($pengguna as $row) {
+                        $broadcast = [
+                            'pengguna_id' => $row->pengguna_id,
+                            'surat_jenis' => $req->disposisi_jenis_surat,
+                            'sifat' => $req->disposisi_sifat,
+                        ];
+                        event(new SuratMasukEvent($broadcast));
+                        array_push($notif_id, [
+                            $row->notif_id
+                        ]);
+                    }
+                    if($notif_id){
+                        $notif = new PushNotification();
+                        $notif->send($notif_id, 'Disposisi '.$req->disposisi_jenis_surat.' sifat '.$req->disposisi_sifat, 'Disposisi');
+                    }
                 }
             });
 
