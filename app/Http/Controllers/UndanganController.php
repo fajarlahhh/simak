@@ -201,14 +201,14 @@ class UndanganController extends Controller
                         'surat_nomor' => $nomor,
                         'surat_jenis' => 'Undangan',
                     ];
-                    array_push($notif_id, [
+                    array_push($notif_id,
                         $atasan->notif_id
-                    ]);
+                    );
                     event(new SuratKeluarEvent($broadcast));
                 }
                 if($notif_id){
-                    $notif = new PushNotification();
-                    $notif->send($notif_id, 'Undangan perihal '.$req->get('undangan_perihal'), 'Undangan');
+                    $notif = new PushNotification($notif_id, 'Undangan perihal '.$req->get('tugas_perihal').' butuh review anda', 'Undangan');
+                    $notif->send();
                 }
             });
             toast('Berhasil menambah undangan '.$req->get('undangan_nomor'), 'success')->autoClose(2000);

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use App\Opd;
 use App\Salam;
 use App\Tugas;
 use App\Review;
 use App\Jabatan;
-use App\Opd;
 use App\KopSurat;
 use App\Pengguna;
 use App\Tembusan;
@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\SuratKeluarEvent;
 use Illuminate\Support\Facades\DB;
+use App\OneSignal\PushNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -200,14 +201,14 @@ class TugasController extends Controller
                         'surat_nomor' => $nomor,
                         'surat_jenis' => 'Tugas',
                     ];
-                    array_push($notif_id, [
+                    array_push($notif_id,
                         $atasan->notif_id
-                    ]);
+                    );
                     event(new SuratKeluarEvent($broadcast));
                 }
                 if($notif_id){
-                    $notif = new PushNotification();
-                    $notif->send($notif_id, 'Surat tugas perihal '.$req->get('tugas_perihal'), 'Surat Tugas');
+                    $notif = new PushNotification($notif_id, 'Surat tugas perihal '.$req->get('tugas_perihal').' butuh review anda', 'Surat tugas');
+                    $notif->send();
                 }
             });
             toast('Berhasil menambah surat tugas '.$req->get('tugas_nomor'), 'success')->autoClose(2000);

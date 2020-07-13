@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use App\Opd;
 use App\Salam;
-use App\Pengantar;
 use App\Review;
 use App\Jabatan;
-use App\Opd;
 use App\KopSurat;
 use App\Pengguna;
 use App\Tembusan;
+use App\Pengantar;
 use App\Penomoran;
 use Carbon\Carbon;
 use App\PengantarLampiran;
@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\SuratKeluarEvent;
 use Illuminate\Support\Facades\DB;
+use App\OneSignal\PushNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -190,14 +191,14 @@ class PengantarController extends Controller
                         'surat_nomor' => $nomor,
                         'surat_jenis' => 'Pengantar',
                     ];
-                    array_push($notif_id, [
+                    array_push($notif_id,
                         $atasan->notif_id
-                    ]);
+                    );
                     event(new SuratKeluarEvent($broadcast));
                 }
                 if($notif_id){
-                    $notif = new PushNotification();
-                    $notif->send($notif_id, 'Surat pengantar perihal '.$req->get('pengantar_perihal'), 'Surat Pengantar');
+                    $notif = new PushNotification($notif_id, 'Surat pengantar perihal '.$req->get('pengantar_perihal').' butuh review anda', 'Surat pengantar');
+                    $notif->send();
                 }
             });
             toast('Berhasil menambah surat pengantar '.$req->get('pengantar_nomor'), 'success')->autoClose(2000);

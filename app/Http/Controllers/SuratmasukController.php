@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Jabatan;
 use Carbon\Carbon;
 use App\SuratMasuk;
-use App\PushNotification;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\SuratMasukEvent;
+use App\OneSignal\PushNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -63,6 +63,7 @@ class SuratmasukController extends Controller
                 'surat_masuk_tanggal_surat' => 'required',
                 'surat_masuk_perihal' => 'required',
                 'surat_masuk_asal' => 'required',
+                'surat_masuk_keterangan' => 'required',
                 'file' => 'required|mimes:pdf'
             ],[
                 'surat_masuk_nomor.required'  => 'Nomor Surat tidak boleh kosong',
@@ -70,6 +71,7 @@ class SuratmasukController extends Controller
                 'surat_masuk_tanggal_surat.required'  => 'Tanggal Surat tidak boleh kosong',
                 'surat_masuk_perihal.required'  => 'Perihal tidak boleh kosong',
                 'surat_masuk_asal.required'  => 'Asal tidak boleh kosong',
+                'surat_masuk_keterangan.required'  => 'Rangkuman Isi Surat tidak boleh kosong',
                 'file.required'  => 'File tidak boleh kosong'
             ]
         );
@@ -98,15 +100,23 @@ class SuratmasukController extends Controller
 			$data->operator = Auth::user()->pengguna_nama;
             $data->save();
 
-            $data = [
-                'nomor' => $req->get('surat_masuk_nomor')
-            ];
-            event(new SuratMasukEvent($data));
             //Pimpinan
             $pimpinan = Jabatan::with('pengguna')->where('jabatan_pimpinan', 1)->get();
-            if($pimpinan){
-                $notif = new PushNotification();
-                $notif->send([ $pimpinan->pengguna->first()->notif_id ], 'Surat masuk dari '.$req->get('surat_masuk_asal'), 'Surat Masuk');
+            $notif_id = [];
+            foreach ($pimpinan as $atasan) {
+                $broadcast = [
+                    'pengguna_id' => $atasan->pengguna_id,
+                    'surat_nomor' => $nomor,
+                    'surat_jenis' => 'Masuk',
+                ];
+                array_push($notif_id,
+                    $atasan->notif_id
+                );
+                event(new SuratMasukEvent($broadcast));
+            }
+            if($notif_id){
+                $notif = new PushNotification($notif_id, 'Surat masuk dari '.$req->get('tugas_perihal'), 'Surat Masuk');
+                $notif->send();
             }
 
             toast('Berhasil menambah surat masuk '.$req->get('surat_masuk_nomor'), 'success')->autoClose(2000);
@@ -134,13 +144,17 @@ class SuratmasukController extends Controller
                 'surat_masuk_tanggal_masuk' => 'required',
                 'surat_masuk_tanggal_surat' => 'required',
                 'surat_masuk_perihal' => 'required',
-                'surat_masuk_asal' => 'required'
+                'surat_masuk_asal' => 'required',
+                'surat_masuk_keterangan' => 'required',
+                'file' => 'required|mimes:pdf'
             ],[
                 'surat_masuk_nomor.required'  => 'Nomor Surat tidak boleh kosong',
                 'surat_masuk_tanggal_masuk.required'  => 'Tanggal Masuk tidak boleh kosong',
                 'surat_masuk_tanggal_surat.required'  => 'Tanggal Surat tidak boleh kosong',
                 'surat_masuk_perihal.required'  => 'Perihal tidak boleh kosong',
-                'surat_masuk_asal.required'  => 'Asal tidak boleh kosong'
+                'surat_masuk_asal.required'  => 'Asal tidak boleh kosong',
+                'surat_masuk_keterangan.required'  => 'Rangkuman Isi Surat tidak boleh kosong',
+                'file.required'  => 'File tidak boleh kosong'
             ]
         );
 

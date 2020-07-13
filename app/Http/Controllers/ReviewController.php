@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\SuratKeluarEvent;
 use Illuminate\Support\Facades\DB;
+use App\OneSignal\PushNotification;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -118,7 +119,6 @@ class ReviewController extends Controller
             DB::transaction(function() use ($req, $data){
                 $review = Review::where('review_nomor', $req->get('review_nomor'))->where('review_surat_nomor', $req->get('review_surat_nomor'))->whereNull('fix');
                 $atasan = null;
-                $notif = new PushNotification();
                 switch ($req->get('fix')) {
                     case 1:
                         $pesan = "mereview";
@@ -133,8 +133,11 @@ class ReviewController extends Controller
                         ];
                         event(new SuratKeluarEvent($broadcast));
 
-                        $notif_id = [ $data->notif_id ];
-                        $notif->send($notif_id, 'Hasil review '.$data->review_surat_jenis.' nomor '.$req->get('review_surat_nomor'), $data->review_surat_jenis);
+                        $notif_id = [ $data->pengguna->notif_id ];
+                        if($notif_id){
+                            $notif = new PushNotification($notif_id, 'Hasil review '.$data->review_surat_jenis.' nomor '.$req->get('review_surat_nomor'), 'Hasil Review');
+                            $notif->send();
+                        }
                         break;
                     case 2:
                         $pesan = "meneruskan ke atasan";
@@ -148,7 +151,7 @@ class ReviewController extends Controller
                         foreach ($pimpinan as $row) {
                             $broadcast = [
                                 'pengguna_id' => $row->pengguna_id,
-                                'surat_nomor' => $nomor,
+                                'surat_nomor' => $req->get('review_surat_nomor'),
                                 'surat_jenis' => $data->review_surat_jenis,
                             ];
                             array_push($notif_id, [
@@ -157,7 +160,8 @@ class ReviewController extends Controller
                             event(new SuratKeluarEvent($broadcast));
                         }
                         if($notif_id){
-                            $notif->send($notif_id, 'Surat '.$data->review_surat_jenis.' nomor '.$req->get('review_surat_nomor'), $data->review_surat_jenis);
+                            $notif = new PushNotification($notif_id, ucfirst($data->review_surat_jenis).' nomor '.$req->get('review_surat_nomor').' butuh review anda', ucfirst($data->review_surat_jenis));
+                            $notif->send();
                         }
                         break;
                     case 3:
@@ -167,12 +171,12 @@ class ReviewController extends Controller
                             'jabatan_id' => $atasan->jabatan_id
                         ]);
 
-                        $pimpinan = Pengguna::where('jabatan_id', $atasan->jabatan_id)->get();
+                        $verifikator = Pengguna::where('jabatan_id', $atasan->jabatan_id)->get();
                         $notif_id = [];
-                        foreach ($pimpinan as $row) {
+                        foreach ($verifikator as $row) {
                             $broadcast = [
                                 'pengguna_id' => $row->pengguna_id,
-                                'surat_nomor' => $nomor,
+                                'surat_nomor' => $req->get('review_surat_nomor'),
                                 'surat_jenis' => $data->review_surat_jenis,
                             ];
                             array_push($notif_id, [
@@ -181,7 +185,8 @@ class ReviewController extends Controller
                             event(new SuratKeluarEvent($broadcast));
                         }
                         if($notif_id){
-                            $notif->send($notif_id, 'Surat '.$data->review_surat_jenis.' nomor '.$req->get('review_surat_nomor'), $data->review_surat_jenis);
+                            $notif = new PushNotification($notif_id, ucfirst($data->review_surat_jenis).' nomor '.$req->get('review_surat_nomor').' butuh review anda', ucfirst($data->review_surat_jenis));
+                            $notif->send();
                         }
                         break;
                     case 4:
@@ -195,7 +200,7 @@ class ReviewController extends Controller
                         foreach ($pimpinan as $row) {
                             $broadcast = [
                                 'pengguna_id' => $row->pengguna_id,
-                                'surat_nomor' => $nomor,
+                                'surat_nomor' => $req->get('review_surat_nomor'),
                                 'surat_jenis' => $data->review_surat_jenis,
                             ];
                             array_push($notif_id, [
@@ -204,7 +209,8 @@ class ReviewController extends Controller
                             event(new SuratKeluarEvent($broadcast));
                         }
                         if($notif_id){
-                            $notif->send($notif_id, 'Surat '.$data->review_surat_jenis.' nomor '.$req->get('review_surat_nomor'), $data->review_surat_jenis);
+                            $notif = new PushNotification($notif_id, ucfirst($data->review_surat_jenis).' nomor '.$req->get('review_surat_nomor').' butuh review anda', ucfirst($data->review_surat_jenis));
+                            $notif->send();
                         }
                         break;
                     case 5:

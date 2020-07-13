@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\OneSignal;
 
 class PushNotification
 {
@@ -11,7 +11,7 @@ class PushNotification
     public function __construct($id, $pesan, $judul)
     {
         $this->id = $id;
-        $this->ipesand = $pesan;
+        $this->pesan = $pesan;
         $this->judul = $judul;
     }
 
@@ -21,9 +21,9 @@ class PushNotification
             'app_id' => "17d7c4b9-f48c-45f9-98f7-e9a5eacf67d2",
             'include_player_ids' => $this->id,
             'contents' => array(
-                "en" => $pesan
+                "en" => $this->pesan
             ),
-            'headings' => array("en" => $judul),
+            'headings' => array("en" => $this->judul),
             'small_icon' => "mipmap/ic_logo"
         );
         $fields = json_encode($fields);

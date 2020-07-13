@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use App\Opd;
 use App\Salam;
 use App\Edaran;
 use App\Review;
 use App\Jabatan;
-use App\Opd;
 use App\KopSurat;
 use App\Pengguna;
 use App\Tembusan;
@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\SuratKeluarEvent;
 use Illuminate\Support\Facades\DB;
+use App\OneSignal\PushNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -190,15 +191,14 @@ class EdaranController extends Controller
                         'surat_nomor' => $nomor,
                         'surat_jenis' => 'Edaran',
                     ];
-                    array_push($notif_id, [
+                    array_push($notif_id,
                         $atasan->notif_id
-                    ]);
+                    );
                     event(new SuratKeluarEvent($broadcast));
                 }
-                return $notif_id;
                 if($notif_id){
-                    $notif = new PushNotification();
-                    $notif->send($notif_id, 'Edaran perihal '.$req->get('edaran_perihal'), 'Edaran');
+                    $notif = new PushNotification($notif_id, 'Edaran perihal '.$req->get('edaran_perihal').' butuh review anda', 'Edaran');
+                    $notif->send();
                 }
             });
             toast('Berhasil menambah edaran '.$req->get('edaran_nomor'), 'success')->autoClose(2000);

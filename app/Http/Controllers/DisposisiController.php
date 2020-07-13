@@ -9,7 +9,9 @@ use App\SuratMasuk;
 use App\DisposisiDetail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Events\SuratMasukEvent;
 use Illuminate\Support\Facades\DB;
+use App\OneSignal\PushNotification;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -234,28 +236,28 @@ class DisposisiController extends Controller
                 $data->operator = Auth::id();
                 $data->save();
 
+                $notif_id = [];
                 foreach ($req->jabatan_id as $key => $value) {
                     DisposisiDetail::create([
                         'disposisi_id' => $data->disposisi_id,
                         'jabatan_id' => $value
                         ]);
                     $pengguna = Pengguna::where('jabatan_id', $value)->get();
-                    $notif_id = [];
                     foreach ($pengguna as $row) {
                         $broadcast = [
                             'pengguna_id' => $row->pengguna_id,
-                            'surat_jenis' => $req->disposisi_jenis_surat,
-                            'sifat' => $req->disposisi_sifat,
+                            'surat_nomor' => $data->surat_masuk->surat_masuk_nomor,
+                            'surat_jenis' => 'Masuk',
                         ];
-                        event(new SuratMasukEvent($broadcast));
-                        array_push($notif_id, [
+                        array_push($notif_id,
                             $row->notif_id
-                        ]);
+                        );
+                        event(new SuratMasukEvent($broadcast));
                     }
-                    if($notif_id){
-                        $notif = new PushNotification();
-                        $notif->send($notif_id, 'Disposisi '.$req->disposisi_jenis_surat.' sifat '.$req->disposisi_sifat, 'Disposisi');
-                    }
+                }
+                if($notif_id){
+                    $notif = new PushNotification($notif_id, 'Surat masuk dari '.$data->surat_masuk->surat_masuk_asal, 'Surat Masuk');
+                    $notif->send();
                 }
             });
 

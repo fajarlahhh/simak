@@ -51,7 +51,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Perihal</label>
-                            <textarea class="form-control" rows="3" name="surat_masuk_perihal">{{ $aksi == 'Edit'? $data->surat_masuk_perihal: old('surat_masuk_perihal') }}</textarea>
+                            <textarea class="form-control" required rows="3" name="surat_masuk_perihal">{{ $aksi == 'Edit'? $data->surat_masuk_perihal: old('surat_masuk_perihal') }}</textarea>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Tanggal Masuk</label>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Rangkuman Isi Surat</label>
-                            <textarea class="form-control" rows="3" id="editor1" name="surat_masuk_keterangan">{{ $aksi == 'Edit'? $data->surat_masuk_keterangan: old('surat_masuk_keterangan') }}</textarea>
+                            <textarea class="form-control" rows="3" id="editor1" name="surat_masuk_keterangan" required>{{ $aksi == 'Edit'? $data->surat_masuk_keterangan: old('surat_masuk_keterangan') }}</textarea>
                         </div>
                     </div>
                     <div class="col-xl-7 m-b-10 m-t-5" >
