@@ -80,7 +80,7 @@ class DisposisiController extends Controller
         $disposisi = null;
 
         if($auth->jabatan->jabatan_pimpinan == 1){
-            switch ($req->get('tipe')) {
+            switch ($req->tipe) {
                 case 'Surat Masuk':
                     $disposisi = SuratMasuk::with('disposisi')->where('surat_masuk_id', $req->id)->where('disposisi', 0)->get([
                         DB::raw('null as id'),
