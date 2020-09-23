@@ -22,9 +22,6 @@
 					<p class="f-s-16">Total Keseluruhan : {{ number_format($edaran[0]) }}</p>
 					<p class="f-s-16">Terbit : {{ number_format($edaran[1]) }}</p>
                 </div>
-                <div class="stats-link">
-                    <a href="{{ url('/edaran')}}">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
-                </div>
 			</div>
 		</div>
 		<div class="col-lg-3 col-md-6">
@@ -34,9 +31,6 @@
 					<h4>Surat Pengantar Tahun {{ date ('Y')}}</h4>
 					<p class="f-s-16">Total Keseluruhan : {{ number_format($pengantar[0]) }}</p>
 					<p class="f-s-16">Terbit : {{ number_format($pengantar[1]) }}</p>
-                </div>
-                <div class="stats-link">
-                    <a href="{{ url('/pengantar') }}">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
                 </div>
 			</div>
 		</div>
@@ -48,9 +42,6 @@
 					<p class="f-s-16">Total Keseluruhan : {{ number_format($tugas[0]) }}</p>
 					<p class="f-s-16">Terbit : {{ number_format($tugas[1]) }}</p>
                 </div>
-                <div class="stats-link">
-                    <a href="{{ url('/tugas') }}">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
-                </div>
 			</div>
 		</div>
 		<div class="col-lg-3 col-md-6">
@@ -60,9 +51,6 @@
 					<h4>Undangan Tahun {{ date ('Y')}}</h4>
 					<p class="f-s-16">Total Keseluruhan : {{ number_format($undangan[0]) }}</p>
 					<p class="f-s-16">Terbit : {{ number_format($undangan[1]) }}</p>
-                </div>
-                <div class="stats-link">
-                    <a href="{{ url('/undangan') }}">View Detail <i class="fa fa-arrow-alt-circle-right"></i></a>
                 </div>
 			</div>
 		</div>

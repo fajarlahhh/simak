@@ -44,7 +44,8 @@
 						</tr>
 					</thead>
 					<tbody>
-					    @foreach ($data as $index => $row)
+                        @foreach ($data as $index => $row)
+                        @if (!$row->edaran->trashed())
 					    <tr>
 					        <td>{{ ++$i }}</td>
 					        <td>
@@ -93,6 +94,7 @@
                                 @endrole
                             </td>
 				      	</tr>
+                        @endif
 					    @endforeach
 				    </tbody>
 				</table>

@@ -41,7 +41,7 @@ class ReviewController extends Controller
 
 	public function data($api = 1, $auth, $cari = null)
 	{
-        $data = Review::with('edaran')->where(function($q) use ($cari){
+        $data = Review::where(function($q) use ($cari){
             $q->where('review_surat_nomor', 'like', '%'.$cari.'%');
         })->orderBy('created_at', 'asc');
         if($auth->jabatan->jabatan_struktural == 0){

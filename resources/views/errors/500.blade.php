@@ -9,7 +9,7 @@
 		<div class="error-content">
 			<div class="error-message">Server Error</div>
 			<div>
-				<a href="/" class="btn btn-success p-l-20 p-r-20">Go Home</a>
+				<a href="/simak" class="btn btn-success p-l-20 p-r-20">Go Home</a>
 			</div>
 		</div>
 	</div>
