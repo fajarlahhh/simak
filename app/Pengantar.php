@@ -41,4 +41,10 @@ class Pengantar extends Model
     {
         return $this->hasOne('App\Review', 'review_surat_nomor', 'pengantar_nomor')->whereNull('fix');
     }
+
+    public function delete()
+    {
+        $this->review()->delete();
+        return parent::delete();
+    }
 }

@@ -16,7 +16,7 @@
 		<div class="panel-heading">
 			<div class="row">
                 <div class="col-md-12">
-                	<form action="/review" method="GET" id="frm-cari">
+                	<form action="/simak/review" method="GET" id="frm-cari">
                 		<div class="form-inline pull-right">
 		                	<div class="input-group">
 								<input type="text" class="form-control cari" name="cari" placeholder="Cari Nomor/Perihal/Jenis" aria-label="Sizing example input" autocomplete="off" aria-describedby="basic-addon2" value="{{ $cari }}">
@@ -45,7 +45,6 @@
 					</thead>
 					<tbody>
                         @foreach ($data as $index => $row)
-                        @if (!$row->edaran->trashed())
 					    <tr>
 					        <td>{{ ++$i }}</td>
 					        <td>
@@ -94,7 +93,6 @@
                                 @endrole
                             </td>
 				      	</tr>
-                        @endif
 					    @endforeach
 				    </tbody>
 				</table>

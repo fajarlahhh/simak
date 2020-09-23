@@ -41,4 +41,10 @@ class Edaran extends Model
     {
         return $this->hasOne('App\Review', 'review_surat_nomor', 'edaran_nomor')->whereNull('fix');
     }
+
+    public function delete()
+    {
+        $this->review()->delete();
+        return parent::delete();
+    }
 }
